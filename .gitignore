@@ -1,0 +1,12 @@
+artifacts/
+deploy/
+docs/build/
+packages/
+.vs/
+bin/
+obj/
+Reports/
+
+version.txt
+*.user
+*.log

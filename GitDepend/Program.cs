@@ -10,6 +10,8 @@ namespace GitDepend
 	{
 		static void Main(string[] args)
 		{
+			Console.WriteLine("I'm just here to reserve the name!");
+			Console.WriteLine("Real Git Dependency management to come!");
 		}
 	}
 }

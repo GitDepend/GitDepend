@@ -48,7 +48,7 @@ install-reportunit:
 version: install-gitversion
     @echo ##teamcity[blockOpened name='Set Version']
 
-    @$(PACKAGES_DIR)\GitVersion.CommandLine.$(GITVERSION_VERSION)\tools\GitVersion.exe /updateassemblyinfo SharedAssemblyInfo.cs /output buildserver
+    @$(PACKAGES_DIR)\GitVersion.CommandLine.$(GITVERSION_VERSION)\tools\GitVersion.exe /updateassemblyinfo /output buildserver
     @$(PACKAGES_DIR)\GitVersion.CommandLine.$(GITVERSION_VERSION)\tools\GitVersion.exe /showvariable NuGetVersion > version.txt
 
     @call <<version.bat
@@ -203,6 +203,8 @@ for /f "delims=" %%i in ('dir *.nuspec /s/b') do (
     call :BUILD_NUGET_PACKAGE_DEBUG %%i
 )
 
+nuget pack GitDepend.CommandLine.nuspec -OutputDirectory $(NUGET_OUTPUT_DIRECTORY)\Debug -IncludeReferencedProjects -Properties Configuration=Debug -Symbols -Version %VERSION%
+
 move /Y $(NUGET_OUTPUT_DIRECTORY)\Debug\*.symbols.nupkg $(NUGET_OUTPUT_DIRECTORY)\Debug\Symbols
 copy $(NUGET_OUTPUT_DIRECTORY)\Debug\*.nupkg $(LOCAL_NUGET_DIRECTORY)
 
@@ -266,7 +268,7 @@ goto :eof
     @echo ##teamcity[blockClosed name='Generate NuGet Packages (Release)']
 
 reset:
-    @git checkout SharedAssemblyInfo.cs
+    @git checkout *\AssemblyInfo.cs
     @if exist version.txt del version.txt
 
 documentation: version

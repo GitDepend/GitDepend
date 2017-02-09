@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>GitDepend.Commandline</id>
+    <version>$version$</version>
+    <title>GitDepend.Commandline</title>
+    <authors>Kevin Johnson</authors>
+    <owners>Kevin Johnson</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A tool to handle dependency trees with multiple git repositories without using submodules.</description>
+    <releaseNotes>Initial Release</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <developmentDependency>true</developmentDependency>
+  </metadata>
+  <files>
+    <file src="bin\$configuration$\*.exe" target="tools" />
+    <file src="bin\$configuration$\*.dll" target="tools" />
+  </files>
+</package>

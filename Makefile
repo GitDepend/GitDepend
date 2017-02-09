@@ -249,6 +249,8 @@ for /f "delims=" %%i in ('dir *.nuspec /s/b') do (
     call :BUILD_NUGET_PACKAGE_RELEASE %%i
 )
 
+nuget pack GitDepend.CommandLine.nuspec -OutputDirectory $(NUGET_OUTPUT_DIRECTORY)\Release -IncludeReferencedProjects -Properties Configuration=Release -Symbols -Version %VERSION%
+
 move /Y $(NUGET_OUTPUT_DIRECTORY)\Release\*.symbols.nupkg $(NUGET_OUTPUT_DIRECTORY)\Release\Symbols
 
 goto :eof

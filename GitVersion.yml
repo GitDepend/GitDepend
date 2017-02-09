@@ -1,6 +1,5 @@
 assembly-informational-format: '{NuGetVersion}'
 mode: ContinuousDeployment
-next-version: 3.0.0
 branches:
   master:
     mode: ContinuousDelivery

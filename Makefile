@@ -10,7 +10,7 @@ DOTCOVER_VERSION=2016.2.20160913.100041
 debug: package-debug reset
 test: run-unit-tests generate-unit-test-report reset
 cov: generate-code-coverage-report generate-unit-test-report reset
-prod: package-release reset
+release: package-release reset
 all: package-debug generate-code-coverage-report generate-unit-test-report package-release doc reset
 teamcity: package-debug capture-code-coverage package-release documentation reset
 

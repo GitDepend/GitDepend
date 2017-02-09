@@ -8,7 +8,7 @@ if /i "%1%" == "" (
     goto :NMAKE
 ) else if /i "%1%" == "cov" (
     goto :NMAKE
-) else if /i "%1%" == "prod" (
+) else if /i "%1%" == "release" (
     goto :NMAKE
 ) else if /i "%1%" == "doc" (
     goto :NMAKE
@@ -42,7 +42,7 @@ echo Valid modes:
 echo   debug       : Only builds debug artifacts [Default]
 echo   test        : Runs Unit Tests
 echo   cov         : Runs Unit Tests and captures code coverage
-echo   prod        : Only builds release artifacts
+echo   release     : Only builds release artifacts
 echo   doc         : Build the documentation
 echo   all         : Builds both debug and release artifacts, runs unit tests,
 echo                 and captures coverage information

@@ -1,11 +1,13 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>GitDepend.Commandline</id>
+    <id>GitDepend.CommandLine</id>
     <version>$version$</version>
-    <title>GitDepend.Commandline</title>
+    <title>GitDepend.CommandLine</title>
     <authors>Kevin Johnson</authors>
     <owners>Kevin Johnson</owners>
+    <licenseUrl>https://github.com/kjjuno/GitDepend/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/kjjuno/GitDepend</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A tool to handle dependency trees with multiple git repositories without using submodules.</description>
     <releaseNotes>Initial Release</releaseNotes>

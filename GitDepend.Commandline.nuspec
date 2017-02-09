@@ -13,7 +13,7 @@
     <developmentDependency>true</developmentDependency>
   </metadata>
   <files>
-    <file src="bin\$configuration$\*.exe" target="tools" />
+    <file src="bin\$configuration$\GitDepend.exe" target="tools" />
     <file src="bin\$configuration$\*.dll" target="tools" />
   </files>
 </package>

@@ -51,9 +51,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandLine\CloneSubOptions.cs" />
     <Compile Include="CommandLine\CommonSubOptions.cs" />
     <Compile Include="CommandLine\ConfigSubOptions.cs" />
     <Compile Include="CommandLine\InitSubOptions.cs" />
+    <Compile Include="Commands\CloneCommand.cs" />
     <Compile Include="Commands\CommandParser.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\InitCommand.cs" />

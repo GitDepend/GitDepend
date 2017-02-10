@@ -36,8 +36,9 @@ namespace GitDepend.Configuration
 
 		#endregion
 
-		public static GitDependFile LoadFromDir(string directory, out string error)
+		public static GitDependFile LoadFromDir(string directory, out string dir, out string error)
 		{
+			dir = directory;
 			var current = directory;
 			bool isGitRoot;
 			do
@@ -46,15 +47,15 @@ namespace GitDepend.Configuration
 
 				if (!isGitRoot)
 				{
-					current = Directory.GetParent(current).FullName;
+					current = Directory.GetParent(current)?.FullName;
 				}
 
 			} while (!string.IsNullOrEmpty(current) && !isGitRoot);
 			
 
-			if (isGitRoot)
+			if (!string.IsNullOrEmpty(current) && isGitRoot)
 			{
-				var file = Path.Combine(directory, "GitDepend.json");
+				var file = Path.Combine(current, "GitDepend.json");
 
 				if (File.Exists(file))
 				{
@@ -63,6 +64,7 @@ namespace GitDepend.Configuration
 						var json = File.ReadAllText(file);
 						var gitDependFile = JsonConvert.DeserializeObject<GitDependFile>(json);
 						error = null;
+						dir = current;
 						return gitDependFile;
 					}
 					catch (Exception ex)

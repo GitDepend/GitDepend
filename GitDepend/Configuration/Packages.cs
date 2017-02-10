@@ -10,7 +10,7 @@ namespace GitDepend.Configuration
 	public class Packages
 	{
 		[JsonProperty("dir")]
-		public string Directory { get; set; }
+		public string Directory { get; set; } = "artifacts/NuGet/Debug";
 
 		#region Overrides of Object
 

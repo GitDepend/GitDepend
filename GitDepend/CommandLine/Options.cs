@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using CommandLine;
 using CommandLine.Text;
+using GitDepend.CommandLine;
+using GitDepend.Commands;
 using Newtonsoft.Json;
 
 namespace GitDepend
@@ -19,11 +21,11 @@ namespace GitDepend
 			
 		}
 
-		[Option('d', "dir", Required = false, HelpText = "The directory to process. The current working directory will be used if this option is ignored.")]
-		public string Directory { get; set; }
+		[VerbOption(ShowConfigCommand.Name, DefaultValue = false, HelpText = "Displays the full configuration file")]
+		public ConfigSubOptions ConfigVerb { get; set; }
 
-		[Option("showconfig", Required = false, HelpText = "Displays the full configuration file")]
-		public bool ShowConfig { get; set; }
+		[VerbOption(InitCommand.Name, DefaultValue = false, HelpText = "Assists you in creating a GitDepend.json")]
+		public InitSubOptions InitVerb { get; set; }
 
 		[ParserState]
 		public IParserState LastParserState { get; set; }

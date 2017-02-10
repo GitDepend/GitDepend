@@ -21,11 +21,14 @@ namespace GitDepend
 			
 		}
 
-		[VerbOption(ShowConfigCommand.Name, DefaultValue = false, HelpText = "Displays the full configuration file")]
+		[VerbOption(ShowConfigCommand.Name, HelpText = "Displays the full configuration file")]
 		public ConfigSubOptions ConfigVerb { get; set; }
 
-		[VerbOption(InitCommand.Name, DefaultValue = false, HelpText = "Assists you in creating a GitDepend.json")]
+		[VerbOption(InitCommand.Name, HelpText = "Assists you in creating a GitDepend.json")]
 		public InitSubOptions InitVerb { get; set; }
+
+		[VerbOption(CloneCommand.Name, HelpText = "Recursively clones all dependencies")]
+		public CloneSubOptions CloneVerb { get; set; }
 
 		[ParserState]
 		public IParserState LastParserState { get; set; }

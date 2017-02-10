@@ -44,6 +44,9 @@ namespace GitDepend.Commands
 				case ShowConfigCommand.Name:
 					command = new ShowConfigCommand(options as ConfigSubOptions);
 					break;
+				case CloneCommand.Name:
+					command = new CloneCommand(options as CloneSubOptions);
+					break;
 				default:
 					command = new ShowHelpCommand();
 					break;

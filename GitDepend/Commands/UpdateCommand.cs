@@ -1,15 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using GitDepend.CommandLine;
 using GitDepend.Visitors;
 
 namespace GitDepend.Commands
 {
-	public class CloneCommand : ICommand
+	class UpdateCommand : ICommand
 	{
-		public const string Name = "clone";
-		private readonly CloneSubOptions _options;
+		private readonly UpdateSubOptions _options;
+		public const string Name = "update";
 
-		public CloneCommand(CloneSubOptions options)
+		public UpdateCommand(UpdateSubOptions options)
 		{
 			_options = options;
 		}
@@ -19,12 +23,12 @@ namespace GitDepend.Commands
 		public int Execute()
 		{
 			var alg = new DependencyVisitorAlgorithm();
-			var visitor = new CheckOutBranchVisitor();
+			var visitor = new RunBuildScriptVisitor();
 			alg.TraverseDependencies(visitor, _options.Directory);
 
 			if (visitor.ReturnCode == ReturnCodes.Success)
 			{
-				Console.WriteLine("Successfully cloned all dependencies");
+				Console.WriteLine("Update complete!");
 			}
 
 			return visitor.ReturnCode;

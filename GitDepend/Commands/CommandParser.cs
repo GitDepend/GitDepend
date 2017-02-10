@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GitDepend.CommandLine;
 
 namespace GitDepend.Commands
@@ -46,6 +42,9 @@ namespace GitDepend.Commands
 					break;
 				case CloneCommand.Name:
 					command = new CloneCommand(options as CloneSubOptions);
+					break;
+				case UpdateCommand.Name:
+					command = new UpdateCommand(options as UpdateSubOptions);
 					break;
 				default:
 					command = new ShowHelpCommand();

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CommandLine;
+﻿using CommandLine;
 using CommandLine.Text;
 using GitDepend.CommandLine;
 using GitDepend.Commands;
@@ -29,6 +24,9 @@ namespace GitDepend
 
 		[VerbOption(CloneCommand.Name, HelpText = "Recursively clones all dependencies")]
 		public CloneSubOptions CloneVerb { get; set; }
+
+		[VerbOption(UpdateCommand.Name, HelpText = "Recursively builds all dependencies, and updates the current project to the newly built artifacts.")]
+		public UpdateSubOptions UpdateVerb { get; set; }
 
 		[ParserState]
 		public IParserState LastParserState { get; set; }

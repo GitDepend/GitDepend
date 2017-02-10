@@ -7,6 +7,9 @@ namespace GitDepend.Configuration
 		[JsonProperty("script")]
 		public string Script { get; set; } = "make.bat";
 
+		[JsonProperty("arguments")]
+		public string Arguments { get; set; }
+
 		#region Overrides of Object
 
 		/// <summary>

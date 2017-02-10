@@ -1,7 +1,5 @@
 ﻿using System;
-using System.IO;
 using GitDepend.Commands;
-using GitDepend.Configuration;
 
 namespace GitDepend
 {

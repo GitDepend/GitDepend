@@ -55,20 +55,27 @@
     <Compile Include="CommandLine\CommonSubOptions.cs" />
     <Compile Include="CommandLine\ConfigSubOptions.cs" />
     <Compile Include="CommandLine\InitSubOptions.cs" />
+    <Compile Include="CommandLine\UpdateSubOptions.cs" />
     <Compile Include="Commands\CloneCommand.cs" />
     <Compile Include="Commands\CommandParser.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\InitCommand.cs" />
     <Compile Include="Commands\ShowConfigCommand.cs" />
     <Compile Include="Commands\ShowHelpCommand.cs" />
+    <Compile Include="Commands\UpdateCommand.cs" />
     <Compile Include="Configuration\Build.cs" />
     <Compile Include="Configuration\Dependency.cs" />
     <Compile Include="Configuration\GitDependFile.cs" />
     <Compile Include="Configuration\Packages.cs" />
     <Compile Include="CommandLine\Options.cs" />
+    <Compile Include="Git.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReturnCodes.cs" />
+    <Compile Include="Visitors\DependencyVisitorAlgorithm.cs" />
+    <Compile Include="Visitors\IVisitor.cs" />
+    <Compile Include="Visitors\CheckOutBranchVisitor.cs" />
+    <Compile Include="Visitors\RunBuildScriptVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

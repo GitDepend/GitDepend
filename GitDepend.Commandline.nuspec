@@ -16,6 +16,7 @@
   </metadata>
   <files>
     <file src="bin\$configuration$\GitDepend.exe" target="tools" />
+    <file src="bin\$configuration$\NuGet.exe" target="tools" />
     <file src="bin\$configuration$\*.dll" target="tools" />
   </files>
 </package>

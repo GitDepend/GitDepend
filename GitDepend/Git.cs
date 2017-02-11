@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace GitDepend
 {
@@ -27,12 +28,19 @@ namespace GitDepend
 
 		public int Add(params string[] files)
 		{
+			Console.WriteLine(files.Length);
+
 			foreach (string file in files)
 			{
-				return ExecuteGitCommand($"add {file}");
+				ExecuteGitCommand($"add {file}");
 			}
 
 			return ReturnCodes.Success;
+		}
+
+		public int Commit(string message)
+		{
+			return ExecuteGitCommand($"commit -m \"{message}\"");
 		}
 
 		private int ExecuteGitCommand(string arguments)

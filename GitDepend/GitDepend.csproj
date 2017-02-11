@@ -61,7 +61,6 @@
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\InitCommand.cs" />
     <Compile Include="Commands\ShowConfigCommand.cs" />
-    <Compile Include="Commands\ShowHelpCommand.cs" />
     <Compile Include="Commands\UpdateCommand.cs" />
     <Compile Include="Configuration\Build.cs" />
     <Compile Include="Configuration\Dependency.cs" />

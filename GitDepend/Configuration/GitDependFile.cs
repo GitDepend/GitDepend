@@ -38,6 +38,13 @@ namespace GitDepend.Configuration
 
 		public static GitDependFile LoadFromDir(string directory, out string dir, out string error)
 		{
+			if (!Directory.Exists(directory))
+			{
+				dir = null;
+				error = $"{directory} does not exist";
+				return null;
+			}
+
 			dir = directory;
 			var current = directory;
 			bool isGitRoot;
@@ -65,6 +72,16 @@ namespace GitDepend.Configuration
 						var gitDependFile = JsonConvert.DeserializeObject<GitDependFile>(json);
 						error = null;
 						dir = current;
+						gitDependFile.Build.Script = Path.GetFullPath(Path.Combine(current, gitDependFile.Build.Script));
+						gitDependFile.Packages.Directory = Path.GetFullPath(Path.Combine(current, gitDependFile.Packages.Directory));
+
+						foreach (var dependency in gitDependFile.Dependencies)
+						{
+							dependency.Directory = Path.GetFullPath(Path.Combine(current, dependency.Directory));
+							string subdir;
+							string suberror;
+							dependency.Configuration = LoadFromDir(dependency.Directory, out subdir, out suberror);
+						}
 						return gitDependFile;
 					}
 					catch (Exception ex)

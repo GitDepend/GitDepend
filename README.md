@@ -30,3 +30,14 @@ For each dependency:
 * make update commit (if dependencies changed)
 * run the build script (must produce packages)
 ```
+
+## v0.2.0
+Minimum Viable Product implementation
+
+* init flag assists with setting up `GitDepend.json` files
+* clone flag recursively clones all dependencies
+* update flag recursively executes the build script and updates all projects to use the artifacts produced by dependency build scripts.
+* config flag shows computed configuration
+
+## v0.1.0
+Simple setup for the sole purpose of reservering names on github.com and nuget.org

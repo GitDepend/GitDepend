@@ -28,8 +28,6 @@ namespace GitDepend
 
 		public int Add(params string[] files)
 		{
-			Console.WriteLine(files.Length);
-
 			foreach (string file in files)
 			{
 				ExecuteGitCommand($"add {file}");

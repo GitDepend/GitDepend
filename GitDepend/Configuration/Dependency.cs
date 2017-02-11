@@ -16,6 +16,9 @@ namespace GitDepend.Configuration
 		[JsonProperty("branch")]
 		public string Branch { get; set; }
 
+		[JsonIgnore]
+		public GitDependFile Configuration { get; set; }
+
 		#region Overrides of Object
 
 		/// <summary>

@@ -29,7 +29,7 @@ namespace GitDepend.Visitors
 
 			foreach (var dependency in config.Dependencies)
 			{
-				int code = ReturnCodes.Success;
+				int code;
 				dependency.Directory = Path.GetFullPath(Path.Combine(dir, dependency.Directory));
 
 				if (!Directory.Exists(dependency.Directory))
@@ -56,6 +56,8 @@ namespace GitDepend.Visitors
 					return;
 				}
 			}
+
+			visitor.VisitProject(dir, config);
 		}
 	}
 }

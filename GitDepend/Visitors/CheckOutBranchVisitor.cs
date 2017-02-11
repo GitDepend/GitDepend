@@ -17,6 +17,11 @@ namespace GitDepend.Visitors
 			return git.Checkout(dependency.Branch);
 		}
 
+		public int VisitProject(string directory, GitDependFile config)
+		{
+			return ReturnCodes.Success;
+		}
+
 		#endregion
 	}
 }

@@ -6,5 +6,6 @@ namespace GitDepend.Visitors
 	{
 		int ReturnCode { get; set; }
 		int VisitDependency(Dependency dependency);
+		int VisitProject(string directory, GitDependFile config);
 	}
 }

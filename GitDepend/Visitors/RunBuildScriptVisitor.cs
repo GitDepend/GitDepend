@@ -73,6 +73,10 @@ namespace GitDepend.Visitors
 					}
 				}
 			}
+
+			var git = new Git(directory);
+			git.Add("*.csproj", @"*\packages.config");
+
 			return ReturnCodes.Success;
 		}
 

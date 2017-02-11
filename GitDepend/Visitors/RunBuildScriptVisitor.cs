@@ -76,6 +76,7 @@ namespace GitDepend.Visitors
 
 			var git = new Git(directory);
 			git.Add("*.csproj", @"*\packages.config");
+			git.Commit("GitDepend: updating dependencies");
 
 			return ReturnCodes.Success;
 		}

@@ -18,7 +18,7 @@ namespace GitDepend.Commands
 					invokedVerbInstance = verbOptions;
 				}))
 			{
-				return new ShowHelpCommand();
+				Environment.Exit(global::CommandLine.Parser.DefaultExitCodeFail);
 			}
 
 			var options = invokedVerbInstance as CommonSubOptions;
@@ -30,7 +30,7 @@ namespace GitDepend.Commands
 					: Path.GetFullPath(options.Directory);
 			}
 
-			ICommand command;
+			ICommand command = null;
 
 			switch (invokedVerb)
 			{
@@ -45,9 +45,6 @@ namespace GitDepend.Commands
 					break;
 				case UpdateCommand.Name:
 					command = new UpdateCommand(options as UpdateSubOptions);
-					break;
-				default:
-					command = new ShowHelpCommand();
 					break;
 			}
 

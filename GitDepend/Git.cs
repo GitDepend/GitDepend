@@ -25,6 +25,16 @@ namespace GitDepend
 			return ExecuteGitCommand($"clone {url} {directory} -b {branch}");
 		}
 
+		public int Add(params string[] files)
+		{
+			foreach (string file in files)
+			{
+				return ExecuteGitCommand($"add {file}");
+			}
+
+			return ReturnCodes.Success;
+		}
+
 		private int ExecuteGitCommand(string arguments)
 		{
 			var info = new ProcessStartInfo("git", arguments)

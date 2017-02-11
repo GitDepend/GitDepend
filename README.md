@@ -1,5 +1,6 @@
 # GitDepend
 
+[![Documentation Status](https://readthedocs.org/projects/gitdepend/badge/?version=latest)](http://gitdepend.readthedocs.io/en/latest/?badge=latest)
 Solves the problem of working with multiple git repositories where lower level repositories produce nuget packages that are consumed by other repositories.
 
 ## Why do I need GitDepend

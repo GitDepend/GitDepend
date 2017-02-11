@@ -37,6 +37,12 @@ namespace GitDepend
 			return HelpText.AutoBuild(this, (HelpText current) => HelpText.DefaultParsingErrorsHandler(this, current));
 		}
 
+		[HelpVerbOption]
+		public string GetUsage(string verb)
+		{
+			return HelpText.AutoBuild(this, verb);
+		}
+
 		#region Overrides of Object
 
 		/// <summary>

@@ -69,6 +69,7 @@
     <Compile Include="Configuration\Packages.cs" />
     <Compile Include="CommandLine\Options.cs" />
     <Compile Include="Git.cs" />
+    <Compile Include="Nuget.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReturnCodes.cs" />
@@ -80,6 +81,12 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\NuGet.exe">
+      <Link>NuGet.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

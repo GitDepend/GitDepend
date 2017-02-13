@@ -1,7 +1,7 @@
 Installing GitDepend
 ====================
 
-GitDepend is available on nuget.org
+GitDepend is available on nuget.org and chocolatey.org
 
 .. code-block:: bash
 

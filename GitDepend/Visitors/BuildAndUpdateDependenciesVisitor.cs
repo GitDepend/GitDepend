@@ -11,7 +11,7 @@ using GitDepend.Configuration;
 
 namespace GitDepend.Visitors
 {
-	public class RunBuildScriptVisitor : IVisitor
+	public class BuildAndUpdateDependenciesVisitor : IVisitor
 	{
 		private static readonly Regex Pattern = new Regex(@"^(?<id>.*?)\.(?<version>(?:\d\.){2,3}\d(?:-.*?)?)$", RegexOptions.Compiled);
 

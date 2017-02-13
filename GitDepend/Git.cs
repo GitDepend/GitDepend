@@ -36,6 +36,11 @@ namespace GitDepend
 			return ReturnCodes.Success;
 		}
 
+		public int Status()
+		{
+			return ExecuteGitCommand("status");
+		}
+
 		public int Commit(string message)
 		{
 			return ExecuteGitCommand($"commit -m \"{message}\"");

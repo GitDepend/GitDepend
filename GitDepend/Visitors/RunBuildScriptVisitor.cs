@@ -74,9 +74,12 @@ namespace GitDepend.Visitors
 				}
 			}
 
+			Console.WriteLine("================================================================================");
 			Console.WriteLine($"Making update commit on {directory}");
 			var git = new Git(directory);
 			git.Add("*.csproj", @"*\packages.config");
+			Console.WriteLine("================================================================================");
+			git.Status();
 			git.Commit("GitDepend: updating dependencies");
 
 			return ReturnCodes.Success;

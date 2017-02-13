@@ -75,7 +75,7 @@
     <Compile Include="Visitors\DependencyVisitorAlgorithm.cs" />
     <Compile Include="Visitors\IVisitor.cs" />
     <Compile Include="Visitors\CheckOutBranchVisitor.cs" />
-    <Compile Include="Visitors\RunBuildScriptVisitor.cs" />
+    <Compile Include="Visitors\BuildAndUpdateDependenciesVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

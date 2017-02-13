@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace GitDepend
 {
@@ -23,6 +24,26 @@ namespace GitDepend
 		public int Clone(string url, string directory, string branch)
 		{
 			return ExecuteGitCommand($"clone {url} {directory} -b {branch}");
+		}
+
+		public int Add(params string[] files)
+		{
+			foreach (string file in files)
+			{
+				ExecuteGitCommand($"add {file}");
+			}
+
+			return ReturnCodes.Success;
+		}
+
+		public int Status()
+		{
+			return ExecuteGitCommand("status");
+		}
+
+		public int Commit(string message)
+		{
+			return ExecuteGitCommand($"commit -m \"{message}\"");
 		}
 
 		private int ExecuteGitCommand(string arguments)

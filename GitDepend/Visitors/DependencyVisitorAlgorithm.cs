@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using GitDepend.Configuration;
 
@@ -6,6 +7,9 @@ namespace GitDepend.Visitors
 {
 	public class DependencyVisitorAlgorithm
 	{
+		HashSet<string> _visitedDependencies = new HashSet<string>();
+		HashSet<string> _visitedProjects = new HashSet<string>();
+
 		public void TraverseDependencies(IVisitor visitor, string directory)
 		{
 			directory = Path.GetFullPath(directory);
@@ -48,16 +52,24 @@ namespace GitDepend.Visitors
 
 				TraverseDependencies(visitor, dependency.Directory);
 
-				code = visitor.VisitDependency(dependency);
-				Console.WriteLine();
-
-				if (code != ReturnCodes.Success)
+				if (!_visitedDependencies.Contains(dependency.Directory))
 				{
-					return;
+					_visitedDependencies.Add(dependency.Directory);
+					code = visitor.VisitDependency(dependency);
+
+					if (code != ReturnCodes.Success)
+					{
+						return;
+					}
 				}
 			}
 
-			visitor.VisitProject(dir, config);
+			if (!_visitedProjects.Contains(dir))
+			{
+				_visitedProjects.Add(dir);
+				visitor.VisitProject(dir, config);
+				Console.WriteLine();
+			}
 		}
 	}
 }

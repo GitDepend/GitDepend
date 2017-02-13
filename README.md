@@ -1,5 +1,7 @@
 # GitDepend
 
+[![Documentation Status](https://readthedocs.org/projects/gitdepend/badge/?version=latest)](http://gitdepend.readthedocs.io/en/latest/?badge=latest)
+
 Solves the problem of working with multiple git repositories where lower level repositories produce nuget packages that are consumed by other repositories.
 
 ## Why do I need GitDepend
@@ -62,3 +64,14 @@ This will follow the chain of `GitDepend.json` files. The following things will 
 At this point the upper level repository should be all up to date, targetting the latest nuget packages and be ready to build.
 
 TODO: point to example projects that use GitDepend where people can try it out.
+
+## v0.2.0
+Minimum Viable Product implementation
+
+* init flag assists with setting up `GitDepend.json` files
+* clone flag recursively clones all dependencies
+* update flag recursively executes the build script and updates all projects to use the artifacts produced by dependency build scripts.
+* config flag shows computed configuration
+
+## v0.1.0
+Simple setup for the sole purpose of reservering names on github.com and nuget.org

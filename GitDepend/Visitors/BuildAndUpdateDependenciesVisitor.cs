@@ -19,13 +19,7 @@ namespace GitDepend.Visitors
 		{
 			get
 			{
-				var location = Assembly.GetEntryAssembly().Location;
-				var dir = Path.GetDirectoryName(location);
-
-				if (dir == null)
-				{
-					return null;
-				}
+				var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GitDepend");
 
 				var cacheDir = Path.Combine(dir, "cache");
 				if (Directory.Exists(cacheDir))

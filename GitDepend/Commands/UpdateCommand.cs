@@ -33,7 +33,7 @@ namespace GitDepend.Commands
 			}
 
 			alg = new DependencyVisitorAlgorithm();
-			visitor = new RunBuildScriptVisitor();
+			visitor = new BuildAndUpdateDependenciesVisitor();
 			alg.TraverseDependencies(visitor, _options.Directory);
 
 			if (visitor.ReturnCode == ReturnCodes.Success)

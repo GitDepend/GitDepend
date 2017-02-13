@@ -1,30 +1,64 @@
 # GitDepend
 
-This is a tool designed to deal with a large project split into multiple git repositories using nuget packages to tie libraries together.
+Solves the problem of working with multiple git repositories where lower level repositories produce nuget packages that are consumed by other repositories.
 
-This is very much a work in progress.
+## Why do I need GitDepend
+I work for a company that produces a lot of in-house nuget packages. Originally we tried maintaining the version of these packages
+manually. If you've ever tried doing that on a large scale you realize that it quickly gets unmanageable. It's easy to make mistakes
+with your versioning. It's easy to forget to bump the version. In short, versioning is something that should really be automated.
 
+[GitVersion](https://github.com/GitTools/GitVersion) to the rescue! With GitVersion we could just write code, and our packages
+magically version themselves correctly. BUT, there was still a big problem. We didn't like lower level packages having to bump
+their version just because another package had to change. GitVersion assumes the same version for the entire repository. So, if you
+need a unique version so that your code can stabalize on a version you need to split it into another git repository.
+
+We started doing this... a LOT. Before we knew it the setup process to get our full process building involved checking out multiple
+repositories. Making sure that each one was on the appropriate branch for what we were doing, and writing a complicated build
+script that lived in the upper most repository to build all other repositories. As we added new repositories that build script
+was constantly changing, and getting more complicated. We needed a solution that made it easy to chain repositories together. Thus
+GitDepend was born.
+
+## How does it work?
+
+You should read the full [documentation](http://gitdepend.readthedocs.io/en/latest/) for a more comprehensive overview. In a nutshell GitDepend works by declaring
+what it takes to build a repository, where nuget packages will be located after a successful build, and what the direct
+git repository dependencies are.
+
+In the root of your repository you will include a `GitDepend.json` file
+
+```json
+{
+  "build": {
+    "script": "make.bat"
+  },
+  "packages": {
+    "dir": "artifacts/NuGet/Debug"
+  },
+  "dependencies": [
+    {
+      "name": "LibC",
+      "url": "ssh://git@stash.xactware.com:7999/~i50331/libc.git",
+      "dir": "../LibC",
+      "branch": "develop"
+    }
+  ]
+}
 ```
-script: make.bat
-packages: artifacts/NuGet/Debug
-dependencies:
-  dependencyA:
-    url: ssh://git@github.com:kjjuno/dependencyA.git
-    dir: ../dependencyA
-    branch: develop
+
+Normally if you are working in an upper level repository you should just be able to run the build script and rely on nuget packages.
+However, when you have changed code in a lower level repository you will need to have those changes cascade up the chain. This
+is where GitDepend shines. Run the following command
+
+```bash
+GitDepend.exe update
 ```
 
-Steps that happen during a call to `update`
+This will follow the chain of `GitDepend.json` files. The following things will happen
+1. Check out the dependency if it has not been checked out.
+2. Ensure that the repository is on the correct branch.
+3. update all dependencies (this is a recursive step)
+4. consume the latest nuget packages produced by dependency repositories.
 
-```
-For each dependency:  
-    * Check to see if the directory exists
-    * Check out the dependency repository if needed
-    * ensure the correct branch has been checked out
-    * look for a `GitDepend.yml` file
-    * if one exists recursively call `update` on each dependency
-    * update to the latest nuget packages
+At this point the upper level repository should be all up to date, targetting the latest nuget packages and be ready to build.
 
-* make update commit (if dependencies changed)
-* run the build script (must produce packages)
-```
+TODO: point to example projects that use GitDepend where people can try it out.

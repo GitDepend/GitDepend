@@ -67,7 +67,41 @@ This will follow the chain of `GitDepend.json` files. The following things will 
 
 At this point the upper level repository should be all up to date, targetting the latest nuget packages and be ready to build.
 
-TODO: point to example projects that use GitDepend where people can try it out.
+## Try it out!
+
+Take a look at some example projects and try it out for yourself.
+
+* [Lib1](https://github.com/kjjuno/Lib1)
+* [Lib2](https://github.com/kjjuno/Lib2)
+
+Lib2 depends on Lib1
+
+Clone Lib2
+
+```cmd
+git clone git@github.com:kjjuno/Lib2.git
+```
+
+from the root of Lib2 run
+
+```cmd
+make.bat update
+```
+
+This will clone and build all dependencies
+
+build it with
+```cmd
+make.bat
+```
+
+Now, make a change in Lib1 and commit that change.
+
+```cmd
+make.bat update
+```
+
+This will build the new changes in Lib1 and pull them into Lib2. You can now use the new changes.
 
 ## v0.2.0
 Minimum Viable Product implementation

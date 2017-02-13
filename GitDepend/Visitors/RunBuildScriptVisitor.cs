@@ -20,24 +20,30 @@ namespace GitDepend.Visitors
 			get
 			{
 				var location = Assembly.GetEntryAssembly().Location;
-				if (location != null)
-				{
-					var cacheDir = Path.Combine(location, "cache");
-					if (!Directory.Exists(cacheDir))
-					{
-						try
-						{
-							Directory.CreateDirectory(cacheDir);
-						}
-						catch (Exception ex)
-						{
-							Console.Error.WriteLine(ex.Message);
-						}
-					}
+				var dir = Path.GetDirectoryName(location);
 
+				if (dir == null)
+				{
+					return null;
+				}
+
+				var cacheDir = Path.Combine(dir, "cache");
+				if (Directory.Exists(cacheDir))
+				{
 					return cacheDir;
 				}
-				return null;
+
+				try
+				{
+					Directory.CreateDirectory(cacheDir);
+				}
+				catch (Exception ex)
+				{
+					Console.Error.WriteLine(ex.Message);
+					return null;
+				}
+
+				return cacheDir;
 			}
 		}
 

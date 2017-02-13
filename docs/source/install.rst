@@ -1,7 +1,7 @@
 Installing GitDepend
 ====================
 
-GitDepend is available on nuget.org REMOVE ME
+GitDepend is available on nuget.org
 
 .. code-block:: bash
 

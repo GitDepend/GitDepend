@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>GitDepend.CommandLine</id>
+    <id>GitDepend.Portable</id>
     <version>$version$</version>
-    <title>GitDepend.CommandLine</title>
+    <title>GitDepend</title>
     <authors>kjjuno and Contributors</authors>
     <owners>kjjuno and Contributors</owners>
     <licenseUrl>https://github.com/kjjuno/GitDepend/blob/master/LICENSE</licenseUrl>
@@ -13,11 +13,12 @@
     <releaseNotes>https://github.com/kjjuno/GitDepend/releases</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>Git Submodules Subtree GitVersion Dependency Repository Repo</tags>
-    <developmentDependency>true</developmentDependency>
   </metadata>
   <files>
     <file src="bin\$configuration$\GitDepend.exe" target="tools" />
     <file src="bin\$configuration$\NuGet.exe" target="tools" />
     <file src="bin\$configuration$\*.dll" target="tools" />
+    <file src="chocolateyInstall.ps1" target="tools" />
+    <file src="chocolateyUninstall.ps1" target="tools" />
   </files>
 </package>

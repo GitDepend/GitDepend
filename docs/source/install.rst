@@ -7,3 +7,8 @@ GitDepend is available on nuget.org
 
     Install-Package GitDepend.CommandLine
 
+GitDepend is also available on chocolatey.org
+
+.. code-block:: bash
+
+    choco install GitDepend.Portable

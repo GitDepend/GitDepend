@@ -25,7 +25,14 @@ namespace GitDepend.Visitors
 					var cacheDir = Path.Combine(location, "cache");
 					if (!Directory.Exists(cacheDir))
 					{
-						Directory.CreateDirectory(cacheDir);
+						try
+						{
+							Directory.CreateDirectory(cacheDir);
+						}
+						catch (Exception ex)
+						{
+							Console.Error.WriteLine(ex.Message);
+						}
 					}
 
 					return cacheDir;

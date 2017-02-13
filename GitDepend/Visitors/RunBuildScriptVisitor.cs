@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -13,6 +14,25 @@ namespace GitDepend.Visitors
 	public class RunBuildScriptVisitor : IVisitor
 	{
 		private static readonly Regex Pattern = new Regex(@"^(?<id>.*?)\.(?<version>(?:\d\.){2,3}\d(?:-.*?)?)$", RegexOptions.Compiled);
+
+		private string CacheDirectory
+		{
+			get
+			{
+				var location = Assembly.GetEntryAssembly().Location;
+				if (location != null)
+				{
+					var cacheDir = Path.Combine(location, "cache");
+					if (!Directory.Exists(cacheDir))
+					{
+						Directory.CreateDirectory(cacheDir);
+					}
+
+					return cacheDir;
+				}
+				return null;
+			}
+		}
 
 		#region Implementation of IVisitor
 
@@ -35,6 +55,18 @@ namespace GitDepend.Visitors
 			};
 			var proc = Process.Start(info);
 			proc?.WaitForExit();
+
+			
+			var artifactsDir = dependency.Configuration.Packages.Directory;
+			foreach (var file in Directory.GetFiles(artifactsDir, "*.nupkg"))
+			{
+				var name = Path.GetFileName(file);
+				if (!string.IsNullOrEmpty(name))
+				{
+					File.Copy(file, Path.Combine(CacheDirectory, name), true);
+				}
+			}
+
 			return proc?.ExitCode ?? ReturnCodes.FailedToRunBuildScript;
 		}
 
@@ -48,28 +80,32 @@ namespace GitDepend.Visitors
 					var name = Path.GetFileNameWithoutExtension(file);
 
 
-					if (!string.IsNullOrEmpty(name))
+					if (string.IsNullOrEmpty(name))
 					{
-						var match = Pattern.Match(name);
+						continue;
+					}
 
-						if (match.Success)
-						{
-							var id = match.Groups["id"].Value;
-							var version = match.Groups["version"].Value;
+					var match = Pattern.Match(name);
 
-							var nugetConfig = Path.Combine(directory, "NuGet.config");
-							if (!File.Exists(nugetConfig))
-							{
-								nugetConfig = null;
-							}
+					if (!match.Success)
+					{
+						continue;
+					}
 
-							var nuget = new Nuget(nugetConfig);
+					var id = match.Groups["id"].Value;
+					var version = match.Groups["version"].Value;
 
-							foreach (var solution in Directory.GetFiles(directory, "*.sln", SearchOption.AllDirectories))
-							{
-								nuget.Update(solution, id, version, dependency.Configuration.Packages.Directory);
-							}
-						}
+					var nugetConfig = Path.Combine(directory, "NuGet.config");
+					if (!File.Exists(nugetConfig))
+					{
+						nugetConfig = null;
+					}
+
+					var nuget = new Nuget(nugetConfig);
+
+					foreach (var solution in Directory.GetFiles(directory, "*.sln", SearchOption.AllDirectories))
+					{
+						nuget.Update(solution, id, version, CacheDirectory);
 					}
 				}
 			}

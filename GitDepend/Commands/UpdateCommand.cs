@@ -23,7 +23,16 @@ namespace GitDepend.Commands
 		public int Execute()
 		{
 			var alg = new DependencyVisitorAlgorithm();
-			var visitor = new RunBuildScriptVisitor();
+			IVisitor visitor = new CheckOutBranchVisitor();
+			alg.TraverseDependencies(visitor, _options.Directory);
+
+			if (visitor.ReturnCode != ReturnCodes.Success)
+			{
+				Console.WriteLine("Could not ensure the correct branch on all dependencies.");
+				return visitor.ReturnCode;
+			}
+
+			visitor = new RunBuildScriptVisitor();
 			alg.TraverseDependencies(visitor, _options.Directory);
 
 			if (visitor.ReturnCode == ReturnCodes.Success)

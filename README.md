@@ -1,6 +1,13 @@
 # GitDepend
 
+|                            |                Stable               |                 Pre-release               |
+| -------------------------: | :---------------------------------: | :---------------------------------------: |
+|                  **Docs**  |     [![Docs][docs-badge]][docs]     |    [![Docs][docs-pre-badge]][docs-pre]    |
+|        **GitHub Release**  |                 -                   | [![GitHub release][gh-rel-badge]][gh-rel] |
+| **GitVersion.CommandLine** |     [![NuGet][gdc-badge]][gdc]      |       [![NuGet][gdc-pre-badge]][gdc]      |
+
 [![Documentation Status](https://readthedocs.org/projects/gitdepend/badge/?version=latest)](http://gitdepend.readthedocs.io/en/latest/?badge=latest)
+
 Solves the problem of working with multiple git repositories where lower level repositories produce nuget packages that are consumed by other repositories.
 
 ## Why do I need GitDepend
@@ -54,7 +61,6 @@ is where GitDepend shines. Run the following command
 GitDepend.exe update
 ```
 
-<<<<<<< HEAD
 This will follow the chain of `GitDepend.json` files. The following things will happen
 1. Check out the dependency if it has not been checked out.
 2. Ensure that the repository is on the correct branch.
@@ -75,4 +81,3 @@ Minimum Viable Product implementation
 
 ## v0.1.0
 Simple setup for the sole purpose of reservering names on github.com and nuget.org
->>>>>>> 922a377... Adds a description of v0.1.0 and v0.2.0

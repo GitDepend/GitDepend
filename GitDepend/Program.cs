@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using GitDepend.Commands;
 
 namespace GitDepend
 {
@@ -10,8 +7,12 @@ namespace GitDepend
 	{
 		static void Main(string[] args)
 		{
-			Console.WriteLine("I'm just here to reserve the name!");
-			Console.WriteLine("Real Git Dependency management to come!");
+			var parser = new CommandParser();
+			var command = parser.GetCommand(args);
+
+			var code = command.Execute();
+
+			Environment.ExitCode = code;
 		}
 	}
 }

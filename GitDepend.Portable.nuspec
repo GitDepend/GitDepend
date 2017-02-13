@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>GitDepend.Portable</id>
+    <version>$version$</version>
+    <title>GitDepend</title>
+    <authors>kjjuno and Contributors</authors>
+    <owners>kjjuno and Contributors</owners>
+    <licenseUrl>https://github.com/kjjuno/GitDepend/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/kjjuno/GitDepend</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A tool to handle dependency trees with multiple git repositories without using submodules.</description>
+    <releaseNotes>https://github.com/kjjuno/GitDepend/releases</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>Git Submodules Subtree GitVersion Dependency Repository Repo</tags>
+  </metadata>
+  <files>
+    <file src="bin\$configuration$\GitDepend.exe" target="tools" />
+    <file src="bin\$configuration$\NuGet.exe" target="tools" />
+    <file src="bin\$configuration$\*.dll" target="tools" />
+    <file src="chocolateyInstall.ps1" target="tools" />
+    <file src="chocolateyUninstall.ps1" target="tools" />
+  </files>
+</package>

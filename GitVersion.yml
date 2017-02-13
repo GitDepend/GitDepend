@@ -1,0 +1,21 @@
+assembly-informational-format: '{NuGetVersion}'
+mode: ContinuousDeployment
+branches:
+  master:
+    mode: ContinuousDelivery
+  support[/-]:
+    mode: ContinuousDelivery
+    tag: ''
+    increment: Patch
+    prevent-increment-of-merged-branch-version: true
+    track-merge-target: false
+  releases?[/-]:
+    tag: beta
+  develop:
+    tag: alpha
+  features?[/-]:
+    tag: pr-{BranchName}
+  tests?[/-]:
+    tag: pr-{BranchName}
+ignore:
+  sha: []

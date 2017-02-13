@@ -2,6 +2,7 @@ SLN=GitDepend.sln
 PACKAGES_DIR=packages
 LOCAL_NUGET_DIRECTORY=C:\NuGet
 NUGET_OUTPUT_DIRECTORY=artifacts\NuGet
+CHOCOLATEY_OUTPUT_DIRECTORY=artifacts\Chocolatey
 GITVERSION_VERSION=3.6.2
 NUNIT_RUNNERS_VERSION=2.6.4
 REPORT_UNIT_VERSION=1.2.1
@@ -191,7 +192,9 @@ package-debug: build-debug
     @echo ##teamcity[blockOpened name='Generate NuGet Packages (Debug)']
 
     @if exist $(NUGET_OUTPUT_DIRECTORY)\Debug rd /S /Q $(NUGET_OUTPUT_DIRECTORY)\Debug
+    @if exist $(CHOCOLATEY_OUTPUT_DIRECTORY)\Debug rd /S /Q $(CHOCOLATEY_OUTPUT_DIRECTORY)\Debug
     @md $(NUGET_OUTPUT_DIRECTORY)\Debug\Symbols
+    @md $(CHOCOLATEY_OUTPUT_DIRECTORY)\Debug
     @if not exist $(LOCAL_NUGET_DIRECTORY) md $(LOCAL_NUGET_DIRECTORY)
 
     @call <<package.bat
@@ -204,6 +207,7 @@ for /f "delims=" %%i in ('dir *.nuspec /s/b') do (
 )
 
 nuget pack GitDepend.CommandLine.nuspec -OutputDirectory $(NUGET_OUTPUT_DIRECTORY)\Debug -IncludeReferencedProjects -Properties Configuration=Debug -Symbols -Version %VERSION%
+nuget pack GitDepend.Portable.nuspec -OutputDirectory $(CHOCOLATEY_OUTPUT_DIRECTORY)\Debug -Properties Configuration=Debug -Version %VERSION%
 
 move /Y $(NUGET_OUTPUT_DIRECTORY)\Debug\*.symbols.nupkg $(NUGET_OUTPUT_DIRECTORY)\Debug\Symbols
 copy $(NUGET_OUTPUT_DIRECTORY)\Debug\*.nupkg $(LOCAL_NUGET_DIRECTORY)
@@ -237,7 +241,9 @@ package-release: build-release
     @echo ##teamcity[blockOpened name='Generate NuGet Packages (Release)']
 
     @if exist $(NUGET_OUTPUT_DIRECTORY)\Release rd /S /Q $(NUGET_OUTPUT_DIRECTORY)\Release
+    @if exist $(CHOCOLATEY_OUTPUT_DIRECTORY)\Release rd /S /Q $(CHOCOLATEY_OUTPUT_DIRECTORY)\Release
     @md $(NUGET_OUTPUT_DIRECTORY)\Release\Symbols
+    @md $(CHOCOLATEY_OUTPUT_DIRECTORY)\Release
     @if not exist $(LOCAL_NUGET_DIRECTORY) md $(LOCAL_NUGET_DIRECTORY)
 
     @call <<package.bat
@@ -250,6 +256,7 @@ for /f "delims=" %%i in ('dir *.nuspec /s/b') do (
 )
 
 nuget pack GitDepend.CommandLine.nuspec -OutputDirectory $(NUGET_OUTPUT_DIRECTORY)\Release -IncludeReferencedProjects -Properties Configuration=Release -Symbols -Version %VERSION%
+nuget pack GitDepend.Portable.nuspec -OutputDirectory $(CHOCOLATEY_OUTPUT_DIRECTORY)\Release -Properties Configuration=Release -Version %VERSION%
 
 move /Y $(NUGET_OUTPUT_DIRECTORY)\Release\*.symbols.nupkg $(NUGET_OUTPUT_DIRECTORY)\Release\Symbols
 

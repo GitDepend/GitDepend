@@ -1,0 +1,1 @@
+Generate-BinFile "gdep" "$packageFolder\tools\GitDepend.exe"

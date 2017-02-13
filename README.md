@@ -42,9 +42,9 @@ In the root of your repository you will include a `GitDepend.json` file
   },
   "dependencies": [
     {
-      "name": "LibC",
-      "url": "ssh://git@stash.xactware.com:7999/~i50331/libc.git",
-      "dir": "../LibC",
+      "name": "Lib1",
+      "url": "git@github.com:kjjuno/Lib1.git",
+      "dir": "../Lib1",
       "branch": "develop"
     }
   ]

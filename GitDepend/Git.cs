@@ -5,32 +5,19 @@ namespace GitDepend
 	/// <summary>
 	/// A helper class for dealing with git.exe
 	/// </summary>
-	public class Git
+	public class Git : IGit
 	{
-		private readonly string _workingDir;
-
 		/// <summary>
-		/// Creates a new <see cref="Git"/>
+		/// The working directory for all git operations.
 		/// </summary>
-		public Git()
-		{
-		}
-
-		/// <summary>
-		/// Creates a new <see cref="Git"/> that operates on the given working directory.
-		/// </summary>
-		/// <param name="workingDir">The working directory for all git operations.</param>
-		public Git(string workingDir)
-		{
-			_workingDir = workingDir;
-		}
+		public string WorkingDir { get; set; }
 
 		/// <summary>
 		/// Checks out the given branch.
 		/// </summary>
 		/// <param name="branch">The branch to check out.</param>
-		/// <returns></returns>
-		public int Checkout(string branch)
+		/// <returns>The git return code.</returns>
+		public ReturnCode Checkout(string branch)
 		{
 			return ExecuteGitCommand($"checkout {branch}");
 		}
@@ -41,8 +28,8 @@ namespace GitDepend
 		/// <param name="url">The repository url.</param>
 		/// <param name="directory">The directory where the repository should be cloned.</param>
 		/// <param name="branch">The branch that should be checked out.</param>
-		/// <returns></returns>
-		public int Clone(string url, string directory, string branch)
+		/// <returns>The git return code.</returns>
+		public ReturnCode Clone(string url, string directory, string branch)
 		{
 			return ExecuteGitCommand($"clone {url} {directory} -b {branch}");
 		}
@@ -51,22 +38,22 @@ namespace GitDepend
 		/// Adds files into the staging area to prepare them for a commit.
 		/// </summary>
 		/// <param name="files">The files to add to the staging area.</param>
-		/// <returns></returns>
-		public int Add(params string[] files)
+		/// <returns>The git return code.</returns>
+		public ReturnCode Add(params string[] files)
 		{
 			foreach (string file in files)
 			{
 				ExecuteGitCommand($"add {file}");
 			}
 
-			return ReturnCodes.Success;
+			return ReturnCode.Success;
 		}
 
 		/// <summary>
 		/// Shows the status of the repository.
 		/// </summary>
-		/// <returns></returns>
-		public int Status()
+		/// <returns>The git return code.</returns>
+		public ReturnCode Status()
 		{
 			return ExecuteGitCommand("status");
 		}
@@ -75,23 +62,27 @@ namespace GitDepend
 		/// Makes a commit with the given message.
 		/// </summary>
 		/// <param name="message"></param>
-		/// <returns></returns>
-		public int Commit(string message)
+		/// <returns>The git return code.</returns>
+		public ReturnCode Commit(string message)
 		{
 			return ExecuteGitCommand($"commit -m \"{message}\"");
 		}
 
-		private int ExecuteGitCommand(string arguments)
+		private ReturnCode ExecuteGitCommand(string arguments)
 		{
 			var info = new ProcessStartInfo("git", arguments)
 			{
-				WorkingDirectory = _workingDir,
+				WorkingDirectory = WorkingDir,
 				UseShellExecute = false,
 			};
 			var proc = Process.Start(info);
 			proc?.WaitForExit();
 
-			return proc?.ExitCode ?? ReturnCodes.FailedToRunGitCommand;
+			var code = proc?.ExitCode ?? (int) ReturnCode.FailedToRunGitCommand;
+
+			return code != (int) ReturnCode.Success
+				? ReturnCode.FailedToRunGitCommand
+				: ReturnCode.Success;
 		}
 	}
 }

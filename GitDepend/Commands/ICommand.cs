@@ -9,6 +9,6 @@
 		/// Executes the command.
 		/// </summary>
 		/// <returns>The return code.</returns>
-		int Execute();
+		ReturnCode Execute();
 	}
 }

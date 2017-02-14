@@ -3,32 +3,37 @@
 	/// <summary>
 	/// Project Return Codes.
 	/// </summary>
-	public static class ReturnCodes
+	public enum ReturnCode
 	{
 		/// <summary>
 		/// Indicates the program ran successfully.
 		/// </summary>
-		public const int Success = 0;
+		Success = 0,
 
 		/// <summary>
 		/// Indicates that the program could not find the GitDepend.json file.
 		/// </summary>
-		public const int GitDependFileNotFound = 1;
+		GitDependFileNotFound = 1,
 
 		/// <summary>
 		/// Indicates that the target directory is not a git repository.
 		/// </summary>
-		public const int GitRepositoryNotFound = 2;
+		GitRepositoryNotFound = 2,
 
 		/// <summary>
 		/// Indicates that there was a failure while running a git command.
 		/// </summary>
-		public const int FailedToRunGitCommand = 3;
+		FailedToRunGitCommand = 3,
+
+		/// <summary>
+		/// Indicates that there was a failure while running a nuget command.
+		/// </summary>
+		FailedToRunNugetCommand = 4,
 
 		/// <summary>
 		/// Indicates that a dependency failed to run the build script successfully.
 		/// </summary>
-		public const int FailedToRunBuildScript = 4;
+		FailedToRunBuildScript = 5
 	}
 }
 	

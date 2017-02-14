@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.IO.Abstractions;
 using GitDepend.Busi;
 using GitDepend.CommandLine;
 using GitDepend.Configuration;
@@ -23,11 +24,11 @@ namespace GitDepend.Commands
 		/// Creates a new <see cref="InitCommand"/>
 		/// </summary>
 		/// <param name="options">The <see cref="InitSubOptions"/> that configures the command.</param>
-		/// <param name="fileIo">The <see cref="IFileIo"/> to use.</param>
-		public InitCommand(InitSubOptions options, IFileIo fileIo)
+		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
+		public InitCommand(InitSubOptions options, IFileSystem fileSystem)
 		{
 			_options = options;
-			_factory = new GitDependFileFactory(fileIo);
+			_factory = new GitDependFileFactory(fileSystem);
 		}
 
 		#region Implementation of ICommand
@@ -36,7 +37,7 @@ namespace GitDepend.Commands
 		/// Executes the command.
 		/// </summary>
 		/// <returns>The return code.</returns>
-		public int Execute()
+		public ReturnCode Execute()
 		{
 			string dir;
 			string error;
@@ -52,7 +53,7 @@ namespace GitDepend.Commands
 
 			File.WriteAllText(path, config.ToString());
 
-			return ReturnCodes.Success;
+			return ReturnCode.Success;
 		}
 
 		private static string ReadLine(string defaultValue)

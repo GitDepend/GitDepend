@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using GitDepend.Configuration;
 using Newtonsoft.Json;
@@ -9,17 +10,17 @@ namespace GitDepend.Busi
 	/// <summary>
 	/// Factory class that loads a <see cref="GitDependFile"/> from a file on disk.
 	/// </summary>
-	public class GitDependFileFactory
+	public class GitDependFileFactory : IGitDependFileFactory
 	{
-		private readonly IFileIo _fileIo;
+		private readonly IFileSystem _fileSystem;
 
 		/// <summary>
 		/// Creates a new <see cref="GitDependFileFactory"/>
 		/// </summary>
-		/// <param name="fileIo">The <see cref="IFileIo"/> to use.</param>
-		public GitDependFileFactory(IFileIo fileIo)
+		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
+		public GitDependFileFactory(IFileSystem fileSystem)
 		{
-			_fileIo = fileIo;
+			_fileSystem = fileSystem;
 		}
 
 		/// <summary>
@@ -28,10 +29,10 @@ namespace GitDepend.Busi
 		/// <param name="directory">The directory to start in.</param>
 		/// <param name="dir">The directory where GitDepend.json was found.</param>
 		/// <param name="error">An error string indicating what went wrong in the case that the file could not be loaded.</param>
-		/// <returns></returns>
+		/// <returns>A <see cref="GitDependFile"/> or null if none could be loaded.</returns>
 		public GitDependFile LoadFromDirectory(string directory, out string dir, out string error)
 		{
-			if (!_fileIo.DirectoryExists(directory))
+			if (!_fileSystem.Directory.Exists(directory))
 			{
 				dir = null;
 				error = $"{directory} does not exist";
@@ -43,11 +44,11 @@ namespace GitDepend.Busi
 			bool isGitRoot;
 			do
 			{
-				isGitRoot = _fileIo.GetDirectories(current, ".git").Any();
+				isGitRoot = _fileSystem.Directory.GetDirectories(current, ".git").Any();
 
 				if (!isGitRoot)
 				{
-					current = _fileIo.GetParentDirectory(current)?.FullName;
+					current = _fileSystem.Directory.GetParent(current)?.FullName;
 				}
 
 			} while (!string.IsNullOrEmpty(current) && !isGitRoot);
@@ -57,7 +58,7 @@ namespace GitDepend.Busi
 			{
 				var file = Path.Combine(current, "GitDepend.json");
 
-				if (_fileIo.FileExists(file))
+				if (_fileSystem.File.Exists(file))
 				{
 					try
 					{

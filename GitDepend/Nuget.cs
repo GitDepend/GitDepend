@@ -7,18 +7,20 @@ namespace GitDepend
 	/// <summary>
 	/// A helper class for dealing with nuget.exe
 	/// </summary>
-	public class Nuget
+	public class Nuget : INuget
 	{
-		private readonly string _configFile;
 		private readonly string _workingDir;
+
+		/// <summary>
+		/// The configuration file to use.
+		/// </summary>
+		public string ConfigFile { get; set; }
 
 		/// <summary>
 		/// Creates a new <see cref="Nuget"/>
 		/// </summary>
-		/// <param name="configFile">The NuGet.config file to use.</param>
-		public Nuget(string configFile)
+		public Nuget()
 		{
-			_configFile = configFile;
 			_workingDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 		}
 
@@ -29,20 +31,20 @@ namespace GitDepend
 		/// <param name="id">The id of the package.</param>
 		/// <param name="version">The version of the package.</param>
 		/// <param name="sourceDirectory">The directory containing packages on disk.</param>
-		/// <returns></returns>
-		public int Update(string soluton, string id, string version, string sourceDirectory)
+		/// <returns>The nuget return code.</returns>
+		public ReturnCode Update(string soluton, string id, string version, string sourceDirectory)
 		{
 			return ExecuteNuGetCommand($"update {soluton} -Id {id} -Version {version} {ConfigFileParam()} -Source \"{sourceDirectory}\" -Pre");
 		}
 
 		private string ConfigFileParam()
 		{
-			return string.IsNullOrEmpty(_configFile)
+			return string.IsNullOrEmpty(ConfigFile)
 				? string.Empty
-				: $"-ConfigFile {_configFile}";
+				: $"-ConfigFile {ConfigFile}";
 		}
 
-		private int ExecuteNuGetCommand(string arguments)
+		private ReturnCode ExecuteNuGetCommand(string arguments)
 		{
 			var info = new ProcessStartInfo("NuGet.exe", arguments)
 			{
@@ -52,7 +54,11 @@ namespace GitDepend
 			var proc = Process.Start(info);
 			proc?.WaitForExit();
 
-			return proc?.ExitCode ?? ReturnCodes.FailedToRunGitCommand;
+			var code = proc?.ExitCode ?? (int)ReturnCode.FailedToRunNugetCommand;
+
+			return code != (int)ReturnCode.Success
+				? ReturnCode.FailedToRunNugetCommand
+				: ReturnCode.Success;
 		}
 	}
 }

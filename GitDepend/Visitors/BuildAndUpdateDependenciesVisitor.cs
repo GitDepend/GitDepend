@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Abstractions;
 using System.Text.RegularExpressions;
 using GitDepend.Busi;
 using GitDepend.Configuration;
@@ -13,18 +14,25 @@ namespace GitDepend.Visitors
 	/// </summary>
 	public class BuildAndUpdateDependenciesVisitor : IVisitor
 	{
-		private readonly IFileIo _fileIo;
 		private static readonly Regex Pattern = new Regex(@"^(?<id>.*?)\.(?<version>(?:\d\.){2,3}\d(?:-.*?)?)$", RegexOptions.Compiled);
-		private readonly GitDependFileFactory _factory;
+		private readonly IGitDependFileFactory _factory;
+		private readonly IGit _git;
+		private readonly INuget _nuget;
+		private readonly IFileSystem _fileSystem;
 
 		/// <summary>
 		/// Creates a new <see cref="BuildAndUpdateDependenciesVisitor"/>
 		/// </summary>
-		/// <param name="fileIo">The <see cref="IFileIo"/> to use.</param>
-		public BuildAndUpdateDependenciesVisitor(IFileIo fileIo)
+		/// /// <param name="factory">The <see cref="IGitDependFileFactory"/> to use.</param>
+		/// <param name="git">The <see cref="IGit"/> to use.</param>
+		/// <param name="nuget">The <see cref="INuget"/> to use.</param>
+		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
+		public BuildAndUpdateDependenciesVisitor(IGitDependFileFactory factory, IGit git, INuget nuget, IFileSystem fileSystem)
 		{
-			_fileIo = fileIo;
-			_factory = new GitDependFileFactory(fileIo);
+			_factory = factory;
+			_git = git;
+			_nuget = nuget;
+			_fileSystem = fileSystem;
 		}
 
 		private string CacheDirectory
@@ -34,14 +42,14 @@ namespace GitDepend.Visitors
 				var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GitDepend");
 
 				var cacheDir = Path.Combine(dir, "cache");
-				if (_fileIo.DirectoryExists(cacheDir))
+				if (_fileSystem.Directory.Exists(cacheDir))
 				{
 					return cacheDir;
 				}
 
 				try
 				{
-					_fileIo.CreateDirectory(cacheDir);
+					_fileSystem.Directory.CreateDirectory(cacheDir);
 				}
 				catch (Exception ex)
 				{
@@ -58,14 +66,14 @@ namespace GitDepend.Visitors
 		/// <summary>
 		/// The return code
 		/// </summary>
-		public int ReturnCode { get; set; }
+		public ReturnCode ReturnCode { get; set; }
 
 		/// <summary>
 		/// Visits a project dependency.
 		/// </summary>
 		/// <param name="dependency">The <see cref="Dependency"/> to visit.</param>
 		/// <returns>The return code.</returns>
-		public int VisitDependency(Dependency dependency)
+		public ReturnCode VisitDependency(Dependency dependency)
 		{
 			string dir;
 			string error;
@@ -73,7 +81,7 @@ namespace GitDepend.Visitors
 
 			if (config == null)
 			{
-				return ReturnCodes.GitRepositoryNotFound;
+				return ReturnCode.GitRepositoryNotFound;
 			}
 
 			var info = new ProcessStartInfo(Path.Combine(dependency.Directory, config.Build.Script), config.Build.Arguments)
@@ -86,16 +94,17 @@ namespace GitDepend.Visitors
 
 			
 			var artifactsDir = dependency.Configuration.Packages.Directory;
-			foreach (var file in _fileIo.GetFiles(artifactsDir, "*.nupkg"))
+			foreach (var file in _fileSystem.Directory.GetFiles(artifactsDir, "*.nupkg"))
 			{
 				var name = Path.GetFileName(file);
 				if (!string.IsNullOrEmpty(name))
 				{
-					_fileIo.Copy(file, Path.Combine(CacheDirectory, name), true);
+					_fileSystem.File.Copy(file, Path.Combine(CacheDirectory, name), true);
 				}
 			}
 
-			return proc?.ExitCode ?? ReturnCodes.FailedToRunBuildScript;
+			var code = proc?.ExitCode ?? (int) ReturnCode.FailedToRunBuildScript;
+			return (ReturnCode)code;
 		}
 
 		/// <summary>
@@ -104,12 +113,12 @@ namespace GitDepend.Visitors
 		/// <param name="directory">The directory of the project.</param>
 		/// <param name="config">The <see cref="GitDependFile"/> with project configuration information.</param>
 		/// <returns>The return code.</returns>
-		public int VisitProject(string directory, GitDependFile config)
+		public ReturnCode VisitProject(string directory, GitDependFile config)
 		{
 			foreach (var dependency in config.Dependencies)
 			{
 				var dir = dependency.Configuration.Packages.Directory;
-				foreach (var file in _fileIo.GetFiles(dir, "*.nupkg"))
+				foreach (var file in _fileSystem.Directory.GetFiles(dir, "*.nupkg"))
 				{
 					var name = Path.GetFileNameWithoutExtension(file);
 
@@ -130,14 +139,14 @@ namespace GitDepend.Visitors
 					var version = match.Groups["version"].Value;
 
 					var nugetConfig = Path.Combine(directory, "NuGet.config");
-					if (!_fileIo.FileExists(nugetConfig))
+					if (!_fileSystem.File.Exists(nugetConfig))
 					{
 						nugetConfig = null;
 					}
 
-					var nuget = new Nuget(nugetConfig);
+					var nuget = new Nuget { ConfigFile = nugetConfig };
 
-					foreach (var solution in _fileIo.GetFiles(directory, "*.sln", SearchOption.AllDirectories))
+					foreach (var solution in _fileSystem.Directory.GetFiles(directory, "*.sln", SearchOption.AllDirectories))
 					{
 						nuget.Update(solution, id, version, CacheDirectory);
 					}
@@ -146,13 +155,13 @@ namespace GitDepend.Visitors
 
 			Console.WriteLine("================================================================================");
 			Console.WriteLine($"Making update commit on {directory}");
-			var git = new Git(directory);
-			git.Add("*.csproj", @"*\packages.config");
+			_git.WorkingDir = directory;
+			_git.Add("*.csproj", @"*\packages.config");
 			Console.WriteLine("================================================================================");
-			git.Status();
-			git.Commit("GitDepend: updating dependencies");
+			_git.Status();
+			_git.Commit("GitDepend: updating dependencies");
 
-			return ReturnCodes.Success;
+			return ReturnCode.Success;
 		}
 
 		#endregion

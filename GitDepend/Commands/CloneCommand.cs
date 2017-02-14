@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO.Abstractions;
 using GitDepend.Busi;
 using GitDepend.CommandLine;
 using GitDepend.Visitors;
@@ -15,16 +16,22 @@ namespace GitDepend.Commands
 		/// </summary>
 		public const string Name = "clone";
 		private readonly CloneSubOptions _options;
-		private readonly IFileIo _fileIo;
+		private readonly IGitDependFileFactory _factory;
+		private readonly IGit _git;
+		private readonly IFileSystem _fileIo;
 
 		/// <summary>
 		/// Creates a new <see cref="CloneCommand"/>
 		/// </summary>
 		/// <param name="options">The <see cref="CloneSubOptions"/> that configure this command.</param>
-		/// <param name="fileIo">The <see cref="IFileIo"/> to use.</param>
-		public CloneCommand(CloneSubOptions options, IFileIo fileIo)
+		/// <param name="factory">The <see cref="IGitDependFileFactory"/> to use.</param>
+		/// <param name="git">The <see cref="IGit"/> to use.</param>
+		/// <param name="fileIo">The <see cref="IFileSystem"/> to use.</param>
+		public CloneCommand(CloneSubOptions options, IGitDependFileFactory factory, IGit git, IFileSystem fileIo)
 		{
 			_options = options;
+			_factory = factory;
+			_git = git;
 			_fileIo = fileIo;
 		}
 
@@ -34,13 +41,13 @@ namespace GitDepend.Commands
 		/// Executes the command.
 		/// </summary>
 		/// <returns>The return code.</returns>
-		public int Execute()
+		public ReturnCode Execute()
 		{
-			var alg = new DependencyVisitorAlgorithm(_fileIo);
-			var visitor = new CheckOutBranchVisitor();
+			var alg = new DependencyVisitorAlgorithm(_factory, _git, _fileIo);
+			var visitor = new CheckOutBranchVisitor(_git);
 			alg.TraverseDependencies(visitor, _options.Directory);
 
-			if (visitor.ReturnCode == ReturnCodes.Success)
+			if (visitor.ReturnCode == ReturnCode.Success)
 			{
 				Console.WriteLine("Successfully cloned all dependencies");
 			}

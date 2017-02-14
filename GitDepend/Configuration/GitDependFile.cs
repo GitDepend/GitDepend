@@ -28,7 +28,7 @@ namespace GitDepend.Configuration
 		public Packages Packages => _packages ?? (_packages = new Packages());
 
 		/// <summary>
-		/// The dependencies section
+		/// A list of <see cref="Dependency"/> objects for this repository.
 		/// </summary>
 		[JsonProperty("dependencies")]
 		public List<Dependency> Dependencies => _dependencies ?? (_dependencies = new List<Dependency>());

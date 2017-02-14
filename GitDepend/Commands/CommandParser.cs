@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.IO.Abstractions;
 using GitDepend.Busi;
 using GitDepend.CommandLine;
 
@@ -14,9 +15,12 @@ namespace GitDepend.Commands
 		/// Gets the implementation of <see cref="ICommand"/> that corresponds with the given arguments.
 		/// </summary>
 		/// <param name="args">The command line arguments.</param>
-		/// <param name="fileIo">The <see cref="IFileIo"/> to use.</param>
+		/// <param name="factory">The <see cref="IGitDependFileFactory"/> to use.</param>
+		/// <param name="git">The <see cref="IGit"/> to use.</param>
+		/// <param name="nuget">The <see cref="INuget"/> to use.</param>
+		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
 		/// <returns>An implementation of <see cref="ICommand"/> that matches the given arguments.</returns>
-		public ICommand GetCommand(string[] args, IFileIo fileIo)
+		public ICommand GetCommand(string[] args, IGitDependFileFactory factory, IGit git, INuget nuget, IFileSystem fileSystem)
 		{
 			string invokedVerb = null;
 			object invokedVerbInstance = null;
@@ -45,16 +49,16 @@ namespace GitDepend.Commands
 			switch (invokedVerb)
 			{
 				case InitCommand.Name:
-					command = new InitCommand(options as InitSubOptions, fileIo);
+					command = new InitCommand(options as InitSubOptions, fileSystem);
 					break;
 				case ShowConfigCommand.Name:
-					command = new ShowConfigCommand(options as ConfigSubOptions, fileIo);
+					command = new ShowConfigCommand(options as ConfigSubOptions, fileSystem);
 					break;
 				case CloneCommand.Name:
-					command = new CloneCommand(options as CloneSubOptions, fileIo);
+					command = new CloneCommand(options as CloneSubOptions, factory, git, fileSystem);
 					break;
 				case UpdateCommand.Name:
-					command = new UpdateCommand(options as UpdateSubOptions, fileIo);
+					command = new UpdateCommand(options as UpdateSubOptions, factory, git, nuget, fileSystem);
 					break;
 			}
 

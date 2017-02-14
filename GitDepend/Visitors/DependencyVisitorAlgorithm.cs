@@ -21,6 +21,11 @@ namespace GitDepend.Visitors
 		/// <param name="directory">The directory containing a GitDepend.json file.</param>
 		public void TraverseDependencies(IVisitor visitor, string directory)
 		{
+			if (visitor == null || string.IsNullOrEmpty(directory))
+			{
+				return;
+			}
+
 			directory = Path.GetFullPath(directory);
 
 			if (!Directory.Exists(directory))

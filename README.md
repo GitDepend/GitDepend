@@ -103,6 +103,10 @@ make.bat update
 
 This will build the new changes in Lib1 and pull them into Lib2. You can now use the new changes.
 
+## v0.2.1
+Fixes an issue where installing GitDepend from chocolatey while using an administrative shell prevented GitDepend from
+collection dependency nuget packages.
+
 ## v0.2.0
 Minimum Viable Product implementation
 

@@ -12,7 +12,7 @@ build_script:
   - cmd: make.bat teamcity
 
 after_build:
-  -cmd: 7z a artifacts.zip %APPVEYOR_BUILD_FOLDER%\artifacts
+  -cmd: 7z a -r artifacts.zip %APPVEYOR_BUILD_FOLDER%\artifacts\*
 
 skip_tags: true
 

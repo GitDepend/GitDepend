@@ -37,7 +37,7 @@ namespace GitDepend.Visitors
 			Console.WriteLine($"Checking out the {dependency.Branch} branch on {dependency.Name}");
 			
 			_git.WorkingDir = dependency.Directory;
-			return _git.Checkout(dependency.Branch);
+			return ReturnCode = _git.Checkout(dependency.Branch);
 		}
 
 		/// <summary>

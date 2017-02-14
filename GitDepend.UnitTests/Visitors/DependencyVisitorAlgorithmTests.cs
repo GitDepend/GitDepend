@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Castle.Components.DictionaryAdapter;
 using GitDepend.Busi;
 using GitDepend.Configuration;
 using GitDepend.Visitors;
@@ -14,7 +9,7 @@ using NUnit.Framework;
 using Telerik.JustMock;
 using Telerik.JustMock.Helpers;
 
-namespace GitDepend.UnitTests
+namespace GitDepend.UnitTests.Visitors
 {
 	[TestFixture]
 	public class DependencyVisitorAlgorithmTests

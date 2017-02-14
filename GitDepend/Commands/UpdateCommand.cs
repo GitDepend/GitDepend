@@ -1,18 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GitDepend.CommandLine;
 using GitDepend.Visitors;
 
 namespace GitDepend.Commands
 {
-	class UpdateCommand : ICommand
+	/// <summary>
+	/// An implementation of <see cref="ICommand"/> that recursively updates all dependencies.
+	/// </summary>
+	public class UpdateCommand : ICommand
 	{
 		private readonly UpdateSubOptions _options;
+
+		/// <summary>
+		/// The verb name
+		/// </summary>
 		public const string Name = "update";
 
+		/// <summary>
+		/// Creates a new <see cref="UpdateCommand"/>
+		/// </summary>
+		/// <param name="options">The <see cref="UpdateSubOptions"/> that configure the command.</param>
 		public UpdateCommand(UpdateSubOptions options)
 		{
 			_options = options;
@@ -20,6 +27,10 @@ namespace GitDepend.Commands
 
 		#region Implementation of ICommand
 
+		/// <summary>
+		/// Executes the command.
+		/// </summary>
+		/// <returns>The return code.</returns>
 		public int Execute()
 		{
 			var alg = new DependencyVisitorAlgorithm();

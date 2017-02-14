@@ -1,5 +1,7 @@
 # GitDepend
 
+[![Join the chat at https://gitter.im/GitDepend/Lobby](https://badges.gitter.im/GitDepend/Lobby.svg)](https://gitter.im/GitDepend/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build status][appveyor-badge]][appveyor]
 
 |                            |                Stable               |                 Pre-release               |

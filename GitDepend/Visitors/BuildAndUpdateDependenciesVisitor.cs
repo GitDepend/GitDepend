@@ -1,21 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using GitDepend.Configuration;
 
 namespace GitDepend.Visitors
 {
+	/// <summary>
+	/// Implementation of <see cref="IVisitor"/> that runs the build for dependencies, and updates the project
+	/// to consume the latest dependency artifacts.
+	/// </summary>
 	public class BuildAndUpdateDependenciesVisitor : IVisitor
 	{
 		private static readonly Regex Pattern = new Regex(@"^(?<id>.*?)\.(?<version>(?:\d\.){2,3}\d(?:-.*?)?)$", RegexOptions.Compiled);
 
-		private string CacheDirectory
+		private static string CacheDirectory
 		{
 			get
 			{
@@ -43,7 +42,16 @@ namespace GitDepend.Visitors
 
 		#region Implementation of IVisitor
 
+		/// <summary>
+		/// The return code
+		/// </summary>
 		public int ReturnCode { get; set; }
+
+		/// <summary>
+		/// Visits a project dependency.
+		/// </summary>
+		/// <param name="dependency">The <see cref="Dependency"/> to visit.</param>
+		/// <returns>The return code.</returns>
 		public int VisitDependency(Dependency dependency)
 		{
 			string dir;
@@ -77,6 +85,12 @@ namespace GitDepend.Visitors
 			return proc?.ExitCode ?? ReturnCodes.FailedToRunBuildScript;
 		}
 
+		/// <summary>
+		/// Visists a project.
+		/// </summary>
+		/// <param name="directory">The directory of the project.</param>
+		/// <param name="config">The <see cref="GitDependFile"/> with project configuration information.</param>
+		/// <returns>The return code.</returns>
 		public int VisitProject(string directory, GitDependFile config)
 		{
 			foreach (var dependency in config.Dependencies)

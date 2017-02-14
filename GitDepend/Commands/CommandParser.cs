@@ -4,8 +4,16 @@ using GitDepend.CommandLine;
 
 namespace GitDepend.Commands
 {
+	/// <summary>
+	/// Parses command line arguments and returns the appropriate implementation of <see cref="ICommand"/> for execution.
+	/// </summary>
 	public class CommandParser
 	{
+		/// <summary>
+		/// Gets the implementation of <see cref="ICommand"/> that corresponds with the given arguments.
+		/// </summary>
+		/// <param name="args">The command line arguments.</param>
+		/// <returns>An implementation of <see cref="ICommand"/> that matches the given arguments.</returns>
 		public ICommand GetCommand(string[] args)
 		{
 			string invokedVerb = null;

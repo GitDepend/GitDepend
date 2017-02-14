@@ -2,8 +2,14 @@
 
 namespace GitDepend.Configuration
 {
+	/// <summary>
+	/// The packages section of GitDepend.json
+	/// </summary>
 	public class Packages
 	{
+		/// <summary>
+		/// The directory where packages can be found.
+		/// </summary>
 		[JsonProperty("dir")]
 		public string Directory { get; set; } = "artifacts/NuGet/Debug";
 

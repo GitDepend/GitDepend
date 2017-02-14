@@ -6,18 +6,30 @@ using Newtonsoft.Json;
 
 namespace GitDepend.Configuration
 {
+	/// <summary>
+	/// Represents GitDepend.json in memory.
+	/// </summary>
 	public class GitDependFile
 	{
 		private List<Dependency> _dependencies;
 		private Build _build;
 		private Packages _packages;
 
+		/// <summary>
+		/// The build section.
+		/// </summary>
 		[JsonProperty("build")]
 		public Build Build => _build ?? (_build = new Build());
 
+		/// <summary>
+		/// The packages section
+		/// </summary>
 		[JsonProperty("packages")]
 		public Packages Packages => _packages ?? (_packages = new Packages());
 
+		/// <summary>
+		/// The dependencies section
+		/// </summary>
 		[JsonProperty("dependencies")]
 		public List<Dependency> Dependencies => _dependencies ?? (_dependencies = new List<Dependency>());
 
@@ -36,6 +48,13 @@ namespace GitDepend.Configuration
 
 		#endregion
 
+		/// <summary>
+		/// Finds a GitDepend.json file in the given directory and loads it into memory.
+		/// </summary>
+		/// <param name="directory">The directory to start in.</param>
+		/// <param name="dir">The directory where GitDepend.json was found.</param>
+		/// <param name="error">An error string indicating what went wrong in the case that the file could not be loaded.</param>
+		/// <returns></returns>
 		public static GitDependFile LoadFromDir(string directory, out string dir, out string error)
 		{
 			if (!Directory.Exists(directory))

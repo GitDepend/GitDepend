@@ -10,7 +10,7 @@ configuration: Debug
 
 install:
   - cinst python -version 2.7.6
-  - cmd: pip install sphinx sphinx-autobuild spinx-rtd-theme
+  - cmd: pip install sphinx sphinx-autobuild spinx_rtd_theme
 
 build_script:
   - cmd: make.bat teamcity

@@ -1,4 +1,5 @@
 ﻿using System;
+using GitDepend.Busi;
 using GitDepend.Commands;
 
 namespace GitDepend
@@ -7,8 +8,9 @@ namespace GitDepend
 	{
 		static void Main(string[] args)
 		{
+			var fileIo = new FileIo();
 			var parser = new CommandParser();
-			var command = parser.GetCommand(args);
+			var command = parser.GetCommand(args, fileIo);
 
 			var code = command.Execute();
 

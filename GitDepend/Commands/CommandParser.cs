@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using GitDepend.Busi;
 using GitDepend.CommandLine;
 
 namespace GitDepend.Commands
@@ -13,8 +14,9 @@ namespace GitDepend.Commands
 		/// Gets the implementation of <see cref="ICommand"/> that corresponds with the given arguments.
 		/// </summary>
 		/// <param name="args">The command line arguments.</param>
+		/// <param name="fileIo">The <see cref="IFileIo"/> to use.</param>
 		/// <returns>An implementation of <see cref="ICommand"/> that matches the given arguments.</returns>
-		public ICommand GetCommand(string[] args)
+		public ICommand GetCommand(string[] args, IFileIo fileIo)
 		{
 			string invokedVerb = null;
 			object invokedVerbInstance = null;
@@ -43,16 +45,16 @@ namespace GitDepend.Commands
 			switch (invokedVerb)
 			{
 				case InitCommand.Name:
-					command = new InitCommand(options as InitSubOptions);
+					command = new InitCommand(options as InitSubOptions, fileIo);
 					break;
 				case ShowConfigCommand.Name:
-					command = new ShowConfigCommand(options as ConfigSubOptions);
+					command = new ShowConfigCommand(options as ConfigSubOptions, fileIo);
 					break;
 				case CloneCommand.Name:
-					command = new CloneCommand(options as CloneSubOptions);
+					command = new CloneCommand(options as CloneSubOptions, fileIo);
 					break;
 				case UpdateCommand.Name:
-					command = new UpdateCommand(options as UpdateSubOptions);
+					command = new UpdateCommand(options as UpdateSubOptions, fileIo);
 					break;
 			}
 

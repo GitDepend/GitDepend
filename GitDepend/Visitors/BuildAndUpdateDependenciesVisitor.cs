@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
+using GitDepend.Busi;
 using GitDepend.Configuration;
 
 namespace GitDepend.Visitors
@@ -12,23 +13,35 @@ namespace GitDepend.Visitors
 	/// </summary>
 	public class BuildAndUpdateDependenciesVisitor : IVisitor
 	{
+		private readonly IFileIo _fileIo;
 		private static readonly Regex Pattern = new Regex(@"^(?<id>.*?)\.(?<version>(?:\d\.){2,3}\d(?:-.*?)?)$", RegexOptions.Compiled);
+		private readonly GitDependFileFactory _factory;
 
-		private static string CacheDirectory
+		/// <summary>
+		/// Creates a new <see cref="BuildAndUpdateDependenciesVisitor"/>
+		/// </summary>
+		/// <param name="fileIo">The <see cref="IFileIo"/> to use.</param>
+		public BuildAndUpdateDependenciesVisitor(IFileIo fileIo)
+		{
+			_fileIo = fileIo;
+			_factory = new GitDependFileFactory(fileIo);
+		}
+
+		private string CacheDirectory
 		{
 			get
 			{
 				var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GitDepend");
 
 				var cacheDir = Path.Combine(dir, "cache");
-				if (Directory.Exists(cacheDir))
+				if (_fileIo.DirectoryExists(cacheDir))
 				{
 					return cacheDir;
 				}
 
 				try
 				{
-					Directory.CreateDirectory(cacheDir);
+					_fileIo.CreateDirectory(cacheDir);
 				}
 				catch (Exception ex)
 				{
@@ -56,7 +69,7 @@ namespace GitDepend.Visitors
 		{
 			string dir;
 			string error;
-			var config = GitDependFile.LoadFromDir(dependency.Directory, out dir, out error);
+			var config = _factory.LoadFromDirectory(dependency.Directory, out dir, out error);
 
 			if (config == null)
 			{
@@ -73,12 +86,12 @@ namespace GitDepend.Visitors
 
 			
 			var artifactsDir = dependency.Configuration.Packages.Directory;
-			foreach (var file in Directory.GetFiles(artifactsDir, "*.nupkg"))
+			foreach (var file in _fileIo.GetFiles(artifactsDir, "*.nupkg"))
 			{
 				var name = Path.GetFileName(file);
 				if (!string.IsNullOrEmpty(name))
 				{
-					File.Copy(file, Path.Combine(CacheDirectory, name), true);
+					_fileIo.Copy(file, Path.Combine(CacheDirectory, name), true);
 				}
 			}
 
@@ -96,7 +109,7 @@ namespace GitDepend.Visitors
 			foreach (var dependency in config.Dependencies)
 			{
 				var dir = dependency.Configuration.Packages.Directory;
-				foreach (var file in Directory.GetFiles(dir, "*.nupkg"))
+				foreach (var file in _fileIo.GetFiles(dir, "*.nupkg"))
 				{
 					var name = Path.GetFileNameWithoutExtension(file);
 
@@ -117,14 +130,14 @@ namespace GitDepend.Visitors
 					var version = match.Groups["version"].Value;
 
 					var nugetConfig = Path.Combine(directory, "NuGet.config");
-					if (!File.Exists(nugetConfig))
+					if (!_fileIo.FileExists(nugetConfig))
 					{
 						nugetConfig = null;
 					}
 
 					var nuget = new Nuget(nugetConfig);
 
-					foreach (var solution in Directory.GetFiles(directory, "*.sln", SearchOption.AllDirectories))
+					foreach (var solution in _fileIo.GetFiles(directory, "*.sln", SearchOption.AllDirectories))
 					{
 						nuget.Update(solution, id, version, CacheDirectory);
 					}

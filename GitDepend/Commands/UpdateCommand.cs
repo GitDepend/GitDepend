@@ -1,4 +1,5 @@
 ﻿using System;
+using GitDepend.Busi;
 using GitDepend.CommandLine;
 using GitDepend.Visitors;
 
@@ -10,6 +11,7 @@ namespace GitDepend.Commands
 	public class UpdateCommand : ICommand
 	{
 		private readonly UpdateSubOptions _options;
+		private readonly IFileIo _fileIo;
 
 		/// <summary>
 		/// The verb name
@@ -20,9 +22,11 @@ namespace GitDepend.Commands
 		/// Creates a new <see cref="UpdateCommand"/>
 		/// </summary>
 		/// <param name="options">The <see cref="UpdateSubOptions"/> that configure the command.</param>
-		public UpdateCommand(UpdateSubOptions options)
+		/// <param name="fileIo">The <see cref="IFileIo"/> to use.</param>
+		public UpdateCommand(UpdateSubOptions options, IFileIo fileIo)
 		{
 			_options = options;
+			_fileIo = fileIo;
 		}
 
 		#region Implementation of ICommand
@@ -33,7 +37,7 @@ namespace GitDepend.Commands
 		/// <returns>The return code.</returns>
 		public int Execute()
 		{
-			var alg = new DependencyVisitorAlgorithm();
+			var alg = new DependencyVisitorAlgorithm(_fileIo);
 			IVisitor visitor = new CheckOutBranchVisitor();
 			alg.TraverseDependencies(visitor, _options.Directory);
 
@@ -43,8 +47,8 @@ namespace GitDepend.Commands
 				return visitor.ReturnCode;
 			}
 
-			alg = new DependencyVisitorAlgorithm();
-			visitor = new BuildAndUpdateDependenciesVisitor();
+			alg = new DependencyVisitorAlgorithm(_fileIo);
+			visitor = new BuildAndUpdateDependenciesVisitor(_fileIo);
 			alg.TraverseDependencies(visitor, _options.Directory);
 
 			if (visitor.ReturnCode == ReturnCodes.Success)

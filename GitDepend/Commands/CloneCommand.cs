@@ -1,4 +1,5 @@
 ﻿using System;
+using GitDepend.Busi;
 using GitDepend.CommandLine;
 using GitDepend.Visitors;
 
@@ -14,14 +15,17 @@ namespace GitDepend.Commands
 		/// </summary>
 		public const string Name = "clone";
 		private readonly CloneSubOptions _options;
+		private readonly IFileIo _fileIo;
 
 		/// <summary>
 		/// Creates a new <see cref="CloneCommand"/>
 		/// </summary>
 		/// <param name="options">The <see cref="CloneSubOptions"/> that configure this command.</param>
-		public CloneCommand(CloneSubOptions options)
+		/// <param name="fileIo">The <see cref="IFileIo"/> to use.</param>
+		public CloneCommand(CloneSubOptions options, IFileIo fileIo)
 		{
 			_options = options;
+			_fileIo = fileIo;
 		}
 
 		#region Implementation of ICommand
@@ -32,7 +36,7 @@ namespace GitDepend.Commands
 		/// <returns>The return code.</returns>
 		public int Execute()
 		{
-			var alg = new DependencyVisitorAlgorithm();
+			var alg = new DependencyVisitorAlgorithm(_fileIo);
 			var visitor = new CheckOutBranchVisitor();
 			alg.TraverseDependencies(visitor, _options.Directory);
 

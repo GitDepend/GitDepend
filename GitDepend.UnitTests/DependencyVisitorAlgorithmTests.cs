@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GitDepend.Busi;
 using GitDepend.Visitors;
 using NUnit.Framework;
 using Telerik.JustMock;
@@ -14,11 +15,13 @@ namespace GitDepend.UnitTests
 	public class DependencyVisitorAlgorithmTests
 	{
 		private DependencyVisitorAlgorithm _instance;
+		private IFileIo _fileIo;
 
 		[SetUp]
 		public void SetUp()
 		{
-			_instance = new DependencyVisitorAlgorithm();
+			_fileIo = Mock.Create<IFileIo>();
+			_instance = new DependencyVisitorAlgorithm(_fileIo);
 		}
 
 		[Test]

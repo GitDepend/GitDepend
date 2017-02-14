@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using GitDepend.Busi;
 using GitDepend.Configuration;
 
 namespace GitDepend.Visitors
@@ -13,6 +14,16 @@ namespace GitDepend.Visitors
 	{
 		private readonly HashSet<string> _visitedDependencies = new HashSet<string>();
 		private readonly HashSet<string> _visitedProjects = new HashSet<string>();
+		private readonly GitDependFileFactory _factory;
+
+		/// <summary>
+		/// Creates a new <see cref="DependencyVisitorAlgorithm"/>
+		/// </summary>
+		/// <param name="fileIo">The <see cref="IFileIo"/> to use.</param>
+		public DependencyVisitorAlgorithm(IFileIo fileIo)
+		{
+			_factory = new GitDependFileFactory(fileIo);
+		}
 
 		/// <summary>
 		/// Traverses all dependencies beginning in the given directory.
@@ -36,7 +47,7 @@ namespace GitDepend.Visitors
 
 			string dir;
 			string error;
-			var config = GitDependFile.LoadFromDir(directory, out dir, out error);
+			var config = _factory.LoadFromDirectory(directory, out dir, out error);
 
 			if (config == null)
 			{

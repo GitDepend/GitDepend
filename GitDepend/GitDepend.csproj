@@ -55,6 +55,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Busi\FileIo.cs" />
+    <Compile Include="Busi\GitDependFileFactory.cs" />
+    <Compile Include="Busi\IFileIo.cs" />
     <Compile Include="CommandLine\CloneSubOptions.cs" />
     <Compile Include="CommandLine\CommonSubOptions.cs" />
     <Compile Include="CommandLine\ConfigSubOptions.cs" />

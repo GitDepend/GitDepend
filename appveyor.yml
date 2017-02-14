@@ -1,0 +1,21 @@
+# Build worker image (VM template)
+image: Visual Studio 2015
+
+# enable patching of AssemblyInfo.* files
+assembly_info:
+  patch: false
+
+# build Configuration, i.e. Debug, Release, etc.
+configuration: Debug
+
+build_script:
+  - cmd: make.bat teamcity
+
+skip_tags: true
+
+# build cache to preserve files/folders between builds
+cache:
+  - packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+
+artifacts:
+  - path: artifacts

@@ -1,6 +1,8 @@
 # Build worker image (VM template)
 image: Visual Studio 2015
 
+version: '{build}'
+
 # enable patching of AssemblyInfo.* files
 assembly_info:
   patch: false

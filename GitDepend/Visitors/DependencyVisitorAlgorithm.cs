@@ -5,11 +5,20 @@ using GitDepend.Configuration;
 
 namespace GitDepend.Visitors
 {
+	/// <summary>
+	/// Implements the visitor algorithm for visiting all repository dependencies. You are guarunteed
+	/// to visit all project dependencies before visiting the project.
+	/// </summary>
 	public class DependencyVisitorAlgorithm
 	{
-		HashSet<string> _visitedDependencies = new HashSet<string>();
-		HashSet<string> _visitedProjects = new HashSet<string>();
+		private readonly HashSet<string> _visitedDependencies = new HashSet<string>();
+		private readonly HashSet<string> _visitedProjects = new HashSet<string>();
 
+		/// <summary>
+		/// Traverses all dependencies beginning in the given directory.
+		/// </summary>
+		/// <param name="visitor">The <see cref="IVisitor"/> that should be called at each dependency and project visit.</param>
+		/// <param name="directory">The directory containing a GitDepend.json file.</param>
 		public void TraverseDependencies(IVisitor visitor, string directory)
 		{
 			directory = Path.GetFullPath(directory);

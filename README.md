@@ -1,5 +1,7 @@
 # GitDepend
 
+[![Build status][appveyor-badge]][appveyor]
+
 |                            |                Stable               |                 Pre-release               |
 | -------------------------: | :---------------------------------: | :---------------------------------------: |
 |                  **Docs**  |     [![Docs][docs-badge]][docs]     |    [![Docs][docs-pre-badge]][docs-pre]    |
@@ -118,6 +120,8 @@ Minimum Viable Product implementation
 ## v0.1.0
 Simple setup for the sole purpose of reservering names on github.com and nuget.org
 
+[appveyor]:        https://ci.appveyor.com/project/kjjuno/gitdepend/branch/develop
+[appveyor-badge]:  https://ci.appveyor.com/api/projects/status/github/kjjuno/GitDepend?branch=develop&svg=true
 [docs]:            http://gitdepend.readthedocs.org/en/stable/
 [docs-badge]:      https://readthedocs.org/projects/gitdepend/badge/?version=stable
 [docs-pre]:        http://gitdepend.readthedocs.org/en/latest/

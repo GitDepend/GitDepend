@@ -1,6 +1,9 @@
 # Build worker image (VM template)
 image: Visual Studio 2015
 
+# Do not build feature branch with open Pull Requests
+skip_branch_with_pr: true
+
 version: '{build}'
 
 # enable patching of AssemblyInfo.* files

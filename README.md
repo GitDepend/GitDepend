@@ -1,7 +1,5 @@
 # GitDepend
 
-TESTING APPVEYOR SETUP
-
 [![Build status][appveyor-badge]][appveyor]
 
 |                            |                Stable               |                 Pre-release               |

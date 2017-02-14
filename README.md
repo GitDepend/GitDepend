@@ -6,6 +6,7 @@
 | -------------------------: | :---------------------------------: | :---------------------------------------: |
 |                  **Docs**  |     [![Docs][docs-badge]][docs]     |    [![Docs][docs-pre-badge]][docs-pre]    |
 |        **GitHub Release**  |                 -                   | [![GitHub release][gh-rel-badge]][gh-rel] |
+|    **GitDepend.Portable**  | [![Chocolatey][choco-badge]][choco] |   [![Chocolatey][choco-pre-badge]][choco] |
 | **GitVersion.CommandLine** |     [![NuGet][gdc-badge]][gdc]      |       [![NuGet][gdc-pre-badge]][gdc]      |
 
 Solves the problem of working with multiple git repositories where lower level repositories produce nuget packages that are consumed by other repositories.
@@ -128,6 +129,9 @@ Simple setup for the sole purpose of reservering names on github.com and nuget.o
 [docs-pre-badge]:  https://readthedocs.org/projects/gitdepend/badge/?version=latest
 [gh-rel]:          https://github.com/kjjuno/GitDepend/releases/latest
 [gh-rel-badge]:    https://img.shields.io/github/release/kjjuno/gitdepend.svg
+[choco]:           https://chocolatey.org/packages/GitDepend.Portable
+[choco-badge]:     https://img.shields.io/chocolatey/v/gitepend.portable.svg
+[choco-pre-badge]: https://img.shields.io/chocolatey/vpre/gitdepend.portable.svg
 [gdc]:             https://www.nuget.org/packages/GitDepend.CommandLine
 [gdc-badge]:       https://img.shields.io/nuget/v/GitDepend.CommandLine.svg
 [gdc-pre-badge]:   https://img.shields.io/nuget/vpre/GitDepend.CommandLine.svg

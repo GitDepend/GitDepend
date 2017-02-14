@@ -63,6 +63,7 @@ GitDepend.exe update
 ```
 
 This will follow the chain of `GitDepend.json` files. The following things will happen
+
 1. Check out the dependency if it has not been checked out.
 2. Ensure that the repository is on the correct branch.
 3. update all dependencies (this is a recursive step)

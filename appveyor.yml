@@ -1,12 +1,18 @@
 # Build worker image (VM template)
 image: Visual Studio 2015
 
+version: '{build}'
+
 # enable patching of AssemblyInfo.* files
 assembly_info:
   patch: false
 
 # build Configuration, i.e. Debug, Release, etc.
 configuration: Debug
+
+install:
+  - cinst python -version 2.7.6
+  - cmd: pip install sphinx sphinx-autobuild sphinx_rtd_theme
 
 build_script:
   - cmd: make.bat teamcity
@@ -19,3 +25,5 @@ cache:
 
 artifacts:
   - path: artifacts
+  - path: docs\build\html
+    name: docs

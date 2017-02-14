@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.IO.Abstractions;
 using GitDepend.Busi;
 using GitDepend.CommandLine;
@@ -13,6 +12,7 @@ namespace GitDepend.Commands
 	public class InitCommand : ICommand
 	{
 		private readonly InitSubOptions _options;
+		private readonly IFileSystem _fileSystem;
 		private readonly GitDependFileFactory _factory;
 
 		/// <summary>
@@ -28,6 +28,7 @@ namespace GitDepend.Commands
 		public InitCommand(InitSubOptions options, IFileSystem fileSystem)
 		{
 			_options = options;
+			_fileSystem = fileSystem;
 			_factory = new GitDependFileFactory(fileSystem);
 		}
 
@@ -49,9 +50,9 @@ namespace GitDepend.Commands
 			Console.Write($"artifacts dir [{config.Packages.Directory}]: ");
 			config.Packages.Directory = ReadLine(config.Packages.Directory);
 
-			var path = Path.Combine(dir, "GitDepend.json");
+			var path = _fileSystem.Path.Combine(dir, "GitDepend.json");
 
-			File.WriteAllText(path, config.ToString());
+			_fileSystem.File.WriteAllText(path, config.ToString());
 
 			return ReturnCode.Success;
 		}

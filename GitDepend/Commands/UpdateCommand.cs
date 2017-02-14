@@ -15,6 +15,7 @@ namespace GitDepend.Commands
 		private readonly IGitDependFileFactory _factory;
 		private readonly IGit _git;
 		private readonly INuget _nuget;
+		private readonly IProcessManager _processManager;
 		private readonly IFileSystem _fileSystem;
 
 		/// <summary>
@@ -29,13 +30,15 @@ namespace GitDepend.Commands
 		/// <param name="factory">The <see cref="IGitDependFileFactory"/> to use.</param>
 		/// <param name="git">The <see cref="IGit"/> to use.</param>
 		/// <param name="nuget">The <see cref="INuget"/> to use.</param>
+		/// <param name="processManager">The <see cref="IProcessManager"/> to use.</param>
 		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
-		public UpdateCommand(UpdateSubOptions options, IGitDependFileFactory factory, IGit git, INuget nuget, IFileSystem fileSystem)
+		public UpdateCommand(UpdateSubOptions options, IGitDependFileFactory factory, IGit git, INuget nuget, IProcessManager processManager, IFileSystem fileSystem)
 		{
 			_options = options;
 			_factory = factory;
 			_git = git;
 			_nuget = nuget;
+			_processManager = processManager;
 			_fileSystem = fileSystem;
 		}
 
@@ -58,7 +61,7 @@ namespace GitDepend.Commands
 			}
 
 			alg = new DependencyVisitorAlgorithm(_factory, _git, _fileSystem);
-			visitor = new BuildAndUpdateDependenciesVisitor(_factory, _git, _nuget, _fileSystem);
+			visitor = new BuildAndUpdateDependenciesVisitor(_factory, _git, _nuget, _processManager, _fileSystem);
 			alg.TraverseDependencies(visitor, _options.Directory);
 
 			if (visitor.ReturnCode == ReturnCode.Success)

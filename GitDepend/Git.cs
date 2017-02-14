@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using GitDepend.Busi;
 
 namespace GitDepend
 {
@@ -7,10 +8,21 @@ namespace GitDepend
 	/// </summary>
 	public class Git : IGit
 	{
+		private readonly IProcessManager _processManager;
+
 		/// <summary>
 		/// The working directory for all git operations.
 		/// </summary>
 		public string WorkingDir { get; set; }
+
+		/// <summary>
+		/// Creates a new <see cref="Git"/>
+		/// </summary>
+		/// <param name="processManager">The <see cref="IProcessManager"/> to use.</param>
+		public Git(IProcessManager processManager)
+		{
+			_processManager = processManager;
+		}
 
 		/// <summary>
 		/// Checks out the given branch.
@@ -75,7 +87,7 @@ namespace GitDepend
 				WorkingDirectory = WorkingDir,
 				UseShellExecute = false,
 			};
-			var proc = Process.Start(info);
+			var proc = _processManager.Start(info);
 			proc?.WaitForExit();
 
 			var code = proc?.ExitCode ?? (int) ReturnCode.FailedToRunGitCommand;

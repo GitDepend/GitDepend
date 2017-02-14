@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.IO.Abstractions;
 using GitDepend.Busi;
 
@@ -44,7 +43,7 @@ namespace GitDepend.Visitors
 				return;
 			}
 
-			directory = Path.GetFullPath(directory);
+			directory = _fileSystem.Path.GetFullPath(directory);
 
 			// If the directory doesn't exist we are done.
 			if (!_fileSystem.Directory.Exists(directory))
@@ -68,7 +67,7 @@ namespace GitDepend.Visitors
 
 			foreach (var dependency in config.Dependencies)
 			{
-				dependency.Directory = Path.GetFullPath(Path.Combine(dir, dependency.Directory));
+				dependency.Directory = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(dir, dependency.Directory));
 
 				// If the dependency does not exist on disk we need to clone it.
 				if (!_fileSystem.Directory.Exists(dependency.Directory))

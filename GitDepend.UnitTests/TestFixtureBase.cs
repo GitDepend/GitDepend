@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using GitDepend.Configuration;
 using NUnit.Framework;
 
 namespace GitDepend.UnitTests
@@ -8,6 +9,35 @@ namespace GitDepend.UnitTests
 	[TestFixture]
 	public abstract class TestFixtureBase
 	{
+		protected readonly GitDependFile Lib1Config;
+		protected readonly Dependency Lib1Dependency;
+		protected readonly GitDependFile Lib2Config;
+
+		protected TestFixtureBase()
+		{
+			Lib1Config = new GitDependFile
+			{
+				Build = { Script = "make.bat" },
+				Packages = { Directory = "artifacts/NuGet/Debug" }
+			};
+
+			Lib1Dependency = new Dependency
+			{
+				Name = "Lib1",
+				Directory = "..\\Lib1",
+				Url = "git@github.com:kjjuno/Lib1.git",
+				Branch = "develop",
+				Configuration = Lib1Config
+			};
+
+			Lib2Config = new GitDependFile
+			{
+				Build = { Script = "make.bat" },
+				Packages = { Directory = "artifacts/NuGet/Debug" },
+				Dependencies = { Lib1Dependency }
+			};
+		}
+
 		protected static void AssertThrows<T>(Action del, string exceptionMessage) where T : Exception
 		{
 			try

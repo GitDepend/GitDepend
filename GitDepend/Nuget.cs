@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
-using System.IO;
+using System.IO.Abstractions;
 using System.Reflection;
+using GitDepend.Busi;
 
 namespace GitDepend
 {
@@ -9,6 +10,7 @@ namespace GitDepend
 	/// </summary>
 	public class Nuget : INuget
 	{
+		private readonly IProcessManager _processManager;
 		private readonly string _workingDir;
 
 		/// <summary>
@@ -19,9 +21,12 @@ namespace GitDepend
 		/// <summary>
 		/// Creates a new <see cref="Nuget"/>
 		/// </summary>
-		public Nuget()
+		/// <param name="processManager">The <see cref="IProcessManager"/> to use.</param>
+		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
+		public Nuget(IProcessManager processManager, IFileSystem fileSystem)
 		{
-			_workingDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+			_processManager = processManager;
+			_workingDir = fileSystem.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 		}
 
 		/// <summary>
@@ -51,7 +56,7 @@ namespace GitDepend
 				WorkingDirectory = _workingDir,
 				UseShellExecute = false,
 			};
-			var proc = Process.Start(info);
+			var proc = _processManager.Start(info);
 			proc?.WaitForExit();
 
 			var code = proc?.ExitCode ?? (int)ReturnCode.FailedToRunNugetCommand;

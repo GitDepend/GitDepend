@@ -18,6 +18,7 @@ namespace GitDepend.Visitors
 		private readonly IGitDependFileFactory _factory;
 		private readonly IGit _git;
 		private readonly INuget _nuget;
+		private readonly IProcessManager _processManager;
 		private readonly IFileSystem _fileSystem;
 
 		/// <summary>
@@ -26,12 +27,14 @@ namespace GitDepend.Visitors
 		/// /// <param name="factory">The <see cref="IGitDependFileFactory"/> to use.</param>
 		/// <param name="git">The <see cref="IGit"/> to use.</param>
 		/// <param name="nuget">The <see cref="INuget"/> to use.</param>
+		/// <param name="processManager">The <see cref="IProcessManager"/> to use.</param>
 		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
-		public BuildAndUpdateDependenciesVisitor(IGitDependFileFactory factory, IGit git, INuget nuget, IFileSystem fileSystem)
+		public BuildAndUpdateDependenciesVisitor(IGitDependFileFactory factory, IGit git, INuget nuget, IProcessManager processManager, IFileSystem fileSystem)
 		{
 			_factory = factory;
 			_git = git;
 			_nuget = nuget;
+			_processManager = processManager;
 			_fileSystem = fileSystem;
 		}
 
@@ -39,9 +42,9 @@ namespace GitDepend.Visitors
 		{
 			get
 			{
-				var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GitDepend");
+				var dir = _fileSystem.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GitDepend");
 
-				var cacheDir = Path.Combine(dir, "cache");
+				var cacheDir = _fileSystem.Path.Combine(dir, "cache");
 				if (_fileSystem.Directory.Exists(cacheDir))
 				{
 					return cacheDir;
@@ -84,22 +87,24 @@ namespace GitDepend.Visitors
 				return ReturnCode.GitRepositoryNotFound;
 			}
 
-			var info = new ProcessStartInfo(Path.Combine(dependency.Directory, config.Build.Script), config.Build.Arguments)
+			var buildScript = _fileSystem.Path.Combine(dependency.Directory, config.Build.Script);
+			var info = new ProcessStartInfo(buildScript, config.Build.Arguments)
 			{
 				WorkingDirectory = dependency.Directory,
 				UseShellExecute = false
 			};
-			var proc = Process.Start(info);
+
+			var proc = _processManager.Start(info);
 			proc?.WaitForExit();
 
 			
 			var artifactsDir = dependency.Configuration.Packages.Directory;
 			foreach (var file in _fileSystem.Directory.GetFiles(artifactsDir, "*.nupkg"))
 			{
-				var name = Path.GetFileName(file);
+				var name = _fileSystem.Path.GetFileName(file);
 				if (!string.IsNullOrEmpty(name))
 				{
-					_fileSystem.File.Copy(file, Path.Combine(CacheDirectory, name), true);
+					_fileSystem.File.Copy(file, _fileSystem.Path.Combine(CacheDirectory, name), true);
 				}
 			}
 
@@ -120,7 +125,7 @@ namespace GitDepend.Visitors
 				var dir = dependency.Configuration.Packages.Directory;
 				foreach (var file in _fileSystem.Directory.GetFiles(dir, "*.nupkg"))
 				{
-					var name = Path.GetFileNameWithoutExtension(file);
+					var name = _fileSystem.Path.GetFileNameWithoutExtension(file);
 
 
 					if (string.IsNullOrEmpty(name))
@@ -138,17 +143,17 @@ namespace GitDepend.Visitors
 					var id = match.Groups["id"].Value;
 					var version = match.Groups["version"].Value;
 
-					var nugetConfig = Path.Combine(directory, "NuGet.config");
+					var nugetConfig = _fileSystem.Path.Combine(directory, "NuGet.config");
 					if (!_fileSystem.File.Exists(nugetConfig))
 					{
 						nugetConfig = null;
 					}
 
-					var nuget = new Nuget { ConfigFile = nugetConfig };
+					_nuget.ConfigFile = nugetConfig;
 
 					foreach (var solution in _fileSystem.Directory.GetFiles(directory, "*.sln", SearchOption.AllDirectories))
 					{
-						nuget.Update(solution, id, version, CacheDirectory);
+						_nuget.Update(solution, id, version, CacheDirectory);
 					}
 				}
 			}

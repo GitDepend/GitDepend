@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using GitDepend.Configuration;
@@ -56,22 +55,22 @@ namespace GitDepend.Busi
 
 			if (!string.IsNullOrEmpty(current) && isGitRoot)
 			{
-				var file = Path.Combine(current, "GitDepend.json");
+				var file = _fileSystem.Path.Combine(current, "GitDepend.json");
 
 				if (_fileSystem.File.Exists(file))
 				{
 					try
 					{
-						var json = File.ReadAllText(file);
+						var json = _fileSystem.File.ReadAllText(file);
 						var gitDependFile = JsonConvert.DeserializeObject<GitDependFile>(json);
 						error = null;
 						dir = current;
-						gitDependFile.Build.Script = Path.GetFullPath(Path.Combine(current, gitDependFile.Build.Script));
-						gitDependFile.Packages.Directory = Path.GetFullPath(Path.Combine(current, gitDependFile.Packages.Directory));
+						gitDependFile.Build.Script = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(current, gitDependFile.Build.Script));
+						gitDependFile.Packages.Directory = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(current, gitDependFile.Packages.Directory));
 
 						foreach (var dependency in gitDependFile.Dependencies)
 						{
-							dependency.Directory = Path.GetFullPath(Path.Combine(current, dependency.Directory));
+							dependency.Directory = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(current, dependency.Directory));
 							string subdir;
 							string suberror;
 							dependency.Configuration = LoadFromDirectory(dependency.Directory, out subdir, out suberror);

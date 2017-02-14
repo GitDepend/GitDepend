@@ -12,11 +12,8 @@ using Telerik.JustMock.Helpers;
 namespace GitDepend.UnitTests.Visitors
 {
 	[TestFixture]
-	public class DependencyVisitorAlgorithmTests
+	public class DependencyVisitorAlgorithmTests : TestFixtureBase
 	{
-		private GitDependFile _lib1Config;
-		private GitDependFile _lib2Config;
-
 		private IGitDependFileFactory _factory;
 		private IGit _git;
 		private IFileSystem _fileSystem;
@@ -28,29 +25,6 @@ namespace GitDepend.UnitTests.Visitors
 		[SetUp]
 		public void SetUp()
 		{
-			_lib1Config = new GitDependFile
-			{
-				Build = {Script = "make.bat"},
-				Packages = {Directory = "artifacts/NuGet/Debug"}
-			};
-
-			_lib2Config = new GitDependFile
-			{
-				Build = { Script = "make.bat" },
-				Packages = { Directory = "artifacts/NuGet/Debug" },
-				Dependencies =
-				{
-					new Dependency
-					{
-						Name = "Lib1",
-						Directory = "..\\Lib1",
-						Url = "git@github.com:kjjuno/Lib1.git",
-						Branch = "develop",
-						Configuration = _lib1Config
-					}
-				}
-			};
-
 			_factory = Mock.Create<IGitDependFileFactory>();
 			_git = Mock.Create<IGit>();
 			_fileSystem = new MockFileSystem();
@@ -130,7 +104,7 @@ namespace GitDepend.UnitTests.Visitors
 				});
 
 			string lib2Dir = PROJECT_DIRECTORY;
-			var dir = _lib2Config.Dependencies.First(d => d.Name == "Lib1").Directory;
+			var dir = Lib2Config.Dependencies.First(d => d.Name == "Lib1").Directory;
 			string lib1Dir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(lib2Dir, dir));
 
 			_fileSystem.Directory.CreateDirectory(PROJECT_DIRECTORY);
@@ -138,10 +112,10 @@ namespace GitDepend.UnitTests.Visitors
 
 			string error;
 			_factory.Arrange(f => f.LoadFromDirectory(lib1Dir, out lib1Dir, out error))
-				.Returns(_lib1Config);
+				.Returns(Lib1Config);
 
 			_factory.Arrange(f => f.LoadFromDirectory(lib2Dir, out lib2Dir, out error))
-				.Returns(_lib2Config);
+				.Returns(Lib2Config);
 
 			_git.Arrange(g => g.Clone(Arg.AnyString, Arg.AnyString, Arg.AnyString))
 				.Returns((string url, string directory, string branch) =>
@@ -168,7 +142,7 @@ namespace GitDepend.UnitTests.Visitors
 
 			string error;
 			_factory.Arrange(f => f.LoadFromDirectory(lib2Dir, out lib2Dir, out error))
-				.Returns(_lib2Config);
+				.Returns(Lib2Config);
 
 			_git.Arrange(g => g.Clone(Arg.AnyString, Arg.AnyString, Arg.AnyString))
 				.Returns(ReturnCode.FailedToRunGitCommand);
@@ -191,7 +165,7 @@ namespace GitDepend.UnitTests.Visitors
 
 			string error;
 			_factory.Arrange(f => f.LoadFromDirectory(lib2Dir, out lib2Dir, out error))
-				.Returns(_lib2Config);
+				.Returns(Lib2Config);
 
 			_git.Arrange(g => g.Clone(Arg.AnyString, Arg.AnyString, Arg.AnyString))
 				.Returns((string url, string directory, string branch) =>
@@ -230,7 +204,7 @@ namespace GitDepend.UnitTests.Visitors
 				});
 
 			string lib2Dir = PROJECT_DIRECTORY;
-			var dir = _lib2Config.Dependencies.First(d => d.Name == "Lib1").Directory;
+			var dir = Lib2Config.Dependencies.First(d => d.Name == "Lib1").Directory;
 			string lib1Dir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(lib2Dir, dir));
 
 			_fileSystem.Directory.CreateDirectory(PROJECT_DIRECTORY);
@@ -238,10 +212,10 @@ namespace GitDepend.UnitTests.Visitors
 
 			string error;
 			_factory.Arrange(f => f.LoadFromDirectory(lib1Dir, out lib1Dir, out error))
-				.Returns(_lib1Config);
+				.Returns(Lib1Config);
 
 			_factory.Arrange(f => f.LoadFromDirectory(lib2Dir, out lib2Dir, out error))
-				.Returns(_lib2Config);
+				.Returns(Lib2Config);
 
 			_git.Arrange(g => g.Clone(Arg.AnyString, Arg.AnyString, Arg.AnyString))
 				.Returns((string url, string directory, string branch) =>

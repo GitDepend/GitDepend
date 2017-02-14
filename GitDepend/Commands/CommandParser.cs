@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.IO.Abstractions;
 using GitDepend.Busi;
 using GitDepend.CommandLine;
@@ -18,9 +17,10 @@ namespace GitDepend.Commands
 		/// <param name="factory">The <see cref="IGitDependFileFactory"/> to use.</param>
 		/// <param name="git">The <see cref="IGit"/> to use.</param>
 		/// <param name="nuget">The <see cref="INuget"/> to use.</param>
+		/// <param name="processManager">The <see cref="IProcessManager"/> to use.</param>
 		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
 		/// <returns>An implementation of <see cref="ICommand"/> that matches the given arguments.</returns>
-		public ICommand GetCommand(string[] args, IGitDependFileFactory factory, IGit git, INuget nuget, IFileSystem fileSystem)
+		public ICommand GetCommand(string[] args, IGitDependFileFactory factory, IGit git, INuget nuget, IProcessManager processManager, IFileSystem fileSystem)
 		{
 			string invokedVerb = null;
 			object invokedVerbInstance = null;
@@ -41,7 +41,7 @@ namespace GitDepend.Commands
 			{
 				options.Directory = string.IsNullOrEmpty(options.Directory)
 					? Environment.CurrentDirectory
-					: Path.GetFullPath(options.Directory);
+					: fileSystem.Path.GetFullPath(options.Directory);
 			}
 
 			ICommand command = null;
@@ -58,7 +58,7 @@ namespace GitDepend.Commands
 					command = new CloneCommand(options as CloneSubOptions, factory, git, fileSystem);
 					break;
 				case UpdateCommand.Name:
-					command = new UpdateCommand(options as UpdateSubOptions, factory, git, nuget, fileSystem);
+					command = new UpdateCommand(options as UpdateSubOptions, factory, git, nuget, processManager, fileSystem);
 					break;
 			}
 

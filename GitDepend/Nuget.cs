@@ -1,25 +1,30 @@
 ﻿using System.Diagnostics;
-using System.IO;
+using System.IO.Abstractions;
 using System.Reflection;
+using GitDepend.Busi;
 
 namespace GitDepend
 {
 	/// <summary>
 	/// A helper class for dealing with nuget.exe
 	/// </summary>
-	public class Nuget
+	public class Nuget : INuget
 	{
-		private readonly string _configFile;
-		private readonly string _workingDir;
+		private readonly IProcessManager _processManager;
+
+		/// <summary>
+		/// The working directory for nuget.exe
+		/// </summary>
+		public string WorkingDirectory { get; set; }
 
 		/// <summary>
 		/// Creates a new <see cref="Nuget"/>
 		/// </summary>
-		/// <param name="configFile">The NuGet.config file to use.</param>
-		public Nuget(string configFile)
+		/// <param name="processManager">The <see cref="IProcessManager"/> to use.</param>
+		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
+		public Nuget(IProcessManager processManager, IFileSystem fileSystem)
 		{
-			_configFile = configFile;
-			_workingDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+			_processManager = processManager;
 		}
 
 		/// <summary>
@@ -29,30 +34,27 @@ namespace GitDepend
 		/// <param name="id">The id of the package.</param>
 		/// <param name="version">The version of the package.</param>
 		/// <param name="sourceDirectory">The directory containing packages on disk.</param>
-		/// <returns></returns>
-		public int Update(string soluton, string id, string version, string sourceDirectory)
+		/// <returns>The nuget return code.</returns>
+		public ReturnCode Update(string soluton, string id, string version, string sourceDirectory)
 		{
-			return ExecuteNuGetCommand($"update {soluton} -Id {id} -Version {version} {ConfigFileParam()} -Source \"{sourceDirectory}\" -Pre");
+			return ExecuteNuGetCommand($"update {soluton} -Id {id} -Version {version} -Source \"{sourceDirectory}\" -Pre");
 		}
 
-		private string ConfigFileParam()
-		{
-			return string.IsNullOrEmpty(_configFile)
-				? string.Empty
-				: $"-ConfigFile {_configFile}";
-		}
-
-		private int ExecuteNuGetCommand(string arguments)
+		private ReturnCode ExecuteNuGetCommand(string arguments)
 		{
 			var info = new ProcessStartInfo("NuGet.exe", arguments)
 			{
-				WorkingDirectory = _workingDir,
+				WorkingDirectory = WorkingDirectory,
 				UseShellExecute = false,
 			};
-			var proc = Process.Start(info);
+			var proc = _processManager.Start(info);
 			proc?.WaitForExit();
 
-			return proc?.ExitCode ?? ReturnCodes.FailedToRunGitCommand;
+			var code = proc?.ExitCode ?? (int)ReturnCode.FailedToRunNugetCommand;
+
+			return code != (int)ReturnCode.Success
+				? ReturnCode.FailedToRunNugetCommand
+				: ReturnCode.Success;
 		}
 	}
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Abstractions;
 using System.Text.RegularExpressions;
+using GitDepend.Busi;
 using GitDepend.Configuration;
 
 namespace GitDepend.Visitors
@@ -13,31 +15,56 @@ namespace GitDepend.Visitors
 	public class BuildAndUpdateDependenciesVisitor : IVisitor
 	{
 		private static readonly Regex Pattern = new Regex(@"^(?<id>.*?)\.(?<version>(?:\d\.){2,3}\d(?:-.*?)?)$", RegexOptions.Compiled);
+		private readonly IGitDependFileFactory _factory;
+		private readonly IGit _git;
+		private readonly INuget _nuget;
+		private readonly IProcessManager _processManager;
+		private readonly IFileSystem _fileSystem;
+		private readonly IConsole _console;
 
-		private static string CacheDirectory
+		/// <summary>
+		/// Creates a new <see cref="BuildAndUpdateDependenciesVisitor"/>
+		/// </summary>
+		/// /// <param name="factory">The <see cref="IGitDependFileFactory"/> to use.</param>
+		/// <param name="git">The <see cref="IGit"/> to use.</param>
+		/// <param name="nuget">The <see cref="INuget"/> to use.</param>
+		/// <param name="processManager">The <see cref="IProcessManager"/> to use.</param>
+		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
+		/// <param name="console">The <see cref="IConsole"/> to use.</param>
+		public BuildAndUpdateDependenciesVisitor(IGitDependFileFactory factory, IGit git, INuget nuget, IProcessManager processManager, IFileSystem fileSystem, IConsole console)
 		{
-			get
+			_factory = factory;
+			_git = git;
+			_nuget = nuget;
+			_processManager = processManager;
+			_fileSystem = fileSystem;
+			_console = console;
+		}
+
+		/// <summary>
+		/// The directory where nuget packages are cached.
+		/// </summary>
+		public string GetCacheDirectory()
+		{
+			var dir = _fileSystem.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GitDepend");
+
+			var cacheDir = _fileSystem.Path.Combine(dir, "cache");
+			if (_fileSystem.Directory.Exists(cacheDir))
 			{
-				var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GitDepend");
-
-				var cacheDir = Path.Combine(dir, "cache");
-				if (Directory.Exists(cacheDir))
-				{
-					return cacheDir;
-				}
-
-				try
-				{
-					Directory.CreateDirectory(cacheDir);
-				}
-				catch (Exception ex)
-				{
-					Console.Error.WriteLine(ex.Message);
-					return null;
-				}
-
 				return cacheDir;
 			}
+
+			try
+			{
+				_fileSystem.Directory.CreateDirectory(cacheDir);
+			}
+			catch (Exception ex)
+			{
+				_console.Error.WriteLine(ex.Message);
+				return null;
+			}
+
+			return cacheDir;
 		}
 
 		#region Implementation of IVisitor
@@ -45,44 +72,55 @@ namespace GitDepend.Visitors
 		/// <summary>
 		/// The return code
 		/// </summary>
-		public int ReturnCode { get; set; }
+		public ReturnCode ReturnCode { get; set; }
 
 		/// <summary>
 		/// Visits a project dependency.
 		/// </summary>
+		/// <param name="directory">The directory of the project.</param>
 		/// <param name="dependency">The <see cref="Dependency"/> to visit.</param>
 		/// <returns>The return code.</returns>
-		public int VisitDependency(Dependency dependency)
+		public ReturnCode VisitDependency(string directory, Dependency dependency)
 		{
 			string dir;
-			string error;
-			var config = GitDependFile.LoadFromDir(dependency.Directory, out dir, out error);
+			ReturnCode code;
+			var config = _factory.LoadFromDirectory(dependency.Directory, out dir, out code);
 
-			if (config == null)
+			if (code != ReturnCode.Success)
 			{
-				return ReturnCodes.GitRepositoryNotFound;
+				return ReturnCode = code;
 			}
 
-			var info = new ProcessStartInfo(Path.Combine(dependency.Directory, config.Build.Script), config.Build.Arguments)
+			var cacheDir = GetCacheDirectory();
+
+			if (string.IsNullOrEmpty(cacheDir))
+			{
+				return ReturnCode = ReturnCode.CouldNotCreateCacheDirectory;
+			}
+
+			var buildScript = _fileSystem.Path.Combine(dependency.Directory, config.Build.Script);
+			var info = new ProcessStartInfo(buildScript, config.Build.Arguments)
 			{
 				WorkingDirectory = dependency.Directory,
 				UseShellExecute = false
 			};
-			var proc = Process.Start(info);
+
+			var proc = _processManager.Start(info);
 			proc?.WaitForExit();
 
 			
-			var artifactsDir = dependency.Configuration.Packages.Directory;
-			foreach (var file in Directory.GetFiles(artifactsDir, "*.nupkg"))
+			var artifactsDir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(directory, dependency.Directory, dependency.Configuration.Packages.Directory));
+			foreach (var file in _fileSystem.Directory.GetFiles(artifactsDir, "*.nupkg"))
 			{
-				var name = Path.GetFileName(file);
+				var name = _fileSystem.Path.GetFileName(file);
 				if (!string.IsNullOrEmpty(name))
 				{
-					File.Copy(file, Path.Combine(CacheDirectory, name), true);
+					_fileSystem.File.Copy(file, _fileSystem.Path.Combine(cacheDir, name), true);
 				}
 			}
 
-			return proc?.ExitCode ?? ReturnCodes.FailedToRunBuildScript;
+			var codeNum = proc?.ExitCode ?? (int) ReturnCode.FailedToRunBuildScript;
+			return ReturnCode = (ReturnCode)codeNum;
 		}
 
 		/// <summary>
@@ -91,14 +129,26 @@ namespace GitDepend.Visitors
 		/// <param name="directory">The directory of the project.</param>
 		/// <param name="config">The <see cref="GitDependFile"/> with project configuration information.</param>
 		/// <returns>The return code.</returns>
-		public int VisitProject(string directory, GitDependFile config)
+		public ReturnCode VisitProject(string directory, GitDependFile config)
 		{
+			if (config == null)
+			{
+				return ReturnCode = ReturnCode.Success;
+			}
+
+			if (string.IsNullOrEmpty(directory) || !_fileSystem.Directory.Exists(directory))
+			{
+				return ReturnCode = ReturnCode.DirectoryDoesNotExist;
+			}
+
 			foreach (var dependency in config.Dependencies)
 			{
-				var dir = dependency.Configuration.Packages.Directory;
-				foreach (var file in Directory.GetFiles(dir, "*.nupkg"))
+				var dependencyDir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(directory, dependency.Directory));
+				var dir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(dependencyDir, dependency.Configuration.Packages.Directory));
+
+				foreach (var file in _fileSystem.Directory.GetFiles(dir, "*.nupkg"))
 				{
-					var name = Path.GetFileNameWithoutExtension(file);
+					var name = _fileSystem.Path.GetFileNameWithoutExtension(file);
 
 
 					if (string.IsNullOrEmpty(name))
@@ -116,30 +166,31 @@ namespace GitDepend.Visitors
 					var id = match.Groups["id"].Value;
 					var version = match.Groups["version"].Value;
 
-					var nugetConfig = Path.Combine(directory, "NuGet.config");
-					if (!File.Exists(nugetConfig))
-					{
-						nugetConfig = null;
-					}
+					_nuget.WorkingDirectory = directory;
 
-					var nuget = new Nuget(nugetConfig);
-
-					foreach (var solution in Directory.GetFiles(directory, "*.sln", SearchOption.AllDirectories))
+					foreach (var solution in _fileSystem.Directory.GetFiles(directory, "*.sln", SearchOption.AllDirectories))
 					{
-						nuget.Update(solution, id, version, CacheDirectory);
+						var cacheDir = GetCacheDirectory();
+
+						if (string.IsNullOrEmpty(cacheDir))
+						{
+							return ReturnCode = ReturnCode.CouldNotCreateCacheDirectory;
+						}
+
+						_nuget.Update(solution, id, version, cacheDir);
 					}
 				}
 			}
 
-			Console.WriteLine("================================================================================");
-			Console.WriteLine($"Making update commit on {directory}");
-			var git = new Git(directory);
-			git.Add("*.csproj", @"*\packages.config");
-			Console.WriteLine("================================================================================");
-			git.Status();
-			git.Commit("GitDepend: updating dependencies");
+			_console.WriteLine("================================================================================");
+			_console.WriteLine($"Making update commit on {directory}");
+			_git.WorkingDirectory = directory;
+			_git.Add("*.csproj", @"*\packages.config");
+			_console.WriteLine("================================================================================");
+			_git.Status();
+			_git.Commit("GitDepend: updating dependencies");
 
-			return ReturnCodes.Success;
+			return ReturnCode = ReturnCode.Success;
 		}
 
 		#endregion

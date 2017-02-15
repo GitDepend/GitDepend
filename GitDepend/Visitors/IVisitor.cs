@@ -11,14 +11,15 @@ namespace GitDepend.Visitors
 		/// <summary>
 		/// The return code
 		/// </summary>
-		int ReturnCode { get; set; }
+		ReturnCode ReturnCode { get; set; }
 
 		/// <summary>
 		/// Visits a project dependency.
 		/// </summary>
+		/// <param name="directory">The directory of the project.</param>
 		/// <param name="dependency">The <see cref="Dependency"/> to visit.</param>
 		/// <returns>The return code.</returns>
-		int VisitDependency(Dependency dependency);
+		ReturnCode VisitDependency(string directory, Dependency dependency);
 
 		/// <summary>
 		/// Visists a project.
@@ -26,6 +27,6 @@ namespace GitDepend.Visitors
 		/// <param name="directory">The directory of the project.</param>
 		/// <param name="config">The <see cref="GitDependFile"/> with project configuration information.</param>
 		/// <returns>The return code.</returns>
-		int VisitProject(string directory, GitDependFile config);
+		ReturnCode VisitProject(string directory, GitDependFile config);
 	}
 }

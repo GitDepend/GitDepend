@@ -6,6 +6,7 @@ packages/
 bin/
 obj/
 Reports/
+_NCrunch_*/
 
 version.txt
 *.user

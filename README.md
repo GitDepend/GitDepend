@@ -1,5 +1,6 @@
 # GitDepend
 
+[![Join the chat at https://gitter.im/GitDepend/Lobby][gitter]][gitter-badge]
 [![Build status][appveyor-badge]][appveyor]
 
 |                            |                Stable               |                 Pre-release               |
@@ -63,6 +64,7 @@ GitDepend.exe update
 ```
 
 This will follow the chain of `GitDepend.json` files. The following things will happen
+
 1. Check out the dependency if it has not been checked out.
 2. Ensure that the repository is on the correct branch.
 3. update all dependencies (this is a recursive step)
@@ -121,6 +123,8 @@ Minimum Viable Product implementation
 ## v0.1.0
 Simple setup for the sole purpose of reservering names on github.com and nuget.org
 
+[gitter]:          https://badges.gitter.im/GitDepend/Lobby.svg
+[gitter-badge]:    https://gitter.im/GitDepend/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 [appveyor]:        https://ci.appveyor.com/project/kjjuno/gitdepend/branch/develop
 [appveyor-badge]:  https://ci.appveyor.com/api/projects/status/github/kjjuno/GitDepend?branch=develop&svg=true
 [docs]:            http://gitdepend.readthedocs.org/en/stable/

@@ -9,15 +9,10 @@ namespace GitDepend
 	{
 		static void Main(string[] args)
 		{
-			var fileSystem = new FileSystem();
-			var console = new ConsoleWrapper();
-			var factory = new GitDependFileFactory(fileSystem, console);
-			var processManager = new ProcessManager();
-			var git = new Git(processManager);
-			var nuget = new Nuget(processManager, fileSystem);
+			UnityConfig.RegisterTypes(DependencyInjection.Container);
 
 			var parser = new CommandParser();
-			var command = parser.GetCommand(args, factory, git, nuget, processManager, fileSystem, console);
+			var command = parser.GetCommand(args);
 
 			var code = command.Execute();
 

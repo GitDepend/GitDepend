@@ -17,12 +17,10 @@ namespace GitDepend.Busi
 		/// <summary>
 		/// Creates a new <see cref="GitDependFileFactory"/>
 		/// </summary>
-		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
-		/// <param name="console">The <see cref="IConsole"/> to use.</param>
-		public GitDependFileFactory(IFileSystem fileSystem, IConsole console)
+		public GitDependFileFactory()
 		{
-			_fileSystem = fileSystem;
-			_console = console;
+			_fileSystem = DependencyInjection.Resolve<IFileSystem>();
+			_console = DependencyInjection.Resolve<IConsole>();
 		}
 
 		/// <summary>

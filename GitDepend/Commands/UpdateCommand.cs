@@ -28,21 +28,15 @@ namespace GitDepend.Commands
 		/// Creates a new <see cref="UpdateCommand"/>
 		/// </summary>
 		/// <param name="options">The <see cref="UpdateSubOptions"/> that configure the command.</param>
-		/// <param name="factory">The <see cref="IGitDependFileFactory"/> to use.</param>
-		/// <param name="git">The <see cref="IGit"/> to use.</param>
-		/// <param name="nuget">The <see cref="INuget"/> to use.</param>
-		/// <param name="processManager">The <see cref="IProcessManager"/> to use.</param>
-		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
-		/// <param name="console">The <see cref="IConsole"/> to use.</param>
-		public UpdateCommand(UpdateSubOptions options, IGitDependFileFactory factory, IGit git, INuget nuget, IProcessManager processManager, IFileSystem fileSystem, IConsole console)
+		public UpdateCommand(UpdateSubOptions options)
 		{
 			_options = options;
-			_factory = factory;
-			_git = git;
-			_nuget = nuget;
-			_processManager = processManager;
-			_fileSystem = fileSystem;
-			_console = console;
+			_factory = DependencyInjection.Resolve<IGitDependFileFactory>();
+			_git = DependencyInjection.Resolve<IGit>();
+			_nuget = DependencyInjection.Resolve<INuget>();
+			_processManager = DependencyInjection.Resolve<IProcessManager>();
+			_fileSystem = DependencyInjection.Resolve<IFileSystem>();
+			_console = DependencyInjection.Resolve<IConsole>();
 		}
 
 		#region Implementation of ICommand
@@ -53,8 +47,8 @@ namespace GitDepend.Commands
 		/// <returns>The return code.</returns>
 		public ReturnCode Execute()
 		{
-			var alg = new DependencyVisitorAlgorithm(_factory, _git, _fileSystem, _console);
-			IVisitor visitor = new CheckOutBranchVisitor(_git, _fileSystem, _console);
+			var alg = new DependencyVisitorAlgorithm();
+			IVisitor visitor = new CheckOutBranchVisitor();
 			alg.TraverseDependencies(visitor, _options.Directory);
 
 			if (visitor.ReturnCode != ReturnCode.Success)
@@ -63,8 +57,8 @@ namespace GitDepend.Commands
 				return visitor.ReturnCode;
 			}
 
-			alg = new DependencyVisitorAlgorithm(_factory, _git, _fileSystem, _console);
-			visitor = new BuildAndUpdateDependenciesVisitor(_factory, _git, _nuget, _processManager, _fileSystem, _console);
+			alg = new DependencyVisitorAlgorithm();
+			visitor = new BuildAndUpdateDependenciesVisitor();
 			alg.TraverseDependencies(visitor, _options.Directory);
 
 			if (visitor.ReturnCode == ReturnCode.Success)

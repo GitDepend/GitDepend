@@ -13,7 +13,7 @@ namespace GitDepend.Commands
 	{
 		private readonly ConfigSubOptions _options;
 		private readonly IConsole _console;
-		private readonly GitDependFileFactory _factory;
+		private readonly IGitDependFileFactory _factory;
 
 		/// <summary>
 		/// The name of the verb.
@@ -24,13 +24,11 @@ namespace GitDepend.Commands
 		/// Creates a new <see cref="ShowConfigCommand"/>
 		/// </summary>
 		/// <param name="options">The <see cref="ConfigSubOptions"/> that configures the command.</param>
-		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
-		/// <param name="console">The <see cref="IConsole"/> to use.</param>
-		public ShowConfigCommand(ConfigSubOptions options, IFileSystem fileSystem, IConsole console)
+		public ShowConfigCommand(ConfigSubOptions options)
 		{
 			_options = options;
-			_console = console;
-			_factory = new GitDependFileFactory(fileSystem, console);
+			_console = DependencyInjection.Resolve<IConsole>();
+			_factory = DependencyInjection.Resolve<IGitDependFileFactory>();
 		}
 
 		#region Implementation of ICommand

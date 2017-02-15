@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Abstractions;
-using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GitDepend.Busi;
 using GitDepend.Configuration;
 using GitDepend.Visitors;
+using Microsoft.Practices.Unity;
 using NUnit.Framework;
 using Telerik.JustMock;
 using Telerik.JustMock.Helpers;
@@ -19,53 +17,41 @@ namespace GitDepend.UnitTests.Visitors
 	[TestFixture]
 	public class BuildAndUpdateDependenciesVisitorTests : TestFixtureBase
 	{
-		private IGitDependFileFactory _factory;
-		private IGit _git;
-		private INuget _nuget;
-		private IProcessManager _processManager;
-		private MockFileSystem _fileSystem;
-		private BuildAndUpdateDependenciesVisitor _instance;
-		private IConsole _console;
-
-		[SetUp]
-		public void SetUp()
-		{
-			_factory = Mock.Create<IGitDependFileFactory>();
-			_git = Mock.Create<IGit>();
-			_nuget = Mock.Create<INuget>();
-			_processManager = Mock.Create<IProcessManager>();
-			_fileSystem = new MockFileSystem();
-			_console = Mock.Create<IConsole>();
-			_instance = new BuildAndUpdateDependenciesVisitor(_factory, _git, _nuget, _processManager, _fileSystem, _console);
-		}
-
 		[Test]
 		public void VisitDependency_ShouldReturn_GitDependFileNotFound_WhenUnableToLoadConfigFile()
 		{
+			var factory = Container.Resolve<IGitDependFileFactory>();
+			var instance = new BuildAndUpdateDependenciesVisitor();
+
 			string dir;
 			ReturnCode loadCode = ReturnCode.GitRepositoryNotFound;
-			_factory.Arrange(f => f.LoadFromDirectory(Arg.AnyString, out dir, out loadCode))
+			factory.Arrange(f => f.LoadFromDirectory(Arg.AnyString, out dir, out loadCode))
 				.Returns(null as GitDependFile);
 
-			var code = _instance.VisitDependency(Lib2Directory, Lib1Dependency);
+			var code = instance.VisitDependency(Lib2Directory, Lib1Dependency);
 			Assert.AreEqual(ReturnCode.GitRepositoryNotFound, code, "Invalid ReturnCode");
-			Assert.AreEqual(ReturnCode.GitRepositoryNotFound, _instance.ReturnCode, "Invalid ReturnCode");
+			Assert.AreEqual(ReturnCode.GitRepositoryNotFound, instance.ReturnCode, "Invalid ReturnCode");
 		}
 
 		[Test]
 		public void VisitDependency_ShouldRunBuildScript()
 		{
+			var factory = Container.Resolve<IGitDependFileFactory>();
+			var processManager = Container.Resolve<IProcessManager>();
+			var fileSystem = RegisterMockFileSystem();
+			var instance = new BuildAndUpdateDependenciesVisitor();
+
 			string dir;
 			ReturnCode loadCode = ReturnCode.Success;
-			_factory.Arrange(f => f.LoadFromDirectory(Arg.AnyString, out dir, out loadCode))
+			factory.Arrange(f => f.LoadFromDirectory(Arg.AnyString, out dir, out loadCode))
 				.Returns(Lib1Config);
 
 			bool scriptExecuted = false;
-			_processManager.Arrange(m => m.Start(Arg.IsAny<ProcessStartInfo>()))
+			processManager.Arrange(m => m.Start(Arg.IsAny<ProcessStartInfo>()))
 				.Returns((ProcessStartInfo info) =>
 				{
 					scriptExecuted = true;
-					EnsureFiles(_fileSystem, Lib1PackagesDirectory, Lib1Packages);
+					EnsureFiles(fileSystem, Lib1PackagesDirectory, Lib1Packages);
 
 					return new FakeProcess
 					{
@@ -75,37 +61,39 @@ namespace GitDepend.UnitTests.Visitors
 				});
 
 
-			var code = _instance.VisitDependency(Lib2Directory, Lib1Dependency);
+			var code = instance.VisitDependency(Lib2Directory, Lib1Dependency);
 
-			var cachedPackages = _fileSystem.Directory.GetFiles(_instance.GetCacheDirectory(), "*.nupkg");
+			var cachedPackages = fileSystem.Directory.GetFiles(instance.GetCacheDirectory(), "*.nupkg");
 
 			Assert.AreEqual(Lib1Packages.Count, cachedPackages.Length, "Invalid number of cached nuget packages");
 
 			foreach (var package in cachedPackages)
 			{
-				var name = _fileSystem.Path.GetFileName(package);
+				var name = fileSystem.Path.GetFileName(package);
 				// Make sure that name shows up in the original list.
-				Assert.IsTrue(Lib1Packages.Any(p => _fileSystem.Path.GetFileName(p) == name));
+				Assert.IsTrue(Lib1Packages.Any(p => fileSystem.Path.GetFileName(p) == name));
 			}
 
 			Assert.IsTrue(scriptExecuted, "Build Script was not executed");
 			Assert.AreEqual(ReturnCode.Success, code, "Invalid ReturnCode");
-			Assert.AreEqual(ReturnCode.Success, _instance.ReturnCode, "Invalid ReturnCode");
+			Assert.AreEqual(ReturnCode.Success, instance.ReturnCode, "Invalid ReturnCode");
 		}
 
 		[Test]
 		public void VisitDependency_ShouldReturn_CouldNotCreateCacheDirectory_IfCacheDirectoryFailsToCreate()
 		{
+			var factory = Container.Resolve<IGitDependFileFactory>();
+
 			string dir;
 			ReturnCode loadCode = ReturnCode.Success;
-			_factory.Arrange(f => f.LoadFromDirectory(Arg.AnyString, out dir, out loadCode))
+			factory.Arrange(f => f.LoadFromDirectory(Arg.AnyString, out dir, out loadCode))
 				.Returns(Lib1Config);
 
-			var fileSystem = Mock.Create<IFileSystem>();
+			var fileSystem = Container.Resolve<IFileSystem>();
 			fileSystem.Directory.Arrange(d => d.CreateDirectory(Arg.AnyString))
 				.Throws<IOException>("Access Denied");
 
-			var instance = new BuildAndUpdateDependenciesVisitor(_factory, _git, _nuget, _processManager, fileSystem, _console);
+			var instance = new BuildAndUpdateDependenciesVisitor();
 
 			var code = instance.VisitDependency(Lib2Directory, Lib1Dependency);
 			Assert.AreEqual(ReturnCode.CouldNotCreateCacheDirectory, code, "Invalid ReturnCode");
@@ -115,42 +103,49 @@ namespace GitDepend.UnitTests.Visitors
 		[Test]
 		public void VisitProject_ShouldReturn_DirectoryDoesNotExist_WhenDirectoryIsNull()
 		{
-			var code = _instance.VisitProject(null, Lib2Config);
+			var instance = new BuildAndUpdateDependenciesVisitor();
+			var code = instance.VisitProject(null, Lib2Config);
 			Assert.AreEqual(ReturnCode.DirectoryDoesNotExist, code, "Invalid Return Code");
 		}
 
 		[Test]
 		public void VisitProject_ShouldReturn_DirectoryDoesNotExist_WhenDirectoryDoesNotExist()
 		{
-			var code = _instance.VisitProject(Lib2Directory, Lib2Config);
+			var instance = new BuildAndUpdateDependenciesVisitor();
+			var code = instance.VisitProject(Lib2Directory, Lib2Config);
 			Assert.AreEqual(ReturnCode.DirectoryDoesNotExist, code, "Invalid Return Code");
 		}
 
 		[Test]
 		public void VisitProject_ShouldReturn_Success_WhenConfigIsNull()
 		{
-			var code = _instance.VisitProject(Lib2Directory, null);
+			var instance = new BuildAndUpdateDependenciesVisitor();
+			var code = instance.VisitProject(Lib2Directory, null);
 			Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
-			Assert.AreEqual(ReturnCode.Success, _instance.ReturnCode, "Invalid Return Code");
+			Assert.AreEqual(ReturnCode.Success, instance.ReturnCode, "Invalid Return Code");
 		}
 
 		[Test]
 		public void VisitProject_ShouldCallNugetUpdate_ForEachNugetPackageInDependencyArtifactsFolder()
 		{
-			EnsureFiles(_fileSystem, Lib1PackagesDirectory, Lib1Packages);
-			EnsureFiles(_fileSystem, Lib1PackagesDirectory, new List<string>
+			var fileSystem = RegisterMockFileSystem();
+			var nuget = Container.Resolve<INuget>();
+			var instance = new BuildAndUpdateDependenciesVisitor();
+
+			EnsureFiles(fileSystem, Lib1PackagesDirectory, Lib1Packages);
+			EnsureFiles(fileSystem, Lib1PackagesDirectory, new List<string>
 			{
 				".nupkg",
 				"bad.input.nupkg"
 			});
 
-			EnsureFiles(_fileSystem, Lib2Directory, Lib2Solutions);
+			EnsureFiles(fileSystem, Lib2Directory, Lib2Solutions);
 			Dictionary<string, List<string>> updatedPackages = new Dictionary<string, List<string>>();
 
-			_nuget.Arrange(n => n.Update(Arg.AnyString, Arg.AnyString, Arg.AnyString, Arg.AnyString))
+			nuget.Arrange(n => n.Update(Arg.AnyString, Arg.AnyString, Arg.AnyString, Arg.AnyString))
 				.Returns((string solution, string id, string version, string sourceDirectory) =>
 				{
-					Assert.AreEqual(Lib2Directory, _nuget.WorkingDirectory, "Invalid working directory for Nuget.exe");
+					Assert.AreEqual(Lib2Directory, nuget.WorkingDirectory, "Invalid working directory for Nuget.exe");
 
 					var key = $"{id}.{version}";
 					if (updatedPackages.ContainsKey(key))
@@ -167,21 +162,21 @@ namespace GitDepend.UnitTests.Visitors
 					return ReturnCode.Success;
 				});
 
-			_fileSystem.Directory.CreateDirectory(Lib2Directory);
+			fileSystem.Directory.CreateDirectory(Lib2Directory);
 
-			var code = _instance.VisitProject(Lib2Directory, Lib2Config);
+			var code = instance.VisitProject(Lib2Directory, Lib2Config);
 			Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
-			Assert.AreEqual(ReturnCode.Success, _instance.ReturnCode, "Invalid Return Code");
+			Assert.AreEqual(ReturnCode.Success, instance.ReturnCode, "Invalid Return Code");
 
 			Assert.AreEqual(Lib1Packages.Count, updatedPackages.Keys.Count, "Invalid number of updated packages");
 
 			foreach (var kvp in updatedPackages)
 			{
-				Assert.IsTrue(Lib1Packages.Any(p => _fileSystem.Path.GetFileNameWithoutExtension(p) == kvp.Key));
+				Assert.IsTrue(Lib1Packages.Any(p => fileSystem.Path.GetFileNameWithoutExtension(p) == kvp.Key));
 
 				foreach (var solution in kvp.Value)
 				{
-					Assert.IsTrue(Lib2Solutions.Any(s => s == _fileSystem.Path.GetFileName(solution)), $"{solution} was not found in Lib2Solutions");
+					Assert.IsTrue(Lib2Solutions.Any(s => s == fileSystem.Path.GetFileName(solution)), $"{solution} was not found in Lib2Solutions");
 				}
 			}
 		}
@@ -189,7 +184,7 @@ namespace GitDepend.UnitTests.Visitors
 		[Test]
 		public void VisitProject_ShouldReturn_CouldNotCreateCacheDirectory_WhenCacheDirectoryFailsToInitialize()
 		{
-			var fileSystem = Mock.Create<IFileSystem>();
+			var fileSystem = Container.Resolve<IFileSystem>();
 			fileSystem.Directory.Arrange(d => d.Exists(Arg.AnyString)).Returns(true);
 			fileSystem.Directory.Arrange(d => d.GetFiles(Arg.AnyString, "*.nupkg"))
 				.Returns(Lib1Packages.ToArray());
@@ -197,12 +192,12 @@ namespace GitDepend.UnitTests.Visitors
 				.Returns(Lib2Solutions.ToArray());
 
 			fileSystem.Path.Arrange(p => p.GetFileNameWithoutExtension(Arg.AnyString))
-				.Returns(path => _fileSystem.Path.GetFileNameWithoutExtension(path));
+				.Returns(Path.GetFileNameWithoutExtension);
 
 			fileSystem.Directory.Arrange(d => d.CreateDirectory(Arg.AnyString))
 				.Throws<IOException>("Access Denied");
 
-			var instance = new BuildAndUpdateDependenciesVisitor(_factory, _git, _nuget, _processManager, fileSystem, _console);
+			var instance = new BuildAndUpdateDependenciesVisitor();
 
 			var code = instance.VisitProject(Lib2Directory, Lib2Config);
 			Assert.AreEqual(ReturnCode.CouldNotCreateCacheDirectory, code, "Invalid Return Code");

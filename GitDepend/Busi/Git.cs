@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
-using GitDepend.Busi;
 
-namespace GitDepend
+namespace GitDepend.Busi
 {
 	/// <summary>
 	/// A helper class for dealing with git.exe
@@ -18,10 +17,9 @@ namespace GitDepend
 		/// <summary>
 		/// Creates a new <see cref="Git"/>
 		/// </summary>
-		/// <param name="processManager">The <see cref="IProcessManager"/> to use.</param>
-		public Git(IProcessManager processManager)
+		public Git()
 		{
-			_processManager = processManager;
+			_processManager = DependencyInjection.Resolve<IProcessManager>();
 		}
 
 		/// <summary>

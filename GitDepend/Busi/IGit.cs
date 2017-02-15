@@ -1,4 +1,4 @@
-﻿namespace GitDepend
+﻿namespace GitDepend.Busi
 {
 	/// <summary>
 	/// A helper class for dealing with git.exe

@@ -25,20 +25,14 @@ namespace GitDepend.Visitors
 		/// <summary>
 		/// Creates a new <see cref="BuildAndUpdateDependenciesVisitor"/>
 		/// </summary>
-		/// /// <param name="factory">The <see cref="IGitDependFileFactory"/> to use.</param>
-		/// <param name="git">The <see cref="IGit"/> to use.</param>
-		/// <param name="nuget">The <see cref="INuget"/> to use.</param>
-		/// <param name="processManager">The <see cref="IProcessManager"/> to use.</param>
-		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
-		/// <param name="console">The <see cref="IConsole"/> to use.</param>
-		public BuildAndUpdateDependenciesVisitor(IGitDependFileFactory factory, IGit git, INuget nuget, IProcessManager processManager, IFileSystem fileSystem, IConsole console)
+		public BuildAndUpdateDependenciesVisitor()
 		{
-			_factory = factory;
-			_git = git;
-			_nuget = nuget;
-			_processManager = processManager;
-			_fileSystem = fileSystem;
-			_console = console;
+			_factory = DependencyInjection.Resolve<IGitDependFileFactory>();
+			_git = DependencyInjection.Resolve<IGit>();
+			_nuget = DependencyInjection.Resolve<INuget>();
+			_processManager = DependencyInjection.Resolve<IProcessManager>();
+			_fileSystem = DependencyInjection.Resolve<IFileSystem>();
+			_console = DependencyInjection.Resolve<IConsole>();
 		}
 
 		/// <summary>

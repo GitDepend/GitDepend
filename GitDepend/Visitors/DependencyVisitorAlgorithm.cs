@@ -21,16 +21,12 @@ namespace GitDepend.Visitors
 		/// <summary>
 		/// Creates a new <see cref="DependencyVisitorAlgorithm"/>
 		/// </summary>
-		/// <param name="factory">The <see cref="IGitDependFileFactory"/> to use.</param>
-		/// <param name="git">The <see cref="IGit"/> to use.</param>
-		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
-		/// <param name="console">The <see cref="IConsole"/> to use.</param>
-		public DependencyVisitorAlgorithm(IGitDependFileFactory factory, IGit git, IFileSystem fileSystem, IConsole console)
+		public DependencyVisitorAlgorithm()
 		{
-			_factory = factory;
-			_git = git;
-			_fileSystem = fileSystem;
-			_console = console;
+			_factory = DependencyInjection.Resolve<IGitDependFileFactory>();
+			_git = DependencyInjection.Resolve<IGit>();
+			_fileSystem = DependencyInjection.Resolve<IFileSystem>();
+			_console = DependencyInjection.Resolve<IConsole>();
 		}
 
 		/// <summary>

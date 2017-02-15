@@ -14,15 +14,10 @@ namespace GitDepend.Commands
 		/// Gets the implementation of <see cref="ICommand"/> that corresponds with the given arguments.
 		/// </summary>
 		/// <param name="args">The command line arguments.</param>
-		/// <param name="factory">The <see cref="IGitDependFileFactory"/> to use.</param>
-		/// <param name="git">The <see cref="IGit"/> to use.</param>
-		/// <param name="nuget">The <see cref="INuget"/> to use.</param>
-		/// <param name="processManager">The <see cref="IProcessManager"/> to use.</param>
-		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
-		/// <param name="console">The <see cref="IConsole"/> to use.</param>
 		/// <returns>An implementation of <see cref="ICommand"/> that matches the given arguments.</returns>
-		public ICommand GetCommand(string[] args, IGitDependFileFactory factory, IGit git, INuget nuget, IProcessManager processManager, IFileSystem fileSystem, IConsole console)
+		public ICommand GetCommand(string[] args)
 		{
+			var fileSystem = DependencyInjection.Resolve<IFileSystem>();
 			string invokedVerb = null;
 			object invokedVerbInstance = null;
 
@@ -50,16 +45,16 @@ namespace GitDepend.Commands
 			switch (invokedVerb)
 			{
 				case InitCommand.Name:
-					command = new InitCommand(options as InitSubOptions, fileSystem, console);
+					command = new InitCommand(options as InitSubOptions);
 					break;
 				case ShowConfigCommand.Name:
-					command = new ShowConfigCommand(options as ConfigSubOptions, fileSystem, console);
+					command = new ShowConfigCommand(options as ConfigSubOptions);
 					break;
 				case CloneCommand.Name:
-					command = new CloneCommand(options as CloneSubOptions, factory, git, fileSystem, console);
+					command = new CloneCommand(options as CloneSubOptions);
 					break;
 				case UpdateCommand.Name:
-					command = new UpdateCommand(options as UpdateSubOptions, factory, git, nuget, processManager, fileSystem, console);
+					command = new UpdateCommand(options as UpdateSubOptions);
 					break;
 			}
 

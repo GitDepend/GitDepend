@@ -1,4 +1,6 @@
-﻿using GitDepend.Configuration;
+﻿using System.IO.Abstractions.TestingHelpers;
+using GitDepend.Busi;
+using GitDepend.Configuration;
 using GitDepend.Visitors;
 using NUnit.Framework;
 using Telerik.JustMock;
@@ -7,24 +9,20 @@ using Telerik.JustMock.Helpers;
 namespace GitDepend.UnitTests.Visitors
 {
 	[TestFixture]
-	public class CheckOutBranchVisitorTests
+	public class CheckOutBranchVisitorTests : TestFixtureBase
 	{
 		private IGit _git;
+		private MockFileSystem _fileSystem;
+		private IConsole _console;
 		private CheckOutBranchVisitor _instance;
-		private Dependency _dependency;
 
 		[SetUp]
 		public void SetUp()
 		{
 			_git = Mock.Create<IGit>();
-			_dependency = new Dependency
-			{
-				Name = "Lib2",
-				Directory = @"C:\projects\Lib2",
-				Url = "git@github.com:kjjuno/Lib2.git",
-				Branch = "develop"
-			};
-			_instance = new CheckOutBranchVisitor(_git);
+			_fileSystem = new MockFileSystem();
+			_console = Mock.Create<IConsole>();
+			_instance = new CheckOutBranchVisitor(_git, _fileSystem, _console);
 		}
 
 		[Test]
@@ -36,16 +34,16 @@ namespace GitDepend.UnitTests.Visitors
 			_git.Arrange(g => g.Checkout(Arg.AnyString))
 				.Returns((string branch) =>
 				{
-					checkedOutDirectory = _git.WorkingDir;
+					checkedOutDirectory = _git.WorkingDirectory;
 					checkedOutBranch = branch;
 					return ReturnCode.Success;
 				});
 
-			var code = _instance.VisitDependency(_dependency);
+			var code = _instance.VisitDependency(Lib2Directory, Lib1Dependency);
 			Assert.AreEqual(ReturnCode.Success, code, "Invalid code returned from VisitDependency");
 			Assert.AreEqual(ReturnCode.Success, _instance.ReturnCode, "Invalid Return Code");
-			Assert.AreEqual(_dependency.Branch, checkedOutBranch, "Invalid branch checked out");
-			Assert.AreEqual(_dependency.Directory, checkedOutDirectory, "Invalid directory checked out.");
+			Assert.AreEqual(Lib1Dependency.Branch, checkedOutBranch, "Invalid branch checked out");
+			Assert.AreEqual(Lib1Directory, checkedOutDirectory, "Invalid directory checked out.");
 		}
 
 		[Test]
@@ -54,7 +52,7 @@ namespace GitDepend.UnitTests.Visitors
 			_git.Arrange(g => g.Checkout(Arg.AnyString))
 				.Returns(ReturnCode.FailedToRunGitCommand);
 
-			var code = _instance.VisitDependency(_dependency);
+			var code = _instance.VisitDependency(Lib2Directory, Lib1Dependency);
 			Assert.AreEqual(ReturnCode.FailedToRunGitCommand, code, "Invalid code returned from VisitDependency");
 			Assert.AreEqual(ReturnCode.FailedToRunGitCommand, _instance.ReturnCode, "Invalid Return Code");
 		}
@@ -62,8 +60,7 @@ namespace GitDepend.UnitTests.Visitors
 		[Test]
 		public void VisitProject_ShouldReturn_Success()
 		{
-			string directory = @"C:\projects\GitDepend";
-			var code = _instance.VisitProject(directory, new GitDependFile());
+			var code = _instance.VisitProject(Lib2Directory, Lib2Config);
 			Assert.AreEqual(ReturnCode.Success, code, "Invalid code returned from VisitProject");
 			Assert.AreEqual(ReturnCode.Success, _instance.ReturnCode, "Invalid Return Code");
 		}

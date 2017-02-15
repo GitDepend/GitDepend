@@ -26,9 +26,10 @@ namespace GitDepend.Busi
 		/// property already set to true. In this case, the started process may have activated
 		/// an existing instance of itself and then exited.
 		/// </returns>
-		public Process Start(ProcessStartInfo startInfo)
+		public IProcess Start(ProcessStartInfo startInfo)
 		{
-			return Process.Start(startInfo);
+			var proc = Process.Start(startInfo);
+			return new ProcessWrapper(proc);
 		}
 
 		#endregion

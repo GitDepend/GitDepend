@@ -10,13 +10,14 @@ namespace GitDepend
 		static void Main(string[] args)
 		{
 			var fileSystem = new FileSystem();
-			var factory = new GitDependFileFactory(fileSystem);
+			var console = new ConsoleWrapper();
+			var factory = new GitDependFileFactory(fileSystem, console);
 			var processManager = new ProcessManager();
 			var git = new Git(processManager);
 			var nuget = new Nuget(processManager, fileSystem);
 
 			var parser = new CommandParser();
-			var command = parser.GetCommand(args, factory, git, nuget, processManager, fileSystem);
+			var command = parser.GetCommand(args, factory, git, nuget, processManager, fileSystem, console);
 
 			var code = command.Execute();
 

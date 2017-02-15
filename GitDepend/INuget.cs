@@ -6,9 +6,9 @@
 	public interface INuget
 	{
 		/// <summary>
-		/// The configuration file to use.
+		/// The working directory for nuget.exe
 		/// </summary>
-		string ConfigFile { get; set; }
+		string WorkingDirectory { get; set; }
 
 		/// <summary>
 		/// Updates the specified nuget package in all projects within the given solution to the specified version.

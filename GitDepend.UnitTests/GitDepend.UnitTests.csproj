@@ -60,6 +60,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FakeProcess.cs" />
     <Compile Include="Visitors\BuildAndUpdateDependenciesVisitorTests.cs" />
     <Compile Include="Visitors\CheckOutBranchVisitorTests.cs" />
     <Compile Include="Visitors\DependencyVisitorAlgorithmTests.cs" />

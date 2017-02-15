@@ -60,9 +60,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Busi\GitDependFileFactory.cs" />
+    <Compile Include="Busi\IConsole.cs" />
     <Compile Include="Busi\IGitDependFileFactory.cs" />
+    <Compile Include="Busi\IProcess.cs" />
     <Compile Include="Busi\IProcessManager.cs" />
+    <Compile Include="Busi\ConsoleWrapper.cs" />
     <Compile Include="Busi\ProcessManager.cs" />
+    <Compile Include="Busi\ProcessWrapper.cs" />
     <Compile Include="CommandLine\CloneSubOptions.cs" />
     <Compile Include="CommandLine\CommonSubOptions.cs" />
     <Compile Include="CommandLine\ConfigSubOptions.cs" />

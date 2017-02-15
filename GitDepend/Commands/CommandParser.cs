@@ -19,8 +19,9 @@ namespace GitDepend.Commands
 		/// <param name="nuget">The <see cref="INuget"/> to use.</param>
 		/// <param name="processManager">The <see cref="IProcessManager"/> to use.</param>
 		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
+		/// <param name="console">The <see cref="IConsole"/> to use.</param>
 		/// <returns>An implementation of <see cref="ICommand"/> that matches the given arguments.</returns>
-		public ICommand GetCommand(string[] args, IGitDependFileFactory factory, IGit git, INuget nuget, IProcessManager processManager, IFileSystem fileSystem)
+		public ICommand GetCommand(string[] args, IGitDependFileFactory factory, IGit git, INuget nuget, IProcessManager processManager, IFileSystem fileSystem, IConsole console)
 		{
 			string invokedVerb = null;
 			object invokedVerbInstance = null;
@@ -49,16 +50,16 @@ namespace GitDepend.Commands
 			switch (invokedVerb)
 			{
 				case InitCommand.Name:
-					command = new InitCommand(options as InitSubOptions, fileSystem);
+					command = new InitCommand(options as InitSubOptions, fileSystem, console);
 					break;
 				case ShowConfigCommand.Name:
-					command = new ShowConfigCommand(options as ConfigSubOptions, fileSystem);
+					command = new ShowConfigCommand(options as ConfigSubOptions, fileSystem, console);
 					break;
 				case CloneCommand.Name:
-					command = new CloneCommand(options as CloneSubOptions, factory, git, fileSystem);
+					command = new CloneCommand(options as CloneSubOptions, factory, git, fileSystem, console);
 					break;
 				case UpdateCommand.Name:
-					command = new UpdateCommand(options as UpdateSubOptions, factory, git, nuget, processManager, fileSystem);
+					command = new UpdateCommand(options as UpdateSubOptions, factory, git, nuget, processManager, fileSystem, console);
 					break;
 			}
 

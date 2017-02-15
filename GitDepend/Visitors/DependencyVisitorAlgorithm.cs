@@ -14,6 +14,7 @@ namespace GitDepend.Visitors
 		private readonly IGitDependFileFactory _factory;
 		private readonly IGit _git;
 		private readonly IFileSystem _fileSystem;
+		private readonly IConsole _console;
 		private readonly HashSet<string> _visitedDependencies = new HashSet<string>();
 		private readonly HashSet<string> _visitedProjects = new HashSet<string>();
 
@@ -23,11 +24,13 @@ namespace GitDepend.Visitors
 		/// <param name="factory">The <see cref="IGitDependFileFactory"/> to use.</param>
 		/// <param name="git">The <see cref="IGit"/> to use.</param>
 		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
-		public DependencyVisitorAlgorithm(IGitDependFileFactory factory, IGit git, IFileSystem fileSystem)
+		/// <param name="console">The <see cref="IConsole"/> to use.</param>
+		public DependencyVisitorAlgorithm(IGitDependFileFactory factory, IGit git, IFileSystem fileSystem, IConsole console)
 		{
 			_factory = factory;
 			_git = git;
 			_fileSystem = fileSystem;
+			_console = console;
 		}
 
 		/// <summary>
@@ -53,18 +56,15 @@ namespace GitDepend.Visitors
 			}
 
 			string dir;
-			string error;
-			var config = _factory.LoadFromDirectory(directory, out dir, out error);
+			ReturnCode code;
+			var config = _factory.LoadFromDirectory(directory, out dir, out code);
 
-			if (config == null)
+			if (code != ReturnCode.Success)
 			{
-				Console.Error.WriteLine("Could not find GitDepend.json");
-				visitor.ReturnCode = ReturnCode.GitDependFileNotFound;
+				visitor.ReturnCode = code;
 				return;
 			}
-
-			ReturnCode code;
-
+		
 			foreach (var dependency in config.Dependencies)
 			{
 				dependency.Directory = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(dir, dependency.Directory));
@@ -72,10 +72,10 @@ namespace GitDepend.Visitors
 				// If the dependency does not exist on disk we need to clone it.
 				if (!_fileSystem.Directory.Exists(dependency.Directory))
 				{
-					Console.WriteLine($"Cloning {dependency.Name} into {dependency.Directory}");
+					_console.WriteLine($"Cloning {dependency.Name} into {dependency.Directory}");
 
 					code = _git.Clone(dependency.Url, dependency.Directory, dependency.Branch);
-					Console.WriteLine();
+					_console.WriteLine();
 
 					// If something went wrong with git we are done.
 					if (code != ReturnCode.Success)
@@ -100,7 +100,7 @@ namespace GitDepend.Visitors
 					_visitedDependencies.Add(dependency.Directory);
 
 					// Visit the dependency.
-					code = visitor.VisitDependency(dependency);
+					code = visitor.VisitDependency(dir, dependency);
 
 					// If something went wrong visiting the dependency we are done.
 					if (code != ReturnCode.Success)
@@ -118,7 +118,7 @@ namespace GitDepend.Visitors
 
 				// Visit the project.
 				code = visitor.VisitProject(dir, config);
-				Console.WriteLine();
+				_console.WriteLine();
 
 				// If something went wrong visiting the project we are done.
 				if (code != ReturnCode.Success)

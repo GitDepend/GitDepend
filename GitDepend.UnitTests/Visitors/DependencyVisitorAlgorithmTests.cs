@@ -18,6 +18,7 @@ namespace GitDepend.UnitTests.Visitors
 		private IGit _git;
 		private IFileSystem _fileSystem;
 		private DependencyVisitorAlgorithm _instance;
+		private IConsole _console;
 
 		const string PROJECT_DIRECTORY = @"C:\projects\GitDepend";
 
@@ -28,7 +29,8 @@ namespace GitDepend.UnitTests.Visitors
 			_factory = Mock.Create<IGitDependFileFactory>();
 			_git = Mock.Create<IGit>();
 			_fileSystem = new MockFileSystem();
-			_instance = new DependencyVisitorAlgorithm(_factory, _git, _fileSystem);
+			_console = Mock.Create<IConsole>();
+			_instance = new DependencyVisitorAlgorithm(_factory, _git, _fileSystem, _console);
 		}
 
 		[Test]
@@ -61,13 +63,14 @@ namespace GitDepend.UnitTests.Visitors
 		}
 
 		[Test]
-		public void TraverseDependencies_ShouldReturn_GitDependFileNotFound_WhenUnableToLoadFile()
+		public void TraverseDependencies_ShouldReturn_GitRepositoryNotFound_WhenUnableToLoadFile()
 		{
 			var visitor = Mock.Create<IVisitor>();
 
 			// LoadFromDirectory returns null
-			string dir, error;
-			_factory.Arrange(f => f.LoadFromDirectory(Arg.AnyString, out dir, out error))
+			string dir;
+			ReturnCode code = ReturnCode.GitRepositoryNotFound;
+			_factory.Arrange(f => f.LoadFromDirectory(Arg.AnyString, out dir, out code))
 				.Returns(null as GitDependFile);
 			
 			// The directory needs to exist
@@ -75,7 +78,7 @@ namespace GitDepend.UnitTests.Visitors
 
 			_instance.TraverseDependencies(visitor, PROJECT_DIRECTORY);
 
-			Assert.AreEqual(ReturnCode.GitDependFileNotFound, visitor.ReturnCode, "Invalid ReturnCode");
+			Assert.AreEqual(ReturnCode.GitRepositoryNotFound, visitor.ReturnCode, "Invalid ReturnCode");
 		}
 
 		[Test]
@@ -85,8 +88,8 @@ namespace GitDepend.UnitTests.Visitors
 			List<string> visitedProjects = new List<string>();
 
 			var visitor = Mock.Create<IVisitor>();
-			visitor.Arrange(v => v.VisitDependency(Arg.IsAny<Dependency>()))
-				.Returns((Dependency dependency) =>
+			visitor.Arrange(v => v.VisitDependency(Arg.AnyString, Arg.IsAny<Dependency>()))
+				.Returns((string directory, Dependency dependency) =>
 				{
 					Assert.IsFalse(visitedDependencies.Contains(dependency.Directory), "This dependency has already been visited");
 
@@ -110,11 +113,12 @@ namespace GitDepend.UnitTests.Visitors
 			_fileSystem.Directory.CreateDirectory(PROJECT_DIRECTORY);
 			_fileSystem.Directory.CreateDirectory(_fileSystem.Path.Combine(PROJECT_DIRECTORY, ".git"));
 
-			string error;
-			_factory.Arrange(f => f.LoadFromDirectory(lib1Dir, out lib1Dir, out error))
+			ReturnCode lib1Code;
+			ReturnCode lib2Code;
+			_factory.Arrange(f => f.LoadFromDirectory(lib1Dir, out lib1Dir, out lib1Code))
 				.Returns(Lib1Config);
 
-			_factory.Arrange(f => f.LoadFromDirectory(lib2Dir, out lib2Dir, out error))
+			_factory.Arrange(f => f.LoadFromDirectory(lib2Dir, out lib2Dir, out lib2Code))
 				.Returns(Lib2Config);
 
 			_git.Arrange(g => g.Clone(Arg.AnyString, Arg.AnyString, Arg.AnyString))
@@ -140,8 +144,8 @@ namespace GitDepend.UnitTests.Visitors
 
 			string lib2Dir = PROJECT_DIRECTORY;
 
-			string error;
-			_factory.Arrange(f => f.LoadFromDirectory(lib2Dir, out lib2Dir, out error))
+			ReturnCode lib1Code;
+			_factory.Arrange(f => f.LoadFromDirectory(lib2Dir, out lib2Dir, out lib1Code))
 				.Returns(Lib2Config);
 
 			_git.Arrange(g => g.Clone(Arg.AnyString, Arg.AnyString, Arg.AnyString))
@@ -155,7 +159,7 @@ namespace GitDepend.UnitTests.Visitors
 		public void TraverseDependencies_ShouldReturnFailureCode_WhenVisitingDependencyReturnsFailureCode()
 		{
 			var visitor = Mock.Create<IVisitor>();
-			visitor.Arrange(v => v.VisitDependency(Arg.IsAny<Dependency>()))
+			visitor.Arrange(v => v.VisitDependency(Arg.AnyString, Arg.IsAny<Dependency>()))
 				.Returns(ReturnCode.FailedToRunBuildScript);
 
 			_fileSystem.Directory.CreateDirectory(PROJECT_DIRECTORY);
@@ -163,8 +167,8 @@ namespace GitDepend.UnitTests.Visitors
 
 			string lib2Dir = PROJECT_DIRECTORY;
 
-			string error;
-			_factory.Arrange(f => f.LoadFromDirectory(lib2Dir, out lib2Dir, out error))
+			ReturnCode lib2Code;
+			_factory.Arrange(f => f.LoadFromDirectory(lib2Dir, out lib2Dir, out lib2Code))
 				.Returns(Lib2Config);
 
 			_git.Arrange(g => g.Clone(Arg.AnyString, Arg.AnyString, Arg.AnyString))
@@ -185,8 +189,8 @@ namespace GitDepend.UnitTests.Visitors
 			List<string> visitedProjects = new List<string>();
 
 			var visitor = Mock.Create<IVisitor>();
-			visitor.Arrange(v => v.VisitDependency(Arg.IsAny<Dependency>()))
-				.Returns((Dependency dependency) =>
+			visitor.Arrange(v => v.VisitDependency(Arg.AnyString, Arg.IsAny<Dependency>()))
+				.Returns((string directory, Dependency dependency) =>
 				{
 					Assert.IsFalse(visitedDependencies.Contains(dependency.Directory), "This dependency has already been visited");
 
@@ -210,11 +214,12 @@ namespace GitDepend.UnitTests.Visitors
 			_fileSystem.Directory.CreateDirectory(PROJECT_DIRECTORY);
 			_fileSystem.Directory.CreateDirectory(_fileSystem.Path.Combine(PROJECT_DIRECTORY, ".git"));
 
-			string error;
-			_factory.Arrange(f => f.LoadFromDirectory(lib1Dir, out lib1Dir, out error))
+			ReturnCode lib1Code;
+			_factory.Arrange(f => f.LoadFromDirectory(lib1Dir, out lib1Dir, out lib1Code))
 				.Returns(Lib1Config);
 
-			_factory.Arrange(f => f.LoadFromDirectory(lib2Dir, out lib2Dir, out error))
+			ReturnCode lib2Code;
+			_factory.Arrange(f => f.LoadFromDirectory(lib2Dir, out lib2Dir, out lib2Code))
 				.Returns(Lib2Config);
 
 			_git.Arrange(g => g.Clone(Arg.AnyString, Arg.AnyString, Arg.AnyString))

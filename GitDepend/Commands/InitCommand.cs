@@ -13,6 +13,7 @@ namespace GitDepend.Commands
 	{
 		private readonly InitSubOptions _options;
 		private readonly IFileSystem _fileSystem;
+		private readonly IConsole _console;
 		private readonly GitDependFileFactory _factory;
 
 		/// <summary>
@@ -25,11 +26,13 @@ namespace GitDepend.Commands
 		/// </summary>
 		/// <param name="options">The <see cref="InitSubOptions"/> that configures the command.</param>
 		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
-		public InitCommand(InitSubOptions options, IFileSystem fileSystem)
+		/// <param name="console">The <see cref="IConsole"/> to use.</param>
+		public InitCommand(InitSubOptions options, IFileSystem fileSystem, IConsole console)
 		{
 			_options = options;
 			_fileSystem = fileSystem;
-			_factory = new GitDependFileFactory(fileSystem);
+			_console = console;
+			_factory = new GitDependFileFactory(fileSystem, console);
 		}
 
 		#region Implementation of ICommand
@@ -41,13 +44,18 @@ namespace GitDepend.Commands
 		public ReturnCode Execute()
 		{
 			string dir;
-			string error;
-			var config = _factory.LoadFromDirectory(_options.Directory, out dir, out error) ?? new GitDependFile();
+			ReturnCode code;
+			var config = _factory.LoadFromDirectory(_options.Directory, out dir, out code) ?? new GitDependFile();
 
-			Console.Write($"build script [{config.Build.Script}]: ");
+			if (code != ReturnCode.Success)
+			{
+				return code;
+			}
+
+			_console.Write($"build script [{config.Build.Script}]: ");
 			config.Build.Script = ReadLine(config.Build.Script);
 
-			Console.Write($"artifacts dir [{config.Packages.Directory}]: ");
+			_console.Write($"artifacts dir [{config.Packages.Directory}]: ");
 			config.Packages.Directory = ReadLine(config.Packages.Directory);
 
 			var path = _fileSystem.Path.Combine(dir, "GitDepend.json");
@@ -57,9 +65,9 @@ namespace GitDepend.Commands
 			return ReturnCode.Success;
 		}
 
-		private static string ReadLine(string defaultValue)
+		private string ReadLine(string defaultValue)
 		{
-			var input = Console.ReadLine();
+			var input = _console.ReadLine();
 			if (string.IsNullOrEmpty(input))
 			{
 				input = defaultValue;

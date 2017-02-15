@@ -11,12 +11,11 @@ namespace GitDepend
 	public class Nuget : INuget
 	{
 		private readonly IProcessManager _processManager;
-		private readonly string _workingDir;
 
 		/// <summary>
-		/// The configuration file to use.
+		/// The working directory for nuget.exe
 		/// </summary>
-		public string ConfigFile { get; set; }
+		public string WorkingDirectory { get; set; }
 
 		/// <summary>
 		/// Creates a new <see cref="Nuget"/>
@@ -26,7 +25,6 @@ namespace GitDepend
 		public Nuget(IProcessManager processManager, IFileSystem fileSystem)
 		{
 			_processManager = processManager;
-			_workingDir = fileSystem.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 		}
 
 		/// <summary>
@@ -39,21 +37,14 @@ namespace GitDepend
 		/// <returns>The nuget return code.</returns>
 		public ReturnCode Update(string soluton, string id, string version, string sourceDirectory)
 		{
-			return ExecuteNuGetCommand($"update {soluton} -Id {id} -Version {version} {ConfigFileParam()} -Source \"{sourceDirectory}\" -Pre");
-		}
-
-		private string ConfigFileParam()
-		{
-			return string.IsNullOrEmpty(ConfigFile)
-				? string.Empty
-				: $"-ConfigFile {ConfigFile}";
+			return ExecuteNuGetCommand($"update {soluton} -Id {id} -Version {version} -Source \"{sourceDirectory}\" -Pre");
 		}
 
 		private ReturnCode ExecuteNuGetCommand(string arguments)
 		{
 			var info = new ProcessStartInfo("NuGet.exe", arguments)
 			{
-				WorkingDirectory = _workingDir,
+				WorkingDirectory = WorkingDirectory,
 				UseShellExecute = false,
 			};
 			var proc = _processManager.Start(info);

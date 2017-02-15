@@ -12,14 +12,17 @@ namespace GitDepend.Busi
 	public class GitDependFileFactory : IGitDependFileFactory
 	{
 		private readonly IFileSystem _fileSystem;
+		private readonly IConsole _console;
 
 		/// <summary>
 		/// Creates a new <see cref="GitDependFileFactory"/>
 		/// </summary>
 		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
-		public GitDependFileFactory(IFileSystem fileSystem)
+		/// <param name="console">The <see cref="IConsole"/> to use.</param>
+		public GitDependFileFactory(IFileSystem fileSystem, IConsole console)
 		{
 			_fileSystem = fileSystem;
+			_console = console;
 		}
 
 		/// <summary>
@@ -27,14 +30,14 @@ namespace GitDepend.Busi
 		/// </summary>
 		/// <param name="directory">The directory to start in.</param>
 		/// <param name="dir">The directory where GitDepend.json was found.</param>
-		/// <param name="error">An error string indicating what went wrong in the case that the file could not be loaded.</param>
+		/// <param name="code">The return code indicating if the load was successful, or which error occurred.</param>
 		/// <returns>A <see cref="GitDependFile"/> or null if none could be loaded.</returns>
-		public GitDependFile LoadFromDirectory(string directory, out string dir, out string error)
+		public GitDependFile LoadFromDirectory(string directory, out string dir, out ReturnCode code)
 		{
 			if (!_fileSystem.Directory.Exists(directory))
 			{
 				dir = null;
-				error = $"{directory} does not exist";
+				code = ReturnCode.DirectoryDoesNotExist;
 				return null;
 			}
 
@@ -63,7 +66,7 @@ namespace GitDepend.Busi
 					{
 						var json = _fileSystem.File.ReadAllText(file);
 						var gitDependFile = JsonConvert.DeserializeObject<GitDependFile>(json);
-						error = null;
+						code = ReturnCode.Success;
 						dir = current;
 						gitDependFile.Build.Script = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(current, gitDependFile.Build.Script));
 						gitDependFile.Packages.Directory = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(current, gitDependFile.Packages.Directory));
@@ -72,23 +75,23 @@ namespace GitDepend.Busi
 						{
 							dependency.Directory = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(current, dependency.Directory));
 							string subdir;
-							string suberror;
-							dependency.Configuration = LoadFromDirectory(dependency.Directory, out subdir, out suberror);
+							ReturnCode subcode;
+							dependency.Configuration = LoadFromDirectory(dependency.Directory, out subdir, out subcode);
 						}
 						return gitDependFile;
 					}
 					catch (Exception ex)
 					{
-						error = ex.Message;
-						Console.Error.WriteLine(ex.Message);
+						code = ReturnCode.UnknownError;
+						_console.Error.WriteLine(ex.Message);
 						return null;
 					}
 				}
-				error = null;
+				code = ReturnCode.Success;
 				return new GitDependFile();
 			}
 
-			error = "This is not a git repository";
+			code = ReturnCode.GitRepositoryNotFound;
 			return null;
 		}
 	}

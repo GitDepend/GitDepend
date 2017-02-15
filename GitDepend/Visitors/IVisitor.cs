@@ -16,9 +16,10 @@ namespace GitDepend.Visitors
 		/// <summary>
 		/// Visits a project dependency.
 		/// </summary>
+		/// <param name="directory">The directory of the project.</param>
 		/// <param name="dependency">The <see cref="Dependency"/> to visit.</param>
 		/// <returns>The return code.</returns>
-		ReturnCode VisitDependency(Dependency dependency);
+		ReturnCode VisitDependency(string directory, Dependency dependency);
 
 		/// <summary>
 		/// Visists a project.

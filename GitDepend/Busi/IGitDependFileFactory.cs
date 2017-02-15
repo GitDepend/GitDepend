@@ -12,8 +12,8 @@ namespace GitDepend.Busi
 		/// </summary>
 		/// <param name="directory">The directory to start in.</param>
 		/// <param name="dir">The directory where GitDepend.json was found.</param>
-		/// <param name="error">An error string indicating what went wrong in the case that the file could not be loaded.</param>
+		/// <param name="code">The return code indicating if the load was successful, or which error occurred.</param>
 		/// <returns>A <see cref="GitDependFile"/> or null if none could be loaded.</returns>
-		GitDependFile LoadFromDirectory(string directory, out string dir, out string error);
+		GitDependFile LoadFromDirectory(string directory, out string dir, out ReturnCode code);
 	}
 }

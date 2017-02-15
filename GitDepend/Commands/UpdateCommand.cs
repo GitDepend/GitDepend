@@ -17,6 +17,7 @@ namespace GitDepend.Commands
 		private readonly INuget _nuget;
 		private readonly IProcessManager _processManager;
 		private readonly IFileSystem _fileSystem;
+		private readonly IConsole _console;
 
 		/// <summary>
 		/// The verb name
@@ -32,7 +33,8 @@ namespace GitDepend.Commands
 		/// <param name="nuget">The <see cref="INuget"/> to use.</param>
 		/// <param name="processManager">The <see cref="IProcessManager"/> to use.</param>
 		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
-		public UpdateCommand(UpdateSubOptions options, IGitDependFileFactory factory, IGit git, INuget nuget, IProcessManager processManager, IFileSystem fileSystem)
+		/// <param name="console">The <see cref="IConsole"/> to use.</param>
+		public UpdateCommand(UpdateSubOptions options, IGitDependFileFactory factory, IGit git, INuget nuget, IProcessManager processManager, IFileSystem fileSystem, IConsole console)
 		{
 			_options = options;
 			_factory = factory;
@@ -40,6 +42,7 @@ namespace GitDepend.Commands
 			_nuget = nuget;
 			_processManager = processManager;
 			_fileSystem = fileSystem;
+			_console = console;
 		}
 
 		#region Implementation of ICommand
@@ -50,23 +53,23 @@ namespace GitDepend.Commands
 		/// <returns>The return code.</returns>
 		public ReturnCode Execute()
 		{
-			var alg = new DependencyVisitorAlgorithm(_factory, _git, _fileSystem);
-			IVisitor visitor = new CheckOutBranchVisitor(_git);
+			var alg = new DependencyVisitorAlgorithm(_factory, _git, _fileSystem, _console);
+			IVisitor visitor = new CheckOutBranchVisitor(_git, _fileSystem, _console);
 			alg.TraverseDependencies(visitor, _options.Directory);
 
 			if (visitor.ReturnCode != ReturnCode.Success)
 			{
-				Console.WriteLine("Could not ensure the correct branch on all dependencies.");
+				_console.WriteLine("Could not ensure the correct branch on all dependencies.");
 				return visitor.ReturnCode;
 			}
 
-			alg = new DependencyVisitorAlgorithm(_factory, _git, _fileSystem);
-			visitor = new BuildAndUpdateDependenciesVisitor(_factory, _git, _nuget, _processManager, _fileSystem);
+			alg = new DependencyVisitorAlgorithm(_factory, _git, _fileSystem, _console);
+			visitor = new BuildAndUpdateDependenciesVisitor(_factory, _git, _nuget, _processManager, _fileSystem, _console);
 			alg.TraverseDependencies(visitor, _options.Directory);
 
 			if (visitor.ReturnCode == ReturnCode.Success)
 			{
-				Console.WriteLine("Update complete!");
+				_console.WriteLine("Update complete!");
 			}
 
 			return visitor.ReturnCode;

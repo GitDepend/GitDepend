@@ -8,7 +8,7 @@
 		/// <summary>
 		/// The working directory for all git operations.
 		/// </summary>
-		string WorkingDir { get; set; }
+		string WorkingDirectory { get; set; }
 
 		/// <summary>
 		/// Adds files into the staging area to prepare them for a commit.

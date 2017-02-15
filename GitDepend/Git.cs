@@ -13,7 +13,7 @@ namespace GitDepend
 		/// <summary>
 		/// The working directory for all git operations.
 		/// </summary>
-		public string WorkingDir { get; set; }
+		public string WorkingDirectory { get; set; }
 
 		/// <summary>
 		/// Creates a new <see cref="Git"/>
@@ -84,7 +84,7 @@ namespace GitDepend
 		{
 			var info = new ProcessStartInfo("git", arguments)
 			{
-				WorkingDirectory = WorkingDir,
+				WorkingDirectory = WorkingDirectory,
 				UseShellExecute = false,
 			};
 			var proc = _processManager.Start(info);

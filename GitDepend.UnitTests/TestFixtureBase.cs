@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
+using System.IO.Abstractions.TestingHelpers;
 using System.Threading.Tasks;
 using GitDepend.Configuration;
+using Microsoft.Practices.Unity;
 using NUnit.Framework;
 
 namespace GitDepend.UnitTests
@@ -10,6 +12,8 @@ namespace GitDepend.UnitTests
 	[TestFixture]
 	public abstract class TestFixtureBase
 	{
+		protected UnityContainer Container;
+
 		protected readonly GitDependFile Lib1Config;
 		protected readonly Dependency Lib1Dependency;
 		protected readonly string Lib1Directory = @"C:\projects\Lib1";
@@ -58,6 +62,21 @@ namespace GitDepend.UnitTests
 				"Lib2.sln",
 				"Lib2.UnitTests.sln"
 			};
+		}
+
+		[SetUp]
+		public void SetUp()
+		{
+			Container = new UnityContainer();
+			Container.EnableMocking();
+			DependencyInjection.Container = Container;
+		}
+
+		protected IFileSystem RegisterMockFileSystem()
+		{
+			var fileSystem = new MockFileSystem();
+			Container.RegisterType<IFileSystem, MockFileSystem>(new InjectionFactory(c => fileSystem));
+			return fileSystem;
 		}
 
 		protected void EnsureDirectory(IFileSystem fileSystem, string directory)

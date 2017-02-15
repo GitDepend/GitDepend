@@ -1,9 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO.Abstractions;
-using System.Reflection;
-using GitDepend.Busi;
 
-namespace GitDepend
+namespace GitDepend.Busi
 {
 	/// <summary>
 	/// A helper class for dealing with nuget.exe
@@ -20,11 +18,9 @@ namespace GitDepend
 		/// <summary>
 		/// Creates a new <see cref="Nuget"/>
 		/// </summary>
-		/// <param name="processManager">The <see cref="IProcessManager"/> to use.</param>
-		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
-		public Nuget(IProcessManager processManager, IFileSystem fileSystem)
+		public Nuget()
 		{
-			_processManager = processManager;
+			_processManager = DependencyInjection.Resolve<IProcessManager>();
 		}
 
 		/// <summary>

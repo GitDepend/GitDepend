@@ -18,14 +18,11 @@ namespace GitDepend.Visitors
 		/// <summary>
 		/// Creates a new <see cref="CheckOutBranchVisitor"/>
 		/// </summary>
-		/// <param name="git">The <see cref="IGit"/> to use.</param>
-		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
-		/// <param name="console">The <see cref="IConsole"/> to use.</param>
-		public CheckOutBranchVisitor(IGit git, IFileSystem fileSystem, IConsole console)
+		public CheckOutBranchVisitor()
 		{
-			_git = git;
-			_fileSystem = fileSystem;
-			_console = console;
+			_git = DependencyInjection.Resolve<IGit>();
+			_fileSystem = DependencyInjection.Resolve<IFileSystem>();
+			_console = DependencyInjection.Resolve<IConsole>();
 		}
 
 		#region Implementation of IVisitor

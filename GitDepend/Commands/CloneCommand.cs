@@ -25,17 +25,13 @@ namespace GitDepend.Commands
 		/// Creates a new <see cref="CloneCommand"/>
 		/// </summary>
 		/// <param name="options">The <see cref="CloneSubOptions"/> that configure this command.</param>
-		/// <param name="factory">The <see cref="IGitDependFileFactory"/> to use.</param>
-		/// <param name="git">The <see cref="IGit"/> to use.</param>
-		/// <param name="fileSystem">The <see cref="IFileSystem"/> to use.</param>
-		/// <param name="console">The <see cref="IConsole"/> to use.</param>
-		public CloneCommand(CloneSubOptions options, IGitDependFileFactory factory, IGit git, IFileSystem fileSystem, IConsole console)
+		public CloneCommand(CloneSubOptions options)
 		{
 			_options = options;
-			_factory = factory;
-			_git = git;
-			_fileSystem = fileSystem;
-			_console = console;
+			_factory = DependencyInjection.Resolve<IGitDependFileFactory>();
+			_git = DependencyInjection.Resolve<IGit>();
+			_fileSystem = DependencyInjection.Resolve<IFileSystem>();
+			_console = DependencyInjection.Resolve<IConsole>();
 		}
 
 		#region Implementation of ICommand
@@ -46,8 +42,8 @@ namespace GitDepend.Commands
 		/// <returns>The return code.</returns>
 		public ReturnCode Execute()
 		{
-			var alg = new DependencyVisitorAlgorithm(_factory, _git, _fileSystem, _console);
-			var visitor = new CheckOutBranchVisitor(_git, _fileSystem, _console);
+			var alg = new DependencyVisitorAlgorithm();
+			var visitor = new CheckOutBranchVisitor();
 			alg.TraverseDependencies(visitor, _options.Directory);
 
 			if (visitor.ReturnCode == ReturnCode.Success)

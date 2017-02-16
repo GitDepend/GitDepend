@@ -15,7 +15,7 @@ namespace GitDepend.UnitTests
 		/// <summary>
 		/// Gets the value that the associated process specified when it terminated.
 		/// </summary>
-		public int ExitCode { get; set; }
+		public int ExitCode { get; set; } = 0;
 
 		/// <summary>
 		/// Indicates if the associated process has exited or not.

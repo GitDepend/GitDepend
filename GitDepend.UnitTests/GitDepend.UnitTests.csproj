@@ -76,6 +76,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Busi\GitTests.cs" />
+    <Compile Include="Configuration\BuildTests.cs" />
+    <Compile Include="Configuration\DependencyTests.cs" />
+    <Compile Include="Configuration\GitDependFileTests.cs" />
+    <Compile Include="Configuration\PackagesTests.cs" />
     <Compile Include="FakeProcess.cs" />
     <Compile Include="MockingUnityContainer.cs" />
     <Compile Include="MockingUnityContainerExtension.cs" />

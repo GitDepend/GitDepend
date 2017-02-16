@@ -32,14 +32,14 @@ namespace GitDepend.Busi
 		/// <returns>A <see cref="GitDependFile"/> or null if none could be loaded.</returns>
 		public GitDependFile LoadFromDirectory(string directory, out string dir, out ReturnCode code)
 		{
+			dir = null;
+
 			if (!_fileSystem.Directory.Exists(directory))
 			{
-				dir = null;
 				code = ReturnCode.DirectoryDoesNotExist;
 				return null;
 			}
 
-			dir = directory;
 			var current = directory;
 			bool isGitRoot;
 			do
@@ -85,6 +85,7 @@ namespace GitDepend.Busi
 						return null;
 					}
 				}
+				dir = directory;
 				code = ReturnCode.Success;
 				return new GitDependFile();
 			}

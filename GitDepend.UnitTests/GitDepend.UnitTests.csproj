@@ -76,7 +76,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Busi\GitDependFileFactoryTests.cs" />
     <Compile Include="Busi\GitTests.cs" />
+    <Compile Include="Busi\NugetTests.cs" />
     <Compile Include="Configuration\BuildTests.cs" />
     <Compile Include="Configuration\DependencyTests.cs" />
     <Compile Include="Configuration\GitDependFileTests.cs" />

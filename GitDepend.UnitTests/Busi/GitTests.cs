@@ -141,5 +141,26 @@ namespace GitDepend.UnitTests.Busi
 			Assert.AreEqual("git", command);
 			Assert.AreEqual($"commit -m \"{message}\"", arguments);
 		}
+
+		[Test]
+		public void WorkingDirectoryTest()
+		{
+			string workingDir = null;
+			var processManager = Container.Resolve<IProcessManager>();
+			processManager.Arrange(p => p.Start(Arg.IsAny<ProcessStartInfo>()))
+				.Returns((ProcessStartInfo info) =>
+				{
+					workingDir = info.WorkingDirectory;
+
+					return new FakeProcess();
+				});
+
+			var instance = new Git() { WorkingDirectory = Lib1Directory };
+			var message = "This is a test message";
+			var code = instance.Commit(message);
+
+			Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
+			Assert.AreEqual(Lib1Directory, workingDir);
+		}
 	}
 }

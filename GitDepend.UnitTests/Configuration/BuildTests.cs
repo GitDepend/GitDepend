@@ -8,33 +8,33 @@ using NUnit.Framework;
 
 namespace GitDepend.UnitTests.Configuration
 {
-	[TestFixture]
-	public class BuildTests
-	{
-		[Test]
-		public void DefaultValuesTest()
-		{
-			var build = new Build();
+    [TestFixture]
+    public class BuildTests
+    {
+        [Test]
+        public void DefaultValuesTest()
+        {
+            var build = new Build();
 
-			Assert.AreEqual("make.bat", build.Script);
-			Assert.AreEqual(null, build.Arguments);
-		}
+            Assert.AreEqual("make.bat", build.Script);
+            Assert.AreEqual(null, build.Arguments);
+        }
 
-		[Test]
-		public void ToStringTest()
-		{
-			var build = new Build
-			{
-				Script = "buildall.bat",
-				Arguments = "cov"
-			};
+        [Test]
+        public void ToStringTest()
+        {
+            var build = new Build
+            {
+                Script = "buildall.bat",
+                Arguments = "cov"
+            };
 
-			var expected = @"{
+            var expected = @"{
   ""script"": ""buildall.bat"",
   ""arguments"": ""cov""
 }";
-			var actual = build.ToString();
-			Assert.AreEqual(expected, actual);
-		}
-	}
+            var actual = build.ToString();
+            Assert.AreEqual(expected, actual);
+        }
+    }
 }

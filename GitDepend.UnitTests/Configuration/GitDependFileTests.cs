@@ -8,29 +8,29 @@ using NUnit.Framework;
 
 namespace GitDepend.UnitTests.Configuration
 {
-	public class GitDependFileTests : TestFixtureBase
-	{
-		[Test]
-		public void DefaultValuesTest()
-		{
-			var file = new GitDependFile();
-			var build = new Build();
-			var packages = new Packages();
+    public class GitDependFileTests : TestFixtureBase
+    {
+        [Test]
+        public void DefaultValuesTest()
+        {
+            var file = new GitDependFile();
+            var build = new Build();
+            var packages = new Packages();
 
-			Assert.IsNotNull(file.Build);
-			Assert.AreEqual(build.ToString(), file.Build.ToString());
+            Assert.IsNotNull(file.Build);
+            Assert.AreEqual(build.ToString(), file.Build.ToString());
 
-			Assert.IsNotNull(file.Packages);
-			Assert.AreEqual(packages.ToString(), file.Packages.ToString());
+            Assert.IsNotNull(file.Packages);
+            Assert.AreEqual(packages.ToString(), file.Packages.ToString());
 
-			Assert.IsNotNull(file.Dependencies);
-			Assert.IsEmpty(file.Dependencies);
-		}
+            Assert.IsNotNull(file.Dependencies);
+            Assert.IsEmpty(file.Dependencies);
+        }
 
-		[Test]
-		public void ToStringTest()
-		{
-			var expected = @"{
+        [Test]
+        public void ToStringTest()
+        {
+            var expected = @"{
   ""build"": {
     ""script"": ""make.bat"",
     ""arguments"": null
@@ -47,8 +47,8 @@ namespace GitDepend.UnitTests.Configuration
     }
   ]
 }";
-			var actual = Lib2Config.ToString();
-			Assert.AreEqual(expected, actual);
-		}
-	}
+            var actual = Lib2Config.ToString();
+            Assert.AreEqual(expected, actual);
+        }
+    }
 }

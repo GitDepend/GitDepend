@@ -12,155 +12,155 @@ using Telerik.JustMock.Helpers;
 
 namespace GitDepend.UnitTests.Busi
 {
-	[TestFixture]
-	public class GitTests : TestFixtureBase
-	{
-		[Test]
-		public void DefaultValuesTest()
-		{
-			var instance = new Git();
+    [TestFixture]
+    public class GitTests : TestFixtureBase
+    {
+        [Test]
+        public void DefaultValuesTest()
+        {
+            var instance = new Git();
 
-			Assert.IsNull(instance.WorkingDirectory);
-		}
+            Assert.IsNull(instance.WorkingDirectory);
+        }
 
-		[Test]
-		public void CheckoutTest()
-		{
-			string command = null;
-			string arguments = null;
-			var processManager = Container.Resolve<IProcessManager>();
-			processManager.Arrange(p => p.Start(Arg.IsAny<ProcessStartInfo>()))
-				.Returns((ProcessStartInfo info) =>
-				{
-					command = info.FileName;
-					arguments = info.Arguments;
+        [Test]
+        public void CheckoutTest()
+        {
+            string command = null;
+            string arguments = null;
+            var processManager = Container.Resolve<IProcessManager>();
+            processManager.Arrange(p => p.Start(Arg.IsAny<ProcessStartInfo>()))
+                .Returns((ProcessStartInfo info) =>
+                {
+                    command = info.FileName;
+                    arguments = info.Arguments;
 
-					return new FakeProcess();
-				});
+                    return new FakeProcess();
+                });
 
-			var instance = new Git();
-			var code = instance.Checkout("develop");
+            var instance = new Git();
+            var code = instance.Checkout("develop");
 
-			Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
-			Assert.AreEqual("git", command);
-			Assert.AreEqual("checkout develop", arguments);
-		}
+            Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
+            Assert.AreEqual("git", command);
+            Assert.AreEqual("checkout develop", arguments);
+        }
 
-		[Test]
-		public void CloneTest()
-		{
-			string command = null;
-			string arguments = null;
-			var processManager = Container.Resolve<IProcessManager>();
-			processManager.Arrange(p => p.Start(Arg.IsAny<ProcessStartInfo>()))
-				.Returns((ProcessStartInfo info) =>
-				{
-					command = info.FileName;
-					arguments = info.Arguments;
+        [Test]
+        public void CloneTest()
+        {
+            string command = null;
+            string arguments = null;
+            var processManager = Container.Resolve<IProcessManager>();
+            processManager.Arrange(p => p.Start(Arg.IsAny<ProcessStartInfo>()))
+                .Returns((ProcessStartInfo info) =>
+                {
+                    command = info.FileName;
+                    arguments = info.Arguments;
 
-					return new FakeProcess();
-				});
+                    return new FakeProcess();
+                });
 
-			var instance = new Git();
-			var url = "ssh://git@github.com:kjjuno/Lib1.git";
-			var directory = @"C:\projects\Lib1";
-			var branch = "master";
-			var code = instance.Clone(url, directory, branch);
+            var instance = new Git();
+            var url = "ssh://git@github.com:kjjuno/Lib1.git";
+            var directory = @"C:\projects\Lib1";
+            var branch = "master";
+            var code = instance.Clone(url, directory, branch);
 
-			Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
-			Assert.AreEqual("git", command);
-			Assert.AreEqual($"clone {url} {directory} -b {branch}", arguments);
-		}
+            Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
+            Assert.AreEqual("git", command);
+            Assert.AreEqual($"clone {url} {directory} -b {branch}", arguments);
+        }
 
-		[Test]
-		public void AddTest()
-		{
-			string command = null;
-			string arguments = null;
-			var processManager = Container.Resolve<IProcessManager>();
-			processManager.Arrange(p => p.Start(Arg.IsAny<ProcessStartInfo>()))
-				.Returns((ProcessStartInfo info) =>
-				{
-					command = info.FileName;
-					arguments = info.Arguments;
+        [Test]
+        public void AddTest()
+        {
+            string command = null;
+            string arguments = null;
+            var processManager = Container.Resolve<IProcessManager>();
+            processManager.Arrange(p => p.Start(Arg.IsAny<ProcessStartInfo>()))
+                .Returns((ProcessStartInfo info) =>
+                {
+                    command = info.FileName;
+                    arguments = info.Arguments;
 
-					return new FakeProcess();
-				});
+                    return new FakeProcess();
+                });
 
-			var instance = new Git();
-			var code = instance.Add("packages.config");
+            var instance = new Git();
+            var code = instance.Add("packages.config");
 
-			Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
-			Assert.AreEqual("git", command);
-			Assert.AreEqual("add packages.config", arguments);
-		}
+            Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
+            Assert.AreEqual("git", command);
+            Assert.AreEqual("add packages.config", arguments);
+        }
 
-		[Test]
-		public void StatusTest()
-		{
-			string command = null;
-			string arguments = null;
-			var processManager = Container.Resolve<IProcessManager>();
-			processManager.Arrange(p => p.Start(Arg.IsAny<ProcessStartInfo>()))
-				.Returns((ProcessStartInfo info) =>
-				{
-					command = info.FileName;
-					arguments = info.Arguments;
+        [Test]
+        public void StatusTest()
+        {
+            string command = null;
+            string arguments = null;
+            var processManager = Container.Resolve<IProcessManager>();
+            processManager.Arrange(p => p.Start(Arg.IsAny<ProcessStartInfo>()))
+                .Returns((ProcessStartInfo info) =>
+                {
+                    command = info.FileName;
+                    arguments = info.Arguments;
 
-					return new FakeProcess();
-				});
+                    return new FakeProcess();
+                });
 
-			var instance = new Git();
-			var code = instance.Status();
+            var instance = new Git();
+            var code = instance.Status();
 
-			Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
-			Assert.AreEqual("git", command);
-			Assert.AreEqual("status", arguments);
-		}
+            Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
+            Assert.AreEqual("git", command);
+            Assert.AreEqual("status", arguments);
+        }
 
-		[Test]
-		public void CommitTest()
-		{
-			string command = null;
-			string arguments = null;
-			var processManager = Container.Resolve<IProcessManager>();
-			processManager.Arrange(p => p.Start(Arg.IsAny<ProcessStartInfo>()))
-				.Returns((ProcessStartInfo info) =>
-				{
-					command = info.FileName;
-					arguments = info.Arguments;
+        [Test]
+        public void CommitTest()
+        {
+            string command = null;
+            string arguments = null;
+            var processManager = Container.Resolve<IProcessManager>();
+            processManager.Arrange(p => p.Start(Arg.IsAny<ProcessStartInfo>()))
+                .Returns((ProcessStartInfo info) =>
+                {
+                    command = info.FileName;
+                    arguments = info.Arguments;
 
-					return new FakeProcess();
-				});
+                    return new FakeProcess();
+                });
 
-			var instance = new Git();
-			var message = "This is a test message";
-			var code = instance.Commit(message);
+            var instance = new Git();
+            var message = "This is a test message";
+            var code = instance.Commit(message);
 
-			Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
-			Assert.AreEqual("git", command);
-			Assert.AreEqual($"commit -m \"{message}\"", arguments);
-		}
+            Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
+            Assert.AreEqual("git", command);
+            Assert.AreEqual($"commit -m \"{message}\"", arguments);
+        }
 
-		[Test]
-		public void WorkingDirectoryTest()
-		{
-			string workingDir = null;
-			var processManager = Container.Resolve<IProcessManager>();
-			processManager.Arrange(p => p.Start(Arg.IsAny<ProcessStartInfo>()))
-				.Returns((ProcessStartInfo info) =>
-				{
-					workingDir = info.WorkingDirectory;
+        [Test]
+        public void WorkingDirectoryTest()
+        {
+            string workingDir = null;
+            var processManager = Container.Resolve<IProcessManager>();
+            processManager.Arrange(p => p.Start(Arg.IsAny<ProcessStartInfo>()))
+                .Returns((ProcessStartInfo info) =>
+                {
+                    workingDir = info.WorkingDirectory;
 
-					return new FakeProcess();
-				});
+                    return new FakeProcess();
+                });
 
-			var instance = new Git() { WorkingDirectory = Lib1Directory };
-			var message = "This is a test message";
-			var code = instance.Commit(message);
+            var instance = new Git() { WorkingDirectory = Lib1Directory };
+            var message = "This is a test message";
+            var code = instance.Commit(message);
 
-			Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
-			Assert.AreEqual(Lib1Directory, workingDir);
-		}
-	}
+            Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
+            Assert.AreEqual(Lib1Directory, workingDir);
+        }
+    }
 }

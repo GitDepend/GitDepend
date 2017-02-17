@@ -8,29 +8,29 @@ using NUnit.Framework;
 
 namespace GitDepend.UnitTests.Configuration
 {
-	public class PackagesTests
-	{
-		[Test]
-		public void DefaultValuesTest()
-		{
-			var packages = new Packages();
+    public class PackagesTests
+    {
+        [Test]
+        public void DefaultValuesTest()
+        {
+            var packages = new Packages();
 
-			Assert.AreEqual("artifacts/NuGet/Debug", packages.Directory);
-		}
+            Assert.AreEqual("artifacts/NuGet/Debug", packages.Directory);
+        }
 
-		[Test]
-		public void ToStringTest()
-		{
-			var build = new Packages()
-			{
-				Directory = "NuGet"
-			};
+        [Test]
+        public void ToStringTest()
+        {
+            var build = new Packages()
+            {
+                Directory = "NuGet"
+            };
 
-			var expected = @"{
+            var expected = @"{
   ""dir"": ""NuGet""
 }";
-			var actual = build.ToString();
-			Assert.AreEqual(expected, actual);
-		}
-	}
+            var actual = build.ToString();
+            Assert.AreEqual(expected, actual);
+        }
+    }
 }

@@ -109,6 +109,7 @@
     <Compile Include="ReturnCode.cs" />
     <Compile Include="UnityConfig.cs" />
     <Compile Include="Visitors\DependencyVisitorAlgorithm.cs" />
+    <Compile Include="Visitors\IDependencyVisitorAlgorithm.cs" />
     <Compile Include="Visitors\IVisitor.cs" />
     <Compile Include="Visitors\CheckOutBranchVisitor.cs" />
     <Compile Include="Visitors\BuildAndUpdateDependenciesVisitor.cs" />

@@ -8,31 +8,31 @@ using NUnit.Framework;
 
 namespace GitDepend.UnitTests.Configuration
 {
-	[TestFixture]
-	public class DependencyTests : TestFixtureBase
-	{
-		[Test]
-		public void DefaultValuesTest()
-		{
-			var dependency = new Dependency();
+    [TestFixture]
+    public class DependencyTests : TestFixtureBase
+    {
+        [Test]
+        public void DefaultValuesTest()
+        {
+            var dependency = new Dependency();
 
-			Assert.AreEqual(null, dependency.Name);
-			Assert.AreEqual(null, dependency.Url);
-			Assert.AreEqual(null, dependency.Directory);
-			Assert.AreEqual(null, dependency.Branch);
-		}
+            Assert.AreEqual(null, dependency.Name);
+            Assert.AreEqual(null, dependency.Url);
+            Assert.AreEqual(null, dependency.Directory);
+            Assert.AreEqual(null, dependency.Branch);
+        }
 
-		[Test]
-		public void ToStringTest()
-		{
-			var expected = @"{
+        [Test]
+        public void ToStringTest()
+        {
+            var expected = @"{
   ""name"": ""Lib1"",
   ""url"": ""git@github.com:kjjuno/Lib1.git"",
   ""dir"": ""..\\Lib1"",
   ""branch"": ""develop""
 }";
-			var actual = Lib1Dependency.ToString();
-			Assert.AreEqual(expected, actual);
-		}
-	}
+            var actual = Lib1Dependency.ToString();
+            Assert.AreEqual(expected, actual);
+        }
+    }
 }

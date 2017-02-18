@@ -26,9 +26,7 @@ namespace GitDepend.UnitTests.Configuration
                 Directory = "NuGet"
             };
 
-            var expected = @"{
-  ""dir"": ""NuGet""
-}";
+            var expected = "{\r\n  \"dir\": \"NuGet\"\r\n}";
             var actual = build.ToString();
             Assert.AreEqual(expected, actual);
         }

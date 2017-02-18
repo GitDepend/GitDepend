@@ -30,23 +30,24 @@ namespace GitDepend.UnitTests.Configuration
         [Test]
         public void ToStringTest()
         {
-            var expected = @"{
-  ""build"": {
-    ""script"": ""make.bat"",
-    ""arguments"": null
-  },
-  ""packages"": {
-    ""dir"": ""artifacts/NuGet/Debug""
-  },
-  ""dependencies"": [
-    {
-      ""name"": ""Lib1"",
-      ""url"": ""git@github.com:kjjuno/Lib1.git"",
-      ""dir"": ""..\\Lib1"",
-      ""branch"": ""develop""
-    }
-  ]
-}";
+            var expected = "{\r\n" +
+                           "  \"build\": {\r\n" +
+                           "    \"script\": \"make.bat\",\r\n" +
+                           "    \"arguments\": null\r\n" +
+                           "  },\r\n" +
+                           "  \"packages\": {\r\n" +
+                           "    \"dir\": \"artifacts/NuGet/Debug\"\r\n" +
+                           "  },\r\n" +
+                           "  \"dependencies\": [\r\n" +
+                           "    {\r\n" +
+                           "      \"name\": \"Lib1\",\r\n" +
+                           "      \"url\": \"git@github.com:kjjuno/Lib1.git\",\r\n" +
+                           "      \"dir\": \"..\\\\Lib1\",\r\n" +
+                           "      \"branch\": \"develop\"\r\n" +
+                           "    }\r\n" +
+                           "  ]\r\n" +
+                           "}";
+  
             var actual = Lib2Config.ToString();
             Assert.AreEqual(expected, actual);
         }

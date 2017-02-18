@@ -29,10 +29,7 @@ namespace GitDepend.UnitTests.Configuration
                 Arguments = "cov"
             };
 
-            var expected = @"{
-  ""script"": ""buildall.bat"",
-  ""arguments"": ""cov""
-}";
+            var expected = "{\r\n  \"script\": \"buildall.bat\",\r\n  \"arguments\": \"cov\"\r\n}";
             var actual = build.ToString();
             Assert.AreEqual(expected, actual);
         }

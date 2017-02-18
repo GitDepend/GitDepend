@@ -16,9 +16,7 @@ namespace GitDepend.Commands
         /// </summary>
         public const string Name = "clone";
         private readonly CloneSubOptions _options;
-        private readonly IGitDependFileFactory _factory;
-        private readonly IGit _git;
-        private readonly IFileSystem _fileSystem;
+        private readonly IDependencyVisitorAlgorithm _algorithm;
         private readonly IConsole _console;
 
         /// <summary>
@@ -28,9 +26,7 @@ namespace GitDepend.Commands
         public CloneCommand(CloneSubOptions options)
         {
             _options = options;
-            _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
-            _git = DependencyInjection.Resolve<IGit>();
-            _fileSystem = DependencyInjection.Resolve<IFileSystem>();
+            _algorithm = DependencyInjection.Resolve<IDependencyVisitorAlgorithm>();
             _console = DependencyInjection.Resolve<IConsole>();
         }
 
@@ -42,9 +38,8 @@ namespace GitDepend.Commands
         /// <returns>The return code.</returns>
         public ReturnCode Execute()
         {
-            var alg = new DependencyVisitorAlgorithm();
             var visitor = new CheckOutBranchVisitor();
-            alg.TraverseDependencies(visitor, _options.Directory);
+            _algorithm.TraverseDependencies(visitor, _options.Directory);
 
             if (visitor.ReturnCode == ReturnCode.Success)
             {

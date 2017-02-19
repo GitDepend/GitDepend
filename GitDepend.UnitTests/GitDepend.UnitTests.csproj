@@ -76,6 +76,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Busi\GitDependFileFactoryTests.cs" />
+    <Compile Include="Busi\GitTests.cs" />
+    <Compile Include="Busi\NugetTests.cs" />
+    <Compile Include="Commands\CloneCommandTests.cs" />
+    <Compile Include="Commands\CommandParserTests.cs" />
+    <Compile Include="Commands\InitCommandTests.cs" />
+    <Compile Include="Commands\ShowConfigCommandTests.cs" />
+    <Compile Include="Commands\UpdateCommandTests.cs" />
+    <Compile Include="Configuration\BuildTests.cs" />
+    <Compile Include="Configuration\DependencyTests.cs" />
+    <Compile Include="Configuration\GitDependFileTests.cs" />
+    <Compile Include="Configuration\PackagesTests.cs" />
     <Compile Include="FakeProcess.cs" />
     <Compile Include="MockingUnityContainer.cs" />
     <Compile Include="MockingUnityContainerExtension.cs" />

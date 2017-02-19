@@ -8,28 +8,28 @@ using GitDepend.Busi;
 
 namespace GitDepend.UnitTests
 {
-	public class FakeProcess : IProcess
-	{
-		#region Implementation of IProcess
+    public class FakeProcess : IProcess
+    {
+        #region Implementation of IProcess
 
-		/// <summary>
-		/// Gets the value that the associated process specified when it terminated.
-		/// </summary>
-		public int ExitCode { get; set; }
+        /// <summary>
+        /// Gets the value that the associated process specified when it terminated.
+        /// </summary>
+        public int ExitCode { get; set; } = 0;
 
-		/// <summary>
-		/// Indicates if the associated process has exited or not.
-		/// </summary>
-		public bool HasExited { get; set; } = true;
+        /// <summary>
+        /// Indicates if the associated process has exited or not.
+        /// </summary>
+        public bool HasExited { get; set; } = true;
 
-		/// <summary>
-		/// Instructs the <see cref="IProcess"/> to wait indefinitely for the associated process to exit.
-		/// </summary>
-		public void WaitForExit()
-		{
-			
-		}
+        /// <summary>
+        /// Instructs the <see cref="IProcess"/> to wait indefinitely for the associated process to exit.
+        /// </summary>
+        public void WaitForExit()
+        {
 
-		#endregion
-	}
+        }
+
+        #endregion
+    }
 }

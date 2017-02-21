@@ -24,6 +24,15 @@ namespace GitDepend.Busi
         }
 
         /// <summary>
+        /// Restores nuget packages needed by the provided solution.
+        /// </summary>
+        /// <param name="solution">The solution file.</param>
+        public ReturnCode Restore(string solution)
+        {
+            return ExecuteNuGetCommand($"restore {solution}");
+        }
+
+        /// <summary>
         /// Updates the specified nuget package in all projects within the given solution to the specified version.
         /// </summary>
         /// <param name="soluton">The solution file.</param>

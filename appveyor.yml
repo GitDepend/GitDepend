@@ -24,6 +24,6 @@ cache:
   - packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
 
 artifacts:
-  - path: artifacts
-  - path: docs\build\html
-    name: docs
+  - path: 'artifacts\NuGet\Debug\*.nupkg'
+  - path: 'docs\build\html'
+    name: 'docs'

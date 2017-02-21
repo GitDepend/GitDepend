@@ -171,6 +171,7 @@ namespace GitDepend.Visitors
                             return ReturnCode = ReturnCode.CouldNotCreateCacheDirectory;
                         }
 
+                        _nuget.Restore(solution);
                         _nuget.Update(solution, id, version, cacheDir);
                     }
                 }

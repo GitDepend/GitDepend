@@ -7,10 +7,6 @@ version: '{build}'
 assembly_info:
   patch: false
 
-install:
-  - cinst python -version 2.7.6
-  - cmd: pip install sphinx sphinx-autobuild sphinx_rtd_theme
-
 build_script:
   - cmd: make.bat debug
   - cmd: make.bat release

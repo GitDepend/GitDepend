@@ -203,5 +203,37 @@ namespace GitDepend.UnitTests.Visitors
             Assert.AreEqual(ReturnCode.CouldNotCreateCacheDirectory, code, "Invalid Return Code");
             Assert.AreEqual(ReturnCode.CouldNotCreateCacheDirectory, instance.ReturnCode, "Invalid Return Code");
         }
+
+        [Test]
+        public void VisitProject_ShouldCallNugetRestoreBeforeCallingNuGetUpdate()
+        {
+            var fileSystem = RegisterMockFileSystem();
+            var nuget = Container.Resolve<INuget>();
+            var instance = new BuildAndUpdateDependenciesVisitor();
+
+            EnsureFiles(fileSystem, Lib1PackagesDirectory, Lib1Packages);
+            EnsureFiles(fileSystem, Lib2Directory, Lib2Solutions);
+
+            bool nugetRestoreCalled = false;
+            nuget.Arrange(n => n.Restore(Arg.AnyString))
+                .Returns((string solution) =>
+                {
+                    nugetRestoreCalled = true;
+                    return ReturnCode.Success;
+                });
+
+            nuget.Arrange(n => n.Update(Arg.AnyString, Arg.AnyString, Arg.AnyString, Arg.AnyString))
+                .Returns((string solution, string id, string version, string sourceDirectory) =>
+                {
+                    Assert.IsTrue(nugetRestoreCalled, "NuGet.exe restore should have been called before Update");
+                    return ReturnCode.Success;
+                });
+
+            fileSystem.Directory.CreateDirectory(Lib2Directory);
+
+            var code = instance.VisitProject(Lib2Directory, Lib2Config);
+            Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
+            Assert.AreEqual(ReturnCode.Success, instance.ReturnCode, "Invalid Return Code");
+        }
     }
 }

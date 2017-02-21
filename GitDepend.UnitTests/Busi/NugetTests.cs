@@ -54,5 +54,35 @@ namespace GitDepend.UnitTests.Busi
             Assert.AreEqual($"update {solution} -Id {id} -Version {version} -Source \"{sourceDirectory}\" -Pre", arguments, "Invalid Arguments");
             Assert.AreEqual(workingDir, workingDirectory, "Invalid Working Directory");
         }
+
+        [Test]
+        public void RestoreTest()
+        {
+            string command = null;
+            string arguments = null;
+            string workingDirectory = null;
+            var processManager = Container.Resolve<IProcessManager>();
+            processManager.Arrange(p => p.Start(Arg.IsAny<ProcessStartInfo>()))
+                .Returns((ProcessStartInfo info) =>
+                {
+                    command = info.FileName;
+                    arguments = info.Arguments;
+                    workingDirectory = info.WorkingDirectory;
+
+                    return new FakeProcess();
+                });
+
+            var workingDir = @"C:\projects\TestProject\";
+            var solution = "TestProject.sln";
+            
+
+            var instance = new Nuget() { WorkingDirectory = workingDir };
+            var code = instance.Restore(solution);
+
+            Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
+            Assert.AreEqual("NuGet.exe", command, "Invalid Command");
+            Assert.AreEqual($"restore {solution}", arguments, "Invalid Arguments");
+            Assert.AreEqual(workingDir, workingDirectory, "Invalid Working Directory");
+        }
     }
 }

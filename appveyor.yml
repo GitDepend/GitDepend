@@ -23,5 +23,6 @@ cache:
 
 artifacts:
   - path: 'artifacts\NuGet\Debug\*.nupkg'
+  - path: 'artifacts\NuGet\Debug\Symbols\*.nupkg'
   - path: 'artifacts\NuGet\Release\*.nupkg'
-  - path: 'docs\build\html'
+  - path: 'artifacts\NuGet\Release\Symbols\*.nupkg'

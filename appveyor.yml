@@ -27,10 +27,18 @@ artifacts:
 
 deploy:
   - provider: Environment
-    name: GitDepend.CommandLine - nuget.org (pre-release)
+    name: nuget.org (pre-release)
     on:
       branch: develop
   - provider: Environment
-    name: GitDepend.Portable - chocolatey.org (pre-release)
+    name: chocolatey.org (pre-release)
     on:
       branch: develop
+  - provider: Environment
+    name: nuget.org
+    on:
+      branch: master
+  - provider: Environment
+    name: chocolatey.org
+    on:
+      branch: master

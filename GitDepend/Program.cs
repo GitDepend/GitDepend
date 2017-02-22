@@ -1,18 +1,22 @@
 ﻿using System;
+using System.IO.Abstractions;
+using GitDepend.Busi;
 using GitDepend.Commands;
 
 namespace GitDepend
 {
-	class Program
-	{
-		static void Main(string[] args)
-		{
-			var parser = new CommandParser();
-			var command = parser.GetCommand(args);
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            UnityConfig.RegisterTypes(DependencyInjection.Container);
 
-			var code = command.Execute();
+            var parser = new CommandParser();
+            var command = parser.GetCommand(args);
 
-			Environment.ExitCode = code;
-		}
-	}
+            var code = command.Execute();
+
+            Environment.ExitCode = (int)code;
+        }
+    }
 }

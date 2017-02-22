@@ -1,51 +1,78 @@
 ﻿using System;
-using System.IO;
+using System.IO.Abstractions;
+using GitDepend.Busi;
 using GitDepend.CommandLine;
 using GitDepend.Configuration;
 
 namespace GitDepend.Commands
 {
-	class InitCommand : ICommand
-	{
-		private readonly InitSubOptions _options;
-		public const string Name = "init";
+    /// <summary>
+    /// An implementation of <see cref="ICommand"/> assists the user to create or modify their GitDepend.json file.
+    /// </summary>
+    public class InitCommand : ICommand
+    {
+        private readonly InitSubOptions _options;
+        private readonly IFileSystem _fileSystem;
+        private readonly IConsole _console;
+        private readonly IGitDependFileFactory _factory;
 
-		public InitCommand(InitSubOptions options)
-		{
-			_options = options;
-		}
+        /// <summary>
+        /// The name of the verb.
+        /// </summary>
+        public const string Name = "init";
 
-		#region Implementation of ICommand
+        /// <summary>
+        /// Creates a new <see cref="InitCommand"/>
+        /// </summary>
+        /// <param name="options">The <see cref="InitSubOptions"/> that configures the command.</param>
+        public InitCommand(InitSubOptions options)
+        {
+            _options = options;
+            _fileSystem = DependencyInjection.Resolve<IFileSystem>();
+            _console = DependencyInjection.Resolve<IConsole>();
+            _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
+        }
 
-		public int Execute()
-		{
-			string dir;
-			string error;
-			var config = GitDependFile.LoadFromDir(_options.Directory, out dir, out error) ?? new GitDependFile();
+        #region Implementation of ICommand
 
-			Console.Write($"build script [{config.Build.Script}]: ");
-			config.Build.Script = ReadLine(config.Build.Script);
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
+        /// <returns>The return code.</returns>
+        public ReturnCode Execute()
+        {
+            string dir;
+            ReturnCode code;
+            var config = _factory.LoadFromDirectory(_options.Directory, out dir, out code) ?? new GitDependFile();
 
-			Console.Write($"artifacts dir [{config.Packages.Directory}]: ");
-			config.Packages.Directory = ReadLine(config.Packages.Directory);
+            if (code != ReturnCode.Success)
+            {
+                return code;
+            }
 
-			var path = Path.Combine(dir, "GitDepend.json");
+            _console.Write($"build script [{config.Build.Script}]: ");
+            config.Build.Script = ReadLine(config.Build.Script);
 
-			File.WriteAllText(path, config.ToString());
+            _console.Write($"artifacts dir [{config.Packages.Directory}]: ");
+            config.Packages.Directory = ReadLine(config.Packages.Directory);
 
-			return ReturnCodes.Success;
-		}
+            var path = _fileSystem.Path.Combine(dir, "GitDepend.json");
 
-		private static string ReadLine(string defaultValue)
-		{
-			var input = Console.ReadLine();
-			if (string.IsNullOrEmpty(input))
-			{
-				input = defaultValue;
-			}
-			return input;
-		}
+            _fileSystem.File.WriteAllText(path, config.ToString());
 
-		#endregion
-	}
+            return ReturnCode.Success;
+        }
+
+        private string ReadLine(string defaultValue)
+        {
+            var input = _console.ReadLine();
+            if (string.IsNullOrEmpty(input))
+            {
+                input = defaultValue;
+            }
+            return input;
+        }
+
+        #endregion
+    }
 }

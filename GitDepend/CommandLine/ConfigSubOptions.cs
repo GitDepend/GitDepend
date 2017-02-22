@@ -1,6 +1,9 @@
 ﻿namespace GitDepend.CommandLine
 {
-	public class ConfigSubOptions : CommonSubOptions
-	{
-	}
+    /// <summary>
+    /// The options for the config verb
+    /// </summary>
+    public class ConfigSubOptions : CommonSubOptions
+    {
+    }
 }

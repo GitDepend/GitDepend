@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GitDepend.CommandLine
+﻿namespace GitDepend.CommandLine
 {
-	class UpdateSubOptions : CommonSubOptions
-	{
-	}
+    /// <summary>
+    /// The options for the update verb
+    /// </summary>
+    public class UpdateSubOptions : CommonSubOptions
+    {
+    }
 }

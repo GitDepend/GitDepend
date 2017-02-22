@@ -1,75 +1,136 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using GitDepend.Configuration;
+using System.IO.Abstractions;
+using GitDepend.Busi;
 
 namespace GitDepend.Visitors
 {
-	public class DependencyVisitorAlgorithm
-	{
-		HashSet<string> _visitedDependencies = new HashSet<string>();
-		HashSet<string> _visitedProjects = new HashSet<string>();
+    /// <summary>
+    /// Implements the visitor algorithm for visiting all repository dependencies. You are guarunteed
+    /// to visit all project dependencies before visiting the project.
+    /// </summary>
+    public class DependencyVisitorAlgorithm : IDependencyVisitorAlgorithm
+    {
+        private readonly IGitDependFileFactory _factory;
+        private readonly IGit _git;
+        private readonly IFileSystem _fileSystem;
+        private readonly IConsole _console;
+        private readonly HashSet<string> _visitedDependencies = new HashSet<string>();
+        private readonly HashSet<string> _visitedProjects = new HashSet<string>();
 
-		public void TraverseDependencies(IVisitor visitor, string directory)
-		{
-			directory = Path.GetFullPath(directory);
+        /// <summary>
+        /// Creates a new <see cref="DependencyVisitorAlgorithm"/>
+        /// </summary>
+        public DependencyVisitorAlgorithm()
+        {
+            _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
+            _git = DependencyInjection.Resolve<IGit>();
+            _fileSystem = DependencyInjection.Resolve<IFileSystem>();
+            _console = DependencyInjection.Resolve<IConsole>();
+        }
 
-			if (!Directory.Exists(directory))
-			{
-				visitor.ReturnCode = ReturnCodes.GitRepositoryNotFound;
-				return;
-			}
+        /// <summary>
+        /// Traverses all dependencies beginning in the given directory.
+        /// </summary>
+        /// <param name="visitor">The <see cref="IVisitor"/> that should be called at each dependency and project visit.</param>
+        /// <param name="directory">The directory containing a GitDepend.json file.</param>
+        public void TraverseDependencies(IVisitor visitor, string directory)
+        {
+            // Make sure we are working with something here.
+            if (visitor == null || string.IsNullOrEmpty(directory))
+            {
+                return;
+            }
 
-			string dir;
-			string error;
-			var config = GitDependFile.LoadFromDir(directory, out dir, out error);
+            directory = _fileSystem.Path.GetFullPath(directory);
 
-			if (config == null)
-			{
-				Console.Error.WriteLine("Could not find GitDepend.json");
-				visitor.ReturnCode = ReturnCodes.GitDependFileNotFound;
-				return;
-			}
+            // If the directory doesn't exist we are done.
+            if (!_fileSystem.Directory.Exists(directory))
+            {
+                visitor.ReturnCode = ReturnCode.GitRepositoryNotFound;
+                return;
+            }
 
-			foreach (var dependency in config.Dependencies)
-			{
-				int code;
-				dependency.Directory = Path.GetFullPath(Path.Combine(dir, dependency.Directory));
+            string dir;
+            ReturnCode code;
+            var config = _factory.LoadFromDirectory(directory, out dir, out code);
 
-				if (!Directory.Exists(dependency.Directory))
-				{
-					Console.WriteLine($"Cloning {dependency.Name} into {dependency.Directory}");
-					var git = new Git();
+            if (code != ReturnCode.Success)
+            {
+                visitor.ReturnCode = code;
+                return;
+            }
 
-					code = git.Clone(dependency.Url, dependency.Directory, dependency.Branch);
-					Console.WriteLine();
-					if (code != ReturnCodes.Success)
-					{
-						visitor.ReturnCode = code;
-						return;
-					}
-				}
+            foreach (var dependency in config.Dependencies)
+            {
+                dependency.Directory = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(dir, dependency.Directory));
 
-				TraverseDependencies(visitor, dependency.Directory);
+                // If the dependency does not exist on disk we need to clone it.
+                if (!_fileSystem.Directory.Exists(dependency.Directory))
+                {
+                    _console.WriteLine($"Cloning {dependency.Name} into {dependency.Directory}");
 
-				if (!_visitedDependencies.Contains(dependency.Directory))
-				{
-					_visitedDependencies.Add(dependency.Directory);
-					code = visitor.VisitDependency(dependency);
+                    code = _git.Clone(dependency.Url, dependency.Directory, dependency.Branch);
+                    _console.WriteLine();
 
-					if (code != ReturnCodes.Success)
-					{
-						return;
-					}
-				}
-			}
+                    // If something went wrong with git we are done.
+                    if (code != ReturnCode.Success)
+                    {
+                        visitor.ReturnCode = code;
+                        return;
+                    }
+                }
 
-			if (!_visitedProjects.Contains(dir))
-			{
-				_visitedProjects.Add(dir);
-				visitor.VisitProject(dir, config);
-				Console.WriteLine();
-			}
-		}
-	}
+                // Visit all dependencies of this dependency.
+                TraverseDependencies(visitor, dependency.Directory);
+
+                // If something went wrong with a dependency we are done.
+                if (visitor.ReturnCode != ReturnCode.Success)
+                {
+                    return;
+                }
+
+                // Make sure to only visit dependencies once.
+                if (!_visitedDependencies.Contains(dependency.Directory))
+                {
+                    _visitedDependencies.Add(dependency.Directory);
+
+                    // Visit the dependency.
+                    code = visitor.VisitDependency(dir, dependency);
+
+                    // If something went wrong visiting the dependency we are done.
+                    if (code != ReturnCode.Success)
+                    {
+                        visitor.ReturnCode = code;
+                        return;
+                    }
+                }
+            }
+
+            // Make sure to only visit projects once.
+            if (!_visitedProjects.Contains(dir))
+            {
+                _visitedProjects.Add(dir);
+
+                // Visit the project.
+                code = visitor.VisitProject(dir, config);
+                _console.WriteLine();
+
+                // If something went wrong visiting the project we are done.
+                if (code != ReturnCode.Success)
+                {
+                    visitor.ReturnCode = code;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Resets the algorithm to a default state.
+        /// </summary>
+        public void Reset()
+        {
+            _visitedDependencies.Clear();
+            _visitedProjects.Clear();
+        }
+    }
 }

@@ -6,11 +6,18 @@
 Welcome to GitDepend's documentation!
 =====================================
 
+Solves the problem of working with multiple git repositories where lower level repositories produce nuget packages that are consumed by other repositories.
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   install
+   why
+   nuget_install
+   choco_install
+   usage
+   usage_example
 
 
 Indices and tables

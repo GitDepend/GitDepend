@@ -1,0 +1,44 @@
+# Build worker image (VM template)
+image: Visual Studio 2015
+
+version: '{build}'
+
+# enable patching of AssemblyInfo.* files
+assembly_info:
+  patch: false
+
+build_script:
+  - cmd: make.bat debug
+  - cmd: make.bat release
+
+skip_tags: true
+
+# build cache to preserve files/folders between builds
+cache:
+  - packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+
+artifacts:
+  - path: 'artifacts\NuGet\Debug\*.nupkg'
+  - path: 'artifacts\NuGet\Debug\Symbols\*.nupkg'
+  - path: 'artifacts\Chocolatey\Debug\*.nupkg'
+  - path: 'artifacts\NuGet\Release\*.nupkg'
+  - path: 'artifacts\NuGet\Release\Symbols\*.nupkg'
+  - path: 'artifacts\Chocolatey\Release\*.nupkg'
+
+deploy:
+  - provider: Environment
+    name: nuget.org (pre-release)
+    on:
+      branch: 'release/*'
+  - provider: Environment
+    name: chocolatey.org (pre-release)
+    on:
+      branch: 'release/*'
+  - provider: Environment
+    name: nuget.org
+    on:
+      branch: master
+  - provider: Environment
+    name: chocolatey.org
+    on:
+      branch: master

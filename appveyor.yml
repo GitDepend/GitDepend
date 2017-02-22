@@ -7,15 +7,9 @@ version: '{build}'
 assembly_info:
   patch: false
 
-# build Configuration, i.e. Debug, Release, etc.
-configuration: Debug
-
-install:
-  - cinst python -version 2.7.6
-  - cmd: pip install sphinx sphinx-autobuild sphinx_rtd_theme
-
 build_script:
-  - cmd: make.bat teamcity
+  - cmd: make.bat debug
+  - cmd: make.bat release
 
 skip_tags: true
 
@@ -24,6 +18,7 @@ cache:
   - packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
 
 artifacts:
-  - path: artifacts
-  - path: docs\build\html
-    name: docs
+  - path: 'artifacts\NuGet\Debug\*.nupkg'
+  - path: 'artifacts\NuGet\Debug\Symbols\*.nupkg'
+  - path: 'artifacts\NuGet\Release\*.nupkg'
+  - path: 'artifacts\NuGet\Release\Symbols\*.nupkg'

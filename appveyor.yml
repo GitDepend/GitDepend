@@ -34,3 +34,11 @@ deploy:
     name: GitDepend.Portable - chocolatey.org (pre-release)
     on:
       branch: develop
+  - provider: Environment
+    name: GitDepend.CommandLine - nuget.org
+    on:
+      branch: master
+  - provider: Environment
+    name: GitDepend.Portable - chocolatey.org
+    on:
+      branch: master

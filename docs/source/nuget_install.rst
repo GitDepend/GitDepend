@@ -1,7 +1,7 @@
 Installing GitDepend.CommandLine
 ================================
 
-GitDepend is available on nuget.org
+`GitDepend <https://www.nuget.org/packages/GitDepend.CommandLine>`_ is available on `nuget.org <https://www.nuget.org/>`_
 
 .. code-block:: bash
 

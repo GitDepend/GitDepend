@@ -6,19 +6,14 @@
 Welcome to GitDepend's documentation!
 =====================================
 
-TODO:
-
-1. Describe the main use case for GitDepend.
-2. Show command line help
-3. Detail GitDepend.CommandLine install
-4. Detail GitDepend.Portable install
-5. Detail Lib1, Lib2 configuration
+Solves the problem of working with multiple git repositories where lower level repositories produce nuget packages that are consumed by other repositories.
 
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+   why
    nuget_install
    choco_install
    usage

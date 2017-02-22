@@ -1,6 +1,15 @@
 Command Line Arguments
 ======================
 
-TODO:
+.. code-block:: bash
 
-Show command line arguments here
+      config    Displays the full configuration file
+    
+      init      Assists you in creating a GitDepend.json
+    
+      clone     Recursively clones all dependencies
+    
+      update    Recursively builds all dependencies, and updates the current
+                project to the newly built artifacts.
+    
+      help      Display this help screen.

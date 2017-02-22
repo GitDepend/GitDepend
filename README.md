@@ -108,6 +108,12 @@ make.bat update
 
 This will build the new changes in Lib1 and pull them into Lib2. You can now use the new changes.
 
+## v0.3.0
+* NuGet packages are now restored before running the NuGet update.
+* All branches and pull requests are now built automatically on appveyor
+* Unit tests have been added
+* Documentation has been updated to at least be somewhat helpful
+
 ## v0.2.1
 Fixes an issue where installing GitDepend from chocolatey while using an administrative shell prevented GitDepend from
 collection dependency nuget packages.

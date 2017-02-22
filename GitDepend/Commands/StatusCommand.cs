@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GitDepend.Busi;
 using GitDepend.CommandLine;
 using GitDepend.Visitors;
 
@@ -15,6 +16,8 @@ namespace GitDepend.Commands
     {
         private readonly StatusSubOptions _options;
         private readonly IDependencyVisitorAlgorithm _algorithm;
+        private readonly IGit _git;
+        private readonly IConsole _console;
 
         /// <summary>
         /// The name of the verb.
@@ -29,6 +32,8 @@ namespace GitDepend.Commands
         {
             _options = options;
             _algorithm = DependencyInjection.Resolve<IDependencyVisitorAlgorithm>();
+            _git = DependencyInjection.Resolve<IGit>();
+            _console = DependencyInjection.Resolve<IConsole>();
         }
 
         #region Implementation of ICommand
@@ -42,7 +47,21 @@ namespace GitDepend.Commands
             var visitor = new DisplayStatusVisitor(_options.Dependencies);
             _algorithm.TraverseDependencies(visitor, _options.Directory);
 
-            return visitor.ReturnCode;
+            var code = visitor.ReturnCode;
+            if (code == ReturnCode.Success)
+            {
+                var origColor = _console.ForegroundColor;
+                _console.ForegroundColor = ConsoleColor.Green;
+                _console.WriteLine("project:");
+                _console.WriteLine($"    dir: {_options.Directory}");
+                _console.WriteLine();
+                _console.ForegroundColor = origColor;
+
+                _git.WorkingDirectory = _options.Directory;
+                code = _git.Status();
+            }
+
+            return code;
         }
 
         #endregion

@@ -64,7 +64,7 @@ namespace GitDepend.Visitors
             _console.WriteLine();
             _console.ForegroundColor = origColor;
 
-            _git.WorkingDirectory = directory;
+            _git.WorkingDirectory = dir;
             return ReturnCode = _git.Status();
         }
 

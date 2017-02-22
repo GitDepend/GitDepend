@@ -93,7 +93,7 @@
     <Compile Include="Commands\CommandParser.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\InitCommand.cs" />
-    <Compile Include="Commands\ShowConfigCommand.cs" />
+    <Compile Include="Commands\ConfigCommand.cs" />
     <Compile Include="Commands\StatusCommand.cs" />
     <Compile Include="Commands\UpdateCommand.cs" />
     <Compile Include="Configuration\Build.cs" />

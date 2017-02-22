@@ -18,7 +18,7 @@ namespace GitDepend.CommandLine
         [VerbOption(CloneCommand.Name, HelpText = "Recursively clones all dependencies")]
         public CloneSubOptions CloneVerb { get; set; }
 
-        [VerbOption(ShowConfigCommand.Name, HelpText = "Displays the full configuration file")]
+        [VerbOption(ConfigCommand.Name, HelpText = "Displays the full configuration file")]
         public ConfigSubOptions ConfigVerb { get; set; }
 
         [VerbOption(InitCommand.Name, HelpText = "Assists you in creating a GitDepend.json")]

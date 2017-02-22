@@ -30,7 +30,7 @@ namespace GitDepend.UnitTests.Commands
 
             var command = instance.GetCommand(args);
 
-            Assert.IsTrue(command is ShowConfigCommand, "Invalid Command");
+            Assert.IsTrue(command is ConfigCommand, "Invalid Command");
         }
 
         [Test]

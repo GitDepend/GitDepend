@@ -16,9 +16,16 @@ namespace GitDepend
             var parser = new CommandParser();
             var command = parser.GetCommand(args);
 
-            var code = command.Execute();
-
-            Environment.ExitCode = (int)code;
+            if (command == null)
+            {
+                Environment.ExitCode = (int)ReturnCode.InvalidCommand;
+                Console.Error.WriteLine("Invalid Command!");
+            }
+            else
+            {
+                var code = command.Execute();
+                Environment.ExitCode = (int)code;
+            }
         }
     }
 }

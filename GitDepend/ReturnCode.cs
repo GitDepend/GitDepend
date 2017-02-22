@@ -41,6 +41,11 @@
         CouldNotCreateCacheDirectory = 6,
 
         /// <summary>
+        /// Indicates that the command parser did not understand the specified command.
+        /// </summary>
+        InvalidCommand = 9998,
+
+        /// <summary>
         /// Indicates that something went wrong, but the cause could not be determined.
         /// </summary>
         UnknownError = 9999,

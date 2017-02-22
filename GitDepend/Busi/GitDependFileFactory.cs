@@ -71,7 +71,8 @@ namespace GitDepend.Busi
                         {
                             string subdir;
                             ReturnCode subcode;
-                            dependency.Configuration = LoadFromDirectory(dependency.Directory, out subdir, out subcode);
+                            var path = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(dir, dependency.Directory));
+                            dependency.Configuration = LoadFromDirectory(path, out subdir, out subcode);
                         }
                         return gitDependFile;
                     }

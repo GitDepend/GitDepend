@@ -2,6 +2,7 @@
 using System.IO.Abstractions;
 using GitDepend.Busi;
 using GitDepend.Commands;
+using Microsoft.Practices.Unity;
 
 namespace GitDepend
 {
@@ -9,6 +10,7 @@ namespace GitDepend
     {
         static void Main(string[] args)
         {
+            DependencyInjection.Container = new UnityContainer();
             UnityConfig.RegisterTypes(DependencyInjection.Container);
 
             var parser = new CommandParser();

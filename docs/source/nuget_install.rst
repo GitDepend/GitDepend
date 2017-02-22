@@ -1,5 +1,5 @@
-Installing GitDepend
-====================
+Installing GitDepend.CommandLine
+================================
 
 GitDepend is available on nuget.org
 

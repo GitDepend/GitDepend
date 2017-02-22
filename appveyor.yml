@@ -22,3 +22,9 @@ artifacts:
   - path: 'artifacts\NuGet\Debug\Symbols\*.nupkg'
   - path: 'artifacts\NuGet\Release\*.nupkg'
   - path: 'artifacts\NuGet\Release\Symbols\*.nupkg'
+
+deploy:
+ - provider: Environment
+   name: GitDepend.CommandLine - nuget.org (pre-release)
+   on:
+     branch: develop

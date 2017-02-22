@@ -29,11 +29,11 @@ deploy:
   - provider: Environment
     name: nuget.org (pre-release)
     on:
-      branch: develop
+      branch: 'release/*'
   - provider: Environment
     name: chocolatey.org (pre-release)
     on:
-      branch: develop
+      branch: 'release/*'
   - provider: Environment
     name: nuget.org
     on:

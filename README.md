@@ -18,6 +18,9 @@ Solves the problem of working with multiple git repositories where lower level r
 * [Why do I need GitDepend](http://gitdepend.readthedocs.io/en/latest/why.html)
 * [How does it work?](http://gitdepend.readthedocs.io/en/latest/usage_example.html)
 
+## v0.3.1
+Recovery build. This fixes a NullReferenceException.
+
 ## v0.3.0
 * NuGet packages are now restored before running the NuGet update.
 * All branches and pull requests are now built automatically on appveyor

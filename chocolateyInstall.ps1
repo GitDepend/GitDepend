@@ -1,1 +1,1 @@
-Generate-BinFile "gdep" "$packageFolder\tools\GitDepend.exe"
+Generate-BinFile "dep" "$packageFolder\tools\GitDepend.exe"

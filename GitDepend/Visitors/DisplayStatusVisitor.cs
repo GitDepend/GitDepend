@@ -54,11 +54,13 @@ namespace GitDepend.Visitors
                 return ReturnCode.Success;
             }
 
+            var dir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(directory, dependency.Directory));
+
             var origColor = _console.ForegroundColor;
             _console.ForegroundColor = ConsoleColor.Green;
             _console.WriteLine("dependency:");
             _console.WriteLine($"    name: {dependency.Name}");
-            _console.WriteLine($"    dir: {directory}");
+            _console.WriteLine($"    dir: {dir}");
             _console.WriteLine();
             _console.ForegroundColor = origColor;
 

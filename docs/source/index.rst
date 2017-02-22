@@ -6,11 +6,23 @@
 Welcome to GitDepend's documentation!
 =====================================
 
+TODO:
+
+1. Describe the main use case for GitDepend.
+2. Show command line help
+3. Detail GitDepend.CommandLine install
+4. Detail GitDepend.Portable install
+5. Detail Lib1, Lib2 configuration
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   install
+   nuget_install
+   choco_install
+   usage
+   usage_example
 
 
 Indices and tables

@@ -39,7 +39,7 @@ namespace GitDepend.Commands
         /// <returns>The return code.</returns>
         public ReturnCode Execute()
         {
-            var visitor = new CheckOutBranchVisitor();
+            var visitor = new DisplayStatusVisitor(_options.Dependencies);
             _algorithm.TraverseDependencies(visitor, _options.Directory);
 
             return visitor.ReturnCode;

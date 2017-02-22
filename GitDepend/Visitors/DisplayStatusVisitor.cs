@@ -14,16 +14,21 @@ namespace GitDepend.Visitors
     /// </summary>
     public class DisplayStatusVisitor : IVisitor
     {
+        private readonly IList<string> _whilelist;
         private readonly IGit _git;
         private readonly IFileSystem _fileSystem;
+        private readonly IConsole _console;
 
         /// <summary>
         /// Creates a new <see cref="DisplayStatusVisitor"/>
         /// </summary>
-        public DisplayStatusVisitor()
+        /// <param name="whilelist">The projects to visit. If this list is null or empty all projects will be visited.</param>
+        public DisplayStatusVisitor(IList<string> whilelist)
         {
+            _whilelist = whilelist ?? new List<string>();
             _git = DependencyInjection.Resolve<IGit>();
             _fileSystem = DependencyInjection.Resolve<IFileSystem>();
+            _console = DependencyInjection.Resolve<IConsole>();
         }
 
         #region Implementation of IVisitor
@@ -41,7 +46,24 @@ namespace GitDepend.Visitors
         /// <returns>The return code.</returns>
         public ReturnCode VisitDependency(string directory, Dependency dependency)
         {
-            return ReturnCode.Success;
+            var shouldExecute = _whilelist.Count == 0 ||
+                _whilelist.Any(d => string.Equals(d, dependency.Name, StringComparison.CurrentCultureIgnoreCase));
+
+            if (!shouldExecute)
+            {
+                return ReturnCode.Success;
+            }
+
+            var origColor = _console.ForegroundColor;
+            _console.ForegroundColor = ConsoleColor.Green;
+            _console.WriteLine("dependency:");
+            _console.WriteLine($"    name: {dependency.Name}");
+            _console.WriteLine($"    dir: {directory}");
+            _console.WriteLine();
+            _console.ForegroundColor = origColor;
+
+            _git.WorkingDirectory = directory;
+            return ReturnCode = _git.Status();
         }
 
         /// <summary>
@@ -52,8 +74,7 @@ namespace GitDepend.Visitors
         /// <returns>The return code.</returns>
         public ReturnCode VisitProject(string directory, GitDependFile config)
         {
-            _git.WorkingDirectory = directory;
-            return ReturnCode = _git.Status();
+            return ReturnCode.Success;
         }
 
         #endregion

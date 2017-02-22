@@ -1,4 +1,5 @@
-﻿using CommandLine;
+﻿using System.Collections;
+using CommandLine;
 
 namespace GitDepend.CommandLine
 {

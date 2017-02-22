@@ -16,6 +16,15 @@ namespace GitDepend.Busi
         #region Implementation of IConsole
 
         /// <summary>
+        /// Gets or sets the foreground color of the console.
+        /// </summary>
+        public ConsoleColor ForegroundColor
+        {
+            get { return Console.ForegroundColor; }
+            set { Console.ForegroundColor = value; }
+        }
+
+        /// <summary>
         /// Gets the standard output stream.
         /// </summary>
         public TextWriter Out => Console.Out;

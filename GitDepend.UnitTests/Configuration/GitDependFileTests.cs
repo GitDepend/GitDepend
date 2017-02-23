@@ -41,7 +41,7 @@ namespace GitDepend.UnitTests.Configuration
                            "  },\r\n" +
                            "  \"dependencies\": [\r\n" +
                            "    {\r\n" +
-                           "      \"url\": \"git@github.com:kjjuno/Lib1.git\",\r\n" +
+                           "      \"url\": \"https://github.com/kjjuno/Lib1.git\",\r\n" +
                            "      \"dir\": \"..\\\\Lib1\",\r\n" +
                            "      \"branch\": \"develop\"\r\n" +
                            "    }\r\n" +

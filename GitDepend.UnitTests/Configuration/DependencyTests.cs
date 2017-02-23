@@ -24,7 +24,7 @@ namespace GitDepend.UnitTests.Configuration
         [Test]
         public void ToStringTest()
         {
-            var expected = "{\r\n  \"url\": \"git@github.com:kjjuno/Lib1.git\",\r\n  \"dir\": \"..\\\\Lib1\",\r\n  \"branch\": \"develop\"\r\n}";
+            var expected = "{\r\n  \"url\": \"https://github.com/kjjuno/Lib1.git\",\r\n  \"dir\": \"..\\\\Lib1\",\r\n  \"branch\": \"develop\"\r\n}";
             var actual = Lib1Dependency.ToString();
             Assert.AreEqual(expected, actual);
         }

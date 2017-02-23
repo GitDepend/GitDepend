@@ -95,17 +95,17 @@ namespace GitDepend.UnitTests.Busi
         [Test]
         public void LoadFromDirectory_ShoulReturn_UnknownError_WhenRandomErrorIsThrown()
         {
-            var fileSysetm = Container.Resolve<IFileSystem>();
+            var fileSystem = Container.Resolve<IFileSystem>();
             var instance = new GitDependFileFactory();
             string directory = @"C:\projects\GitDepend";
 
-            fileSysetm.Directory.Arrange(d => d.Exists(Arg.AnyString))
+            fileSystem.Directory.Arrange(d => d.Exists(Arg.AnyString))
                 .Returns(true);
-            fileSysetm.Directory.Arrange(d => d.GetDirectories(Arg.AnyString, Arg.AnyString))
+            fileSystem.Directory.Arrange(d => d.GetDirectories(Arg.AnyString, Arg.AnyString))
                 .Returns(new[] { @"C:\projects\GitDepend\.git" });
-            fileSysetm.File.Arrange(f => f.Exists(Arg.AnyString))
+            fileSystem.File.Arrange(f => f.Exists(Arg.AnyString))
                 .Returns(true);
-            fileSysetm.File.Arrange(f => f.ReadAllText(Arg.AnyString))
+            fileSystem.File.Arrange(f => f.ReadAllText(Arg.AnyString))
                 .Throws<Exception>();
 
             string dir;
@@ -115,6 +115,40 @@ namespace GitDepend.UnitTests.Busi
             Assert.IsNull(config, "Config file should be null");
             Assert.IsNull(dir, "Invalid directory");
             Assert.AreEqual(ReturnCode.UnknownError, code, "Invalid Return Code");
+        }
+
+        [Test]
+        public void LoadFromDirectory_ShouldReturn_InvalidUrlFormat_WhenUrlIsNotHttps()
+        {
+            var fileSystem = RegisterMockFileSystem();
+            var expectedConfig = new GitDependFile
+            {
+                Name = "testing",
+                Dependencies =
+                {
+                    new Dependency
+                    {
+                        Url = "git@github.com:kjjuno/Lib2.git",
+                        Directory = "..\\Lib2"
+                    }
+                }
+            };
+
+            var instance = new GitDependFileFactory();
+
+            string directory = @"C:\projects\GitDepend";
+            fileSystem.Directory.CreateDirectory(directory);
+            fileSystem.Directory.CreateDirectory(fileSystem.Path.Combine(directory, ".git"));
+            var path = fileSystem.Path.Combine(directory, "GitDepend.json");
+            fileSystem.File.WriteAllText(path, expectedConfig.ToString());
+
+            string dir;
+            ReturnCode code;
+            var config = instance.LoadFromDirectory(directory, out dir, out code);
+
+            Assert.IsNull(config, "Config file should be null");
+            Assert.AreEqual(directory, dir, "Invalid directory");
+            Assert.AreEqual(ReturnCode.InvalidUrlFormat, code, "Invalid Return Code");
         }
     }
 }

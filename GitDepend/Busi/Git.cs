@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO.Abstractions;
 
 namespace GitDepend.Busi
 {
@@ -8,6 +9,7 @@ namespace GitDepend.Busi
     public class Git : IGit
     {
         private readonly IProcessManager _processManager;
+        private readonly IFileSystem _fileSystem;
 
         /// <summary>
         /// The working directory for all git operations.
@@ -20,6 +22,7 @@ namespace GitDepend.Busi
         public Git()
         {
             _processManager = DependencyInjection.Resolve<IProcessManager>();
+            _fileSystem = DependencyInjection.Resolve<IFileSystem>();
         }
 
         /// <summary>
@@ -75,7 +78,13 @@ namespace GitDepend.Busi
         /// <returns>The git return code.</returns>
         public ReturnCode Commit(string message)
         {
-            return ExecuteGitCommand($"commit -m \"{message}\"");
+            var file = _fileSystem.Path.GetTempFileName();
+            _fileSystem.File.WriteAllText(file, message);
+
+            var code = ExecuteGitCommand($"commit --file=\"{file}\"");
+
+            _fileSystem.File.Delete(file);
+            return code;
         }
 
         private ReturnCode ExecuteGitCommand(string arguments)

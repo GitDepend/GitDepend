@@ -44,14 +44,17 @@ namespace GitDepend.Commands
 
             switch (invokedVerb)
             {
+                case CloneCommand.Name:
+                    command = new CloneCommand(options as CloneSubOptions);
+                    break;
+                case ConfigCommand.Name:
+                    command = new ConfigCommand(options as ConfigSubOptions);
+                    break;
                 case InitCommand.Name:
                     command = new InitCommand(options as InitSubOptions);
                     break;
-                case ShowConfigCommand.Name:
-                    command = new ShowConfigCommand(options as ConfigSubOptions);
-                    break;
-                case CloneCommand.Name:
-                    command = new CloneCommand(options as CloneSubOptions);
+                case StatusCommand.Name:
+                    command = new StatusCommand(options as StatusSubOptions);
                     break;
                 case UpdateCommand.Name:
                     command = new UpdateCommand(options as UpdateSubOptions);

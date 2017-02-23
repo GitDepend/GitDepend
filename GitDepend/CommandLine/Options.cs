@@ -1,10 +1,9 @@
 ﻿using CommandLine;
 using CommandLine.Text;
-using GitDepend.CommandLine;
 using GitDepend.Commands;
 using Newtonsoft.Json;
 
-namespace GitDepend
+namespace GitDepend.CommandLine
 {
     class Options
     {
@@ -16,14 +15,17 @@ namespace GitDepend
 
         }
 
-        [VerbOption(ShowConfigCommand.Name, HelpText = "Displays the full configuration file")]
+        [VerbOption(CloneCommand.Name, HelpText = "Recursively clones all dependencies")]
+        public CloneSubOptions CloneVerb { get; set; }
+
+        [VerbOption(ConfigCommand.Name, HelpText = "Displays the full configuration file")]
         public ConfigSubOptions ConfigVerb { get; set; }
 
         [VerbOption(InitCommand.Name, HelpText = "Assists you in creating a GitDepend.json")]
         public InitSubOptions InitVerb { get; set; }
 
-        [VerbOption(CloneCommand.Name, HelpText = "Recursively clones all dependencies")]
-        public CloneSubOptions CloneVerb { get; set; }
+        [VerbOption(StatusCommand.Name, HelpText = "Displays git status on dependencies")]
+        public StatusSubOptions StatusVerb { get; set; }
 
         [VerbOption(UpdateCommand.Name, HelpText = "Recursively builds all dependencies, and updates the current project to the newly built artifacts.")]
         public UpdateSubOptions UpdateVerb { get; set; }

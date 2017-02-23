@@ -9,7 +9,7 @@ namespace GitDepend.Commands
     /// <summary>
     /// An implementation of <see cref="ICommand"/> that displays the fully calculated configuration file.
     /// </summary>
-    public class ShowConfigCommand : ICommand
+    public class ConfigCommand : ICommand
     {
         private readonly ConfigSubOptions _options;
         private readonly IConsole _console;
@@ -21,10 +21,10 @@ namespace GitDepend.Commands
         public const string Name = "config";
 
         /// <summary>
-        /// Creates a new <see cref="ShowConfigCommand"/>
+        /// Creates a new <see cref="ConfigCommand"/>
         /// </summary>
         /// <param name="options">The <see cref="ConfigSubOptions"/> that configures the command.</param>
-        public ShowConfigCommand(ConfigSubOptions options)
+        public ConfigCommand(ConfigSubOptions options)
         {
             _options = options;
             _console = DependencyInjection.Resolve<IConsole>();

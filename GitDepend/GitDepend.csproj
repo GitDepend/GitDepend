@@ -87,12 +87,15 @@
     <Compile Include="CommandLine\CommonSubOptions.cs" />
     <Compile Include="CommandLine\ConfigSubOptions.cs" />
     <Compile Include="CommandLine\InitSubOptions.cs" />
+    <Compile Include="CommandLine\NamedDependenciesOptions.cs" />
+    <Compile Include="CommandLine\StatusSubOptions.cs" />
     <Compile Include="CommandLine\UpdateSubOptions.cs" />
     <Compile Include="Commands\CloneCommand.cs" />
     <Compile Include="Commands\CommandParser.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\InitCommand.cs" />
-    <Compile Include="Commands\ShowConfigCommand.cs" />
+    <Compile Include="Commands\ConfigCommand.cs" />
+    <Compile Include="Commands\StatusCommand.cs" />
     <Compile Include="Commands\UpdateCommand.cs" />
     <Compile Include="Configuration\Build.cs" />
     <Compile Include="Configuration\Dependency.cs" />
@@ -109,6 +112,7 @@
     <Compile Include="ReturnCode.cs" />
     <Compile Include="UnityConfig.cs" />
     <Compile Include="Visitors\DependencyVisitorAlgorithm.cs" />
+    <Compile Include="Visitors\DisplayStatusVisitor.cs" />
     <Compile Include="Visitors\IDependencyVisitorAlgorithm.cs" />
     <Compile Include="Visitors\IVisitor.cs" />
     <Compile Include="Visitors\CheckOutBranchVisitor.cs" />

@@ -83,6 +83,7 @@
     <Compile Include="Commands\CommandParserTests.cs" />
     <Compile Include="Commands\InitCommandTests.cs" />
     <Compile Include="Commands\ShowConfigCommandTests.cs" />
+    <Compile Include="Commands\StatusCommandTests.cs" />
     <Compile Include="Commands\UpdateCommandTests.cs" />
     <Compile Include="Configuration\BuildTests.cs" />
     <Compile Include="Configuration\DependencyTests.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Visitors\DependencyVisitorAlgorithmTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestFixtureBase.cs" />
+    <Compile Include="Visitors\DisplayStatusVisitorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -35,7 +35,7 @@ namespace GitDepend.UnitTests.Commands
                 });
 
             var options = new ConfigSubOptions();
-            var instance = new ShowConfigCommand(options);
+            var instance = new ConfigCommand(options);
 
             var code = instance.Execute();
             Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
@@ -60,7 +60,7 @@ namespace GitDepend.UnitTests.Commands
                 });
 
             var options = new ConfigSubOptions();
-            var instance = new ShowConfigCommand(options);
+            var instance = new ConfigCommand(options);
 
             var code = instance.Execute();
             Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
@@ -85,7 +85,7 @@ namespace GitDepend.UnitTests.Commands
                 });
 
             var options = new ConfigSubOptions();
-            var instance = new ShowConfigCommand(options);
+            var instance = new ConfigCommand(options);
 
             var code = instance.Execute();
             Assert.AreEqual(ReturnCode.GitRepositoryNotFound, code, "Invalid Return Code");

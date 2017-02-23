@@ -54,5 +54,16 @@ namespace GitDepend.UnitTests.Commands
 
             Assert.IsTrue(command is UpdateCommand, "Invalid Command");
         }
+
+        [Test]
+        public void GetCommand_ShouldReturn_StatusCommand_WhenStatusVerbIsSpecified()
+        {
+            string[] args = { "status", "lib1" };
+            var instance = new CommandParser();
+
+            var command = instance.GetCommand(args);
+
+            Assert.IsTrue(command is StatusCommand, "Invalid Command");
+        }
     }
 }

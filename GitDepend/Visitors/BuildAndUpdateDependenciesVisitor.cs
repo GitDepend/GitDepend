@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Abstractions;
@@ -21,6 +22,11 @@ namespace GitDepend.Visitors
         private readonly IProcessManager _processManager;
         private readonly IFileSystem _fileSystem;
         private readonly IConsole _console;
+
+        /// <summary>
+        /// The list of packages that were updated.
+        /// </summary>
+        public HashSet<string> UpdatedPackages { get; } = new HashSet<string>();
 
         /// <summary>
         /// Creates a new <see cref="BuildAndUpdateDependenciesVisitor"/>
@@ -173,6 +179,12 @@ namespace GitDepend.Visitors
 
                         _nuget.Restore(solution);
                         _nuget.Update(solution, id, version, cacheDir);
+
+                        var package = $"{id}.{version}";
+                        if (!UpdatedPackages.Contains(package))
+                        {
+                            UpdatedPackages.Add(package);
+                        }
                     }
                 }
             }

@@ -39,25 +39,30 @@ namespace GitDepend.Commands
         /// <returns>The return code.</returns>
         public ReturnCode Execute()
         {
-            IVisitor visitor = new CheckOutBranchVisitor();
-            _algorithm.TraverseDependencies(visitor, _options.Directory);
+            var checkoutVisitor = new CheckOutBranchVisitor();
+            _algorithm.TraverseDependencies(checkoutVisitor, _options.Directory);
 
-            if (visitor.ReturnCode != ReturnCode.Success)
+            if (checkoutVisitor.ReturnCode != ReturnCode.Success)
             {
                 _console.WriteLine("Could not ensure the correct branch on all dependencies.");
-                return visitor.ReturnCode;
+                return checkoutVisitor.ReturnCode;
             }
 
             _algorithm.Reset();
-            visitor = new BuildAndUpdateDependenciesVisitor();
-            _algorithm.TraverseDependencies(visitor, _options.Directory);
+            var buildAndUpdateVisitor = new BuildAndUpdateDependenciesVisitor();
+            _algorithm.TraverseDependencies(buildAndUpdateVisitor, _options.Directory);
 
-            if (visitor.ReturnCode == ReturnCode.Success)
+            if (buildAndUpdateVisitor.ReturnCode == ReturnCode.Success)
             {
+                _console.WriteLine("Updated packages: ");
+                foreach (var package in buildAndUpdateVisitor.UpdatedPackages)
+                {
+                    _console.WriteLine($"    {package}");
+                }
                 _console.WriteLine("Update complete!");
             }
 
-            return visitor.ReturnCode;
+            return buildAndUpdateVisitor.ReturnCode;
         }
 
         #endregion

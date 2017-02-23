@@ -8,6 +8,7 @@ namespace GitDepend.Busi
     /// </summary>
     public class Nuget : INuget
     {
+        private readonly IConsole _console;
         private readonly IProcessManager _processManager;
 
         /// <summary>
@@ -20,6 +21,7 @@ namespace GitDepend.Busi
         /// </summary>
         public Nuget()
         {
+            _console = DependencyInjection.Resolve<IConsole>();
             _processManager = DependencyInjection.Resolve<IProcessManager>();
         }
 
@@ -51,11 +53,17 @@ namespace GitDepend.Busi
             {
                 WorkingDirectory = WorkingDirectory,
                 UseShellExecute = false,
+                RedirectStandardOutput = true
             };
-            var proc = _processManager.Start(info);
-            proc?.WaitForExit();
+            _console.WriteLine($"{info.FileName} {arguments}");
 
-            var code = proc?.ExitCode ?? (int)ReturnCode.FailedToRunNugetCommand;
+            int code;
+            using (var proc = _processManager.Start(info))
+            {
+                proc.StandardOutput.ReadToEnd();
+                proc?.WaitForExit();
+                code = proc?.ExitCode ?? (int)ReturnCode.FailedToRunNugetCommand;
+            }
 
             return code != (int)ReturnCode.Success
                 ? ReturnCode.FailedToRunNugetCommand

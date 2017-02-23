@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 
 namespace GitDepend.Busi
 {
@@ -37,6 +38,23 @@ namespace GitDepend.Busi
         public void WaitForExit()
         {
             _proc?.WaitForExit();
+        }
+
+        /// <summary>
+        /// Gets a handle to the standard output stream.
+        /// </summary>
+        public StreamReader StandardOutput => _proc?.StandardOutput;
+
+        #endregion
+
+        #region Implementation of IDisposable
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            _proc?.Dispose();
         }
 
         #endregion

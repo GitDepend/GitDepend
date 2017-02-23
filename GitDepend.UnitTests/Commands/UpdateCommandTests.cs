@@ -68,6 +68,12 @@ namespace GitDepend.UnitTests.Commands
         [Test]
         public void Execute_ReturnsSucccess_WhenBuildAndUpdateDependenciesVisitor_Succeeds()
         {
+            string[] packages =
+            {
+                "TestPackage.0.1.2",
+                "TestPackage.Busi.3.1.2"
+            };
+
             bool checkoutCalled = false;
             var algorithm = Container.Resolve<IDependencyVisitorAlgorithm>();
             algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
@@ -81,6 +87,12 @@ namespace GitDepend.UnitTests.Commands
                     }
 
                     Assert.IsTrue(visitor is BuildAndUpdateDependenciesVisitor);
+
+                    foreach (var package in packages)
+                    {
+                        ((BuildAndUpdateDependenciesVisitor) visitor).UpdatedPackages.Add(package);
+                    }
+                    
                     visitor.ReturnCode = ReturnCode.Success;
                 });
 
@@ -93,6 +105,10 @@ namespace GitDepend.UnitTests.Commands
                     output.AppendLine(text);
                 });
 
+            var expected = "Updated packages: " + Environment.NewLine +
+                           "    " + string.Join(Environment.NewLine + "    ", packages) + Environment.NewLine +
+                           "Update complete!" + Environment.NewLine;
+
 
             var options = new UpdateSubOptions();
             var instance = new UpdateCommand(options);
@@ -101,7 +117,7 @@ namespace GitDepend.UnitTests.Commands
 
             Assert.IsTrue(checkoutCalled, "Dependencies should have been checked out first.");
             Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
-            Assert.AreEqual("Update complete!" + Environment.NewLine, output.ToString());
+            Assert.AreEqual(expected, output.ToString());
         }
     }
 }

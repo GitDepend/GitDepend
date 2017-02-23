@@ -57,9 +57,8 @@ namespace GitDepend.UnitTests.Commands
 
             var code = instance.Execute();
 
-            const string EXPECTED = @"- Lib2
-    - Lib1
-";
+            const string EXPECTED = "- Lib2\r\n" +
+                                    "    - Lib1\r\n";
             var actual = output.ToString();
 
             Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");

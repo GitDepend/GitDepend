@@ -119,6 +119,7 @@
     <Compile Include="Visitors\IVisitor.cs" />
     <Compile Include="Visitors\CheckOutBranchVisitor.cs" />
     <Compile Include="Visitors\BuildAndUpdateDependenciesVisitor.cs" />
+    <Compile Include="Visitors\NullVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

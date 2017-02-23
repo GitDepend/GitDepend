@@ -39,12 +39,21 @@ namespace GitDepend.Commands
         /// <returns>The return code.</returns>
         public ReturnCode Execute()
         {
-            var visitor = new CheckOutBranchVisitor();
+            IVisitor visitor = new NullVisitor();
             _algorithm.TraverseDependencies(visitor, _options.Directory);
 
             if (visitor.ReturnCode == ReturnCode.Success)
             {
                 _console.WriteLine("Successfully cloned all dependencies");
+            }
+
+            visitor = new CheckOutBranchVisitor();
+            _algorithm.Reset();
+            _algorithm.TraverseDependencies(visitor, _options.Directory);
+
+            if (visitor.ReturnCode == ReturnCode.Success)
+            {
+                _console.WriteLine("All dependencies on the correct branch");
             }
 
             return visitor.ReturnCode;

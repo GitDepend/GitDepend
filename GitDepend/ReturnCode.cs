@@ -41,6 +41,11 @@
         CouldNotCreateCacheDirectory = 6,
 
         /// <summary>
+        /// Indicates that the specified dependency url is invalid. The only supported format is https
+        /// </summary>
+        InvalidUrlFormat = 7,
+
+        /// <summary>
         /// Indicates that the command parser did not understand the specified command.
         /// </summary>
         InvalidCommand = 9998,

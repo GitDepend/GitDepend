@@ -40,7 +40,7 @@ namespace GitDepend.UnitTests.Visitors
             git.Arrange(g => g.Status())
                 .Returns(ReturnCode.FailedToRunGitCommand);
 
-            IList<string> whilelist = new List<string>() { Lib1Dependency.Name, "OTHER" };
+            IList<string> whilelist = new List<string>() { Lib1Dependency.Configuration.Name, "OTHER" };
             var instance = new DisplayStatusVisitor(whilelist);
 
             var code = instance.VisitDependency(Lib2Directory, Lib1Dependency);

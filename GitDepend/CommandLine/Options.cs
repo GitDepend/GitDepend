@@ -24,6 +24,9 @@ namespace GitDepend.CommandLine
         [VerbOption(InitCommand.Name, HelpText = "Assists you in creating a GitDepend.json")]
         public InitSubOptions InitVerb { get; set; }
 
+        [VerbOption(ListCommand.Name, HelpText = "Lists all repository dependencies")]
+        public ListSubOptons ListVerb { get; set; }
+
         [VerbOption(StatusCommand.Name, HelpText = "Displays git status on dependencies")]
         public StatusSubOptions StatusVerb { get; set; }
 

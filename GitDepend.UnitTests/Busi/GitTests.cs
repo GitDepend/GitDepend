@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -121,6 +122,12 @@ namespace GitDepend.UnitTests.Busi
         [Test]
         public void CommitTest()
         {
+            var fileSystem = Container.Resolve<IFileSystem>();
+
+            var tempFile = @"C:\temp\somefile.dat";
+            fileSystem.Path.Arrange(p => p.GetTempFileName())
+                .Returns(tempFile);
+
             string command = null;
             string arguments = null;
             var processManager = Container.Resolve<IProcessManager>();
@@ -134,12 +141,14 @@ namespace GitDepend.UnitTests.Busi
                 });
 
             var instance = new Git();
-            var message = "This is a test message";
+            var message = "This is a test message" + Environment.NewLine +
+                          "With multiple lines";
+
             var code = instance.Commit(message);
 
             Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
             Assert.AreEqual("git", command);
-            Assert.AreEqual($"commit -m \"{message}\"", arguments);
+            Assert.AreEqual($"commit --file=\"{tempFile}\"", arguments);
         }
 
         [Test]

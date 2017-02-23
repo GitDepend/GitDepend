@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Abstractions;
+using System.Text;
 using System.Text.RegularExpressions;
 using GitDepend.Busi;
 using GitDepend.Configuration;
@@ -105,8 +106,12 @@ namespace GitDepend.Visitors
                 UseShellExecute = false
             };
 
-            var proc = _processManager.Start(info);
-            proc?.WaitForExit();
+            int exitCode;
+            using (var proc = _processManager.Start(info))
+            {
+                proc.WaitForExit();
+                exitCode = proc.ExitCode;
+            }
 
 
             var artifactsDir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(directory, dependency.Directory, dependency.Configuration.Packages.Directory));
@@ -119,8 +124,9 @@ namespace GitDepend.Visitors
                 }
             }
 
-            var codeNum = proc?.ExitCode ?? (int)ReturnCode.FailedToRunBuildScript;
-            return ReturnCode = (ReturnCode)codeNum;
+            return ReturnCode = exitCode == 0
+                ? ReturnCode.Success
+                : ReturnCode.FailedToRunBuildScript;
         }
 
         /// <summary>
@@ -141,35 +147,48 @@ namespace GitDepend.Visitors
                 return ReturnCode = ReturnCode.DirectoryDoesNotExist;
             }
 
-            foreach (var dependency in config.Dependencies)
+            StringBuilder commitMessage = new StringBuilder();
+            commitMessage.AppendLine("GitDepend: updating dependencies");
+            commitMessage.AppendLine();
+
+            var solutions = _fileSystem.Directory.GetFiles(directory, "*.sln", SearchOption.AllDirectories);
+
+            foreach (var solution in solutions)
             {
-                var dependencyDir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(directory, dependency.Directory));
-                var dir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(dependencyDir, dependency.Configuration.Packages.Directory));
+                _nuget.Restore(solution);
+            }
 
-                foreach (var file in _fileSystem.Directory.GetFiles(dir, "*.nupkg"))
+            foreach (var solution in solutions)
+            {
+                foreach (var dependency in config.Dependencies)
                 {
-                    var name = _fileSystem.Path.GetFileNameWithoutExtension(file);
+                    var dependencyDir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(directory, dependency.Directory));
+                    var dir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(dependencyDir, dependency.Configuration.Packages.Directory));
 
-
-                    if (string.IsNullOrEmpty(name))
+                    foreach (var file in _fileSystem.Directory.GetFiles(dir, "*.nupkg"))
                     {
-                        continue;
-                    }
+                        var name = _fileSystem.Path.GetFileNameWithoutExtension(file);
 
-                    var match = Pattern.Match(name);
 
-                    if (!match.Success)
-                    {
-                        continue;
-                    }
+                        if (string.IsNullOrEmpty(name))
+                        {
+                            continue;
+                        }
 
-                    var id = match.Groups["id"].Value;
-                    var version = match.Groups["version"].Value;
+                        var match = Pattern.Match(name);
 
-                    _nuget.WorkingDirectory = directory;
+                        if (!match.Success)
+                        {
+                            continue;
+                        }
 
-                    foreach (var solution in _fileSystem.Directory.GetFiles(directory, "*.sln", SearchOption.AllDirectories))
-                    {
+                        var id = match.Groups["id"].Value;
+                        var version = match.Groups["version"].Value;
+
+                        commitMessage.AppendLine($"* {id}.{version}");
+
+                        _nuget.WorkingDirectory = directory;
+
                         var cacheDir = GetCacheDirectory();
 
                         if (string.IsNullOrEmpty(cacheDir))
@@ -177,7 +196,6 @@ namespace GitDepend.Visitors
                             return ReturnCode = ReturnCode.CouldNotCreateCacheDirectory;
                         }
 
-                        _nuget.Restore(solution);
                         _nuget.Update(solution, id, version, cacheDir);
 
                         var package = $"{id}.{version}";
@@ -195,7 +213,8 @@ namespace GitDepend.Visitors
             _git.Add("*.csproj", @"*\packages.config");
             _console.WriteLine("================================================================================");
             _git.Status();
-            _git.Commit("GitDepend: updating dependencies");
+
+            _git.Commit(commitMessage.ToString());
 
             return ReturnCode = ReturnCode.Success;
         }

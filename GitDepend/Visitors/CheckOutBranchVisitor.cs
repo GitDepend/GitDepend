@@ -40,7 +40,7 @@ namespace GitDepend.Visitors
         /// <returns>The return code.</returns>
         public ReturnCode VisitDependency(string directory, Dependency dependency)
         {
-            _console.WriteLine($"Checking out the {dependency.Branch} branch on {dependency.Name}");
+            _console.WriteLine($"Checking out the {dependency.Branch} branch on {dependency.Configuration.Name}");
 
             _git.WorkingDirectory = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(directory, dependency.Directory));
             return ReturnCode = _git.Checkout(dependency.Branch);

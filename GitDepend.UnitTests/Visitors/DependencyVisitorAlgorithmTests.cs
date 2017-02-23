@@ -102,7 +102,7 @@ namespace GitDepend.UnitTests.Visitors
                 });
 
             string lib2Dir = PROJECT_DIRECTORY;
-            var dir = Lib2Config.Dependencies.First(d => d.Name == "Lib1").Directory;
+            var dir = Lib2Config.Dependencies.First(d => d.Configuration.Name == "Lib1").Directory;
             string lib1Dir = fileSystem.Path.GetFullPath(fileSystem.Path.Combine(lib2Dir, dir));
 
             fileSystem.Directory.CreateDirectory(PROJECT_DIRECTORY);
@@ -218,7 +218,7 @@ namespace GitDepend.UnitTests.Visitors
                 });
 
             string lib2Dir = PROJECT_DIRECTORY;
-            var dir = Lib2Config.Dependencies.First(d => d.Name == "Lib1").Directory;
+            var dir = Lib2Config.Dependencies.First(d => d.Configuration.Name == "Lib1").Directory;
             string lib1Dir = fileSystem.Path.GetFullPath(fileSystem.Path.Combine(lib2Dir, dir));
 
             fileSystem.Directory.CreateDirectory(PROJECT_DIRECTORY);

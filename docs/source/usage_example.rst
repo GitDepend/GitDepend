@@ -6,6 +6,7 @@ In the root of your repository you will include a ``GitDepend.json`` file
 .. code-block:: json
 
     {
+      "name": "Lib2",
       "build": {
         "script": "make.bat"
       },
@@ -14,7 +15,6 @@ In the root of your repository you will include a ``GitDepend.json`` file
       },
       "dependencies": [
         {
-          "name": "Lib1",
           "url": "git@github.com:kjjuno/Lib1.git",
           "dir": "../Lib1",
           "branch": "develop"

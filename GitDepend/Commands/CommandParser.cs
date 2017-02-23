@@ -53,6 +53,9 @@ namespace GitDepend.Commands
                 case InitCommand.Name:
                     command = new InitCommand(options as InitSubOptions);
                     break;
+                case ListCommand.Name:
+                    command = new ListCommand(options as ListSubOptons);
+                    break;
                 case StatusCommand.Name:
                     command = new StatusCommand(options as StatusSubOptions);
                     break;

@@ -47,7 +47,7 @@ namespace GitDepend.Visitors
         public ReturnCode VisitDependency(string directory, Dependency dependency)
         {
             var shouldExecute = _whilelist.Count == 0 ||
-                _whilelist.Any(d => string.Equals(d, dependency.Name, StringComparison.CurrentCultureIgnoreCase));
+                _whilelist.Any(d => string.Equals(d, dependency.Configuration.Name, StringComparison.CurrentCultureIgnoreCase));
 
             if (!shouldExecute)
             {
@@ -59,7 +59,7 @@ namespace GitDepend.Visitors
             var origColor = _console.ForegroundColor;
             _console.ForegroundColor = ConsoleColor.Green;
             _console.WriteLine("dependency:");
-            _console.WriteLine($"    name: {dependency.Name}");
+            _console.WriteLine($"    name: {dependency.Configuration.Name}");
             _console.WriteLine($"    dir: {dir}");
             _console.WriteLine();
             _console.ForegroundColor = origColor;

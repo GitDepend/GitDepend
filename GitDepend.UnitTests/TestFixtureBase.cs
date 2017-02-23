@@ -30,13 +30,13 @@ namespace GitDepend.UnitTests
         {
             Lib1Config = new GitDependFile
             {
+                Name = "Lib1",
                 Build = { Script = "make.bat" },
                 Packages = { Directory = "artifacts/NuGet/Debug" }
             };
 
             Lib1Dependency = new Dependency
             {
-                Name = "Lib1",
                 Directory = "..\\Lib1",
                 Url = "git@github.com:kjjuno/Lib1.git",
                 Branch = "develop",
@@ -52,6 +52,7 @@ namespace GitDepend.UnitTests
 
             Lib2Config = new GitDependFile
             {
+                Name = "Lib2",
                 Build = { Script = "make.bat" },
                 Packages = { Directory = "artifacts/NuGet/Debug" },
                 Dependencies = { Lib1Dependency }

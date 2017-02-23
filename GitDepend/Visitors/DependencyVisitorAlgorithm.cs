@@ -68,7 +68,7 @@ namespace GitDepend.Visitors
                 // If the dependency does not exist on disk we need to clone it.
                 if (!_fileSystem.Directory.Exists(dependency.Directory))
                 {
-                    _console.WriteLine($"Cloning {dependency.Name} into {dependency.Directory}");
+                    _console.WriteLine($"Cloning {dependency.Configuration.Name} into {dependency.Directory}");
 
                     code = _git.Clone(dependency.Url, dependency.Directory, dependency.Branch);
                     _console.WriteLine();

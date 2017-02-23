@@ -13,6 +13,12 @@ namespace GitDepend.Configuration
         private Packages _packages;
 
         /// <summary>
+        /// The name of this repository
+        /// </summary>
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        /// <summary>
         /// The build section.
         /// </summary>
         [JsonProperty("build")]

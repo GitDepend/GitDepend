@@ -8,12 +8,6 @@ namespace GitDepend.Configuration
     public class Dependency
     {
         /// <summary>
-        /// The dependency name.
-        /// </summary>
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        /// <summary>
         /// The url where the dependency can be cloned with git.
         /// </summary>
         [JsonProperty("url")]

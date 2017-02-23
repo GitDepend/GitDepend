@@ -15,6 +15,7 @@ namespace GitDepend.Commands
         /// The name of the verb.
         /// </summary>
         public const string Name = "clone";
+
         private readonly CloneSubOptions _options;
         private readonly IDependencyVisitorAlgorithm _algorithm;
         private readonly IConsole _console;

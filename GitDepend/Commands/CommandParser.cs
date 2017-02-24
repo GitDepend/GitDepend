@@ -44,6 +44,9 @@ namespace GitDepend.Commands
 
             switch (invokedVerb)
             {
+                case BranchCommand.Name:
+                    command = new BranchCommand(options as BranchSubOptions);
+                    break;
                 case CloneCommand.Name:
                     command = new CloneCommand(options as CloneSubOptions);
                     break;

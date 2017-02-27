@@ -1,4 +1,5 @@
-﻿using GitDepend.CommandLine;
+﻿using System.Collections.Generic;
+using GitDepend.CommandLine;
 using GitDepend.Visitors;
 
 namespace GitDepend.Commands
@@ -39,7 +40,17 @@ namespace GitDepend.Commands
                 return ReturnCode.InvalidArguments;
             }
 
-            var visitor = new CheckOutBranchVisitor(_options.BranchName, _options.CreateBranch);
+            IVisitor visitor = new CheckOutBranchVisitor(_options.BranchName, _options.CreateBranch);
+            _algorithm.TraverseDependencies(visitor, _options.Directory);
+
+            if (visitor.ReturnCode != ReturnCode.Success)
+            {
+                return visitor.ReturnCode;
+            }
+
+            _algorithm.Reset();
+
+            visitor = new SyncConfigWithCurrentBranchVisitor(new List<string>());
             _algorithm.TraverseDependencies(visitor, _options.Directory);
 
             return visitor.ReturnCode;

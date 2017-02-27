@@ -65,7 +65,7 @@ namespace GitDepend.Visitors
                 : $"Deleting the {BranchName} branch from {config.Name}");
 
             _git.WorkingDirectory = directory;
-            return ReturnCode = _git.Delete(BranchName, Force);
+            return ReturnCode = _git.DeleteBranch(BranchName, Force);
         }
 
         #endregion

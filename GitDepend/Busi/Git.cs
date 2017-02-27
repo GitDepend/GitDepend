@@ -40,7 +40,7 @@ namespace GitDepend.Busi
         /// </summary>
         /// <param name="branch">The branch to create</param>
         /// <returns>The git return code.</returns>
-        public ReturnCode Branch(string branch)
+        public ReturnCode CreateBranch(string branch)
         {
             return ExecuteGitCommand($"branch {branch}");
         }
@@ -87,7 +87,7 @@ namespace GitDepend.Busi
         /// <param name="branch">The branch to delete.</param>
         /// <param name="force">Should the deletion be forced or not.</param>
         /// <returns></returns>
-        public ReturnCode Delete(string branch, bool force)
+        public ReturnCode DeleteBranch(string branch, bool force)
         {
             return ExecuteGitCommand(force
                 ? $"branch -D {branch}"

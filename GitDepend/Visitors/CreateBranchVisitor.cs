@@ -55,7 +55,7 @@ namespace GitDepend.Visitors
         {
             _console.WriteLine($"Creating the {BranchName} branch on {config.Name}");
             _git.WorkingDirectory = directory;
-            return ReturnCode = _git.Branch(BranchName);
+            return ReturnCode = _git.CreateBranch(BranchName);
         }
 
         #endregion

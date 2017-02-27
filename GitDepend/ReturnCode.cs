@@ -46,6 +46,11 @@
         InvalidUrlFormat = 7,
 
         /// <summary>
+        /// Specifies that a dependency is missing in the GitDepend.json
+        /// </summary>
+        MissingDependency = 8,
+
+        /// <summary>
         /// Indicates the supplied arguments were invalid.
         /// </summary>
         InvalidArguments = 9997,

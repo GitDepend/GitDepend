@@ -46,7 +46,12 @@ namespace GitDepend.Configuration
         /// </returns>
         public override string ToString()
         {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
+            JsonSerializerSettings settings = new JsonSerializerSettings
+            {
+                DefaultValueHandling = DefaultValueHandling.Ignore,
+                NullValueHandling = NullValueHandling.Ignore
+            };
+            return JsonConvert.SerializeObject(this, Formatting.Indented, settings);
         }
 
         #endregion

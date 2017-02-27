@@ -63,6 +63,9 @@ namespace GitDepend.Commands
                 case StatusCommand.Name:
                     command = new StatusCommand(options as StatusSubOptions);
                     break;
+                case SyncCommand.Name:
+                    command = new SyncCommand(options as SyncSubOptions);
+                    break;
                 case UpdateCommand.Name:
                     command = new UpdateCommand(options as UpdateSubOptions);
                     break;

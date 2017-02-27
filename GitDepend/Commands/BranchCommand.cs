@@ -21,6 +21,7 @@ namespace GitDepend.Commands
         public const string Name = "branch";
 
         private readonly BranchSubOptions _options;
+        private readonly IGit _git;
         private readonly IDependencyVisitorAlgorithm _algorithm;
         private readonly IConsole _console;
 
@@ -31,6 +32,7 @@ namespace GitDepend.Commands
         public BranchCommand(BranchSubOptions options)
         {
             _options = options;
+            _git = DependencyInjection.Resolve<IGit>();
             _algorithm = DependencyInjection.Resolve<IDependencyVisitorAlgorithm>();
             _console = DependencyInjection.Resolve<IConsole>();
         }
@@ -43,16 +45,85 @@ namespace GitDepend.Commands
         /// <returns>The return code.</returns>
         public ReturnCode Execute()
         {
-            // TODO: Traverse dependencies and create a branch
-            //       also create the branch on this project too.
+            bool[] flags =
+            {
+                _options.Delete,
+                _options.ListMerged
+            };
 
-            IVisitor visitor = new CreateBranchVisitor(_options.BranchName);
+            // only one mutually exclusive flag can be set.
+            if (flags.Count(b => b) > 1)
+            {
+                return ReturnCode.InvalidArguments;
+            }
+
+            // force delete can only be specified if delete is specified.
+            if (!_options.Delete && _options.ForceDelete)
+            {
+                return ReturnCode.InvalidArguments;
+            }
+
+            // if delete is specified the branch name must also be specified.
+            if (_options.Delete && string.IsNullOrEmpty(_options.BranchName))
+            {
+                return ReturnCode.InvalidArguments;
+            }
+
+            IVisitor visitor;
+            string successMessage;
+            Func<ReturnCode> postTraverse = null;
+
+            if (_options.Delete)
+            {
+                visitor = new DeleteBranchVisitor(_options.BranchName, _options.ForceDelete);
+                successMessage = $"Successfully deleted the {_options.BranchName} branch from all repositories.";
+            }
+            else if (_options.ListMerged)
+            {
+                visitor = new ListMergedBranchesVisitor();
+                successMessage = string.Empty;
+                postTraverse = () =>
+                {
+                    _git.WorkingDirectory = _options.Directory;
+                    return _git.ListMergedBranches();
+                };
+            }
+            else if (!string.IsNullOrEmpty(_options.BranchName))
+            {
+                visitor = new CreateBranchVisitor(_options.BranchName);
+                successMessage = $"Successfully switched to the {_options.BranchName} branch in all repositories.";
+            }
+            else
+            {
+                visitor = new ListAllBranchesVisitor();
+                successMessage = string.Empty;
+                postTraverse = () =>
+                {
+                    _git.WorkingDirectory = _options.Directory;
+                    return _git.ListAllBranches();
+                };
+            }
+
             _algorithm.TraverseDependencies(visitor, _options.Directory);
 
-            if (visitor.ReturnCode == ReturnCode.Success)
+            var code = visitor.ReturnCode;
+            if (code == ReturnCode.Success && postTraverse != null)
             {
-                _console.WriteLine("Successfully cloned all dependencies");
+                var origColor = _console.ForegroundColor;
+                _console.ForegroundColor = ConsoleColor.Green;
+                _console.WriteLine("project:");
+                _console.WriteLine($"    dir: {_options.Directory}");
+                _console.WriteLine();
+                _console.ForegroundColor = origColor;
+
+                code = postTraverse();
             }
+
+            if (code == ReturnCode.Success)
+            {
+                _console.WriteLine(successMessage);
+            }
+
 
             return visitor.ReturnCode;
         }

@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO.Abstractions;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using GitDepend.Busi;
 using GitDepend.Configuration;
 
@@ -11,19 +7,22 @@ namespace GitDepend.Visitors
     /// <summary>
     /// An implementation of <see cref="IVisitor"/> that creates the specified branch on all dependencies.
     /// </summary>
-    public class CreateBranchVisitor : IVisitor
+    public class DeleteBranchVisitor : IVisitor
     {
         private readonly string _branchName;
+        private readonly bool _force;
         private readonly IGit _git;
         private readonly IConsole _console;
 
         /// <summary>
-        /// Creates a new <see cref="CreateBranchVisitor"/>
+        /// Creates a new <see cref="DeleteBranchVisitor"/>
         /// </summary>
-        /// <param name="branchName">The branch name to create.</param>
-        public CreateBranchVisitor(string branchName)
+        /// <param name="branchName">The branch name to delete.</param>
+        /// <param name="force">Should the deletion be forced or not.</param>
+        public DeleteBranchVisitor(string branchName, bool force)
         {
             _branchName = branchName;
+            _force = force;
             _git = DependencyInjection.Resolve<IGit>();
             _console = DependencyInjection.Resolve<IConsole>();
         }
@@ -54,9 +53,12 @@ namespace GitDepend.Visitors
         /// <returns>The return code.</returns>
         public ReturnCode VisitProject(string directory, GitDependFile config)
         {
-            _console.WriteLine($"Creating the {_branchName} branch on {config.Name}");
+            _console.WriteLine(_force
+                ? $"forcefully deleting the {_branchName} branch from {config.Name}"
+                : $"Deleting the {_branchName} branch from {config.Name}");
+
             _git.WorkingDirectory = directory;
-            return ReturnCode = _git.Branch(_branchName);
+            return ReturnCode = _git.Delete(_branchName, _force);
         }
 
         #endregion

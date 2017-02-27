@@ -1,30 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.IO.Abstractions;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GitDepend.Busi;
 using GitDepend.Configuration;
 
 namespace GitDepend.Visitors
 {
     /// <summary>
-    /// An implementation of <see cref="IVisitor"/> that creates the specified branch on all dependencies.
+    /// An implementation of <see cref="IVisitor"/> that lists all merged branches on all dependencies.
     /// </summary>
-    public class CreateBranchVisitor : IVisitor
+    public class ListMergedBranchesVisitor : IVisitor
     {
-        private readonly string _branchName;
         private readonly IGit _git;
+        private readonly IFileSystem _fileSystem;
         private readonly IConsole _console;
 
         /// <summary>
-        /// Creates a new <see cref="CreateBranchVisitor"/>
+        /// Creates a new <see cref="ListMergedBranchesVisitor"/>
         /// </summary>
-        /// <param name="branchName">The branch name to create.</param>
-        public CreateBranchVisitor(string branchName)
+        public ListMergedBranchesVisitor()
         {
-            _branchName = branchName;
             _git = DependencyInjection.Resolve<IGit>();
+            _fileSystem = DependencyInjection.Resolve<IFileSystem>();
             _console = DependencyInjection.Resolve<IConsole>();
         }
 
@@ -43,7 +39,18 @@ namespace GitDepend.Visitors
         /// <returns>The return code.</returns>
         public ReturnCode VisitDependency(string directory, Dependency dependency)
         {
-            return ReturnCode.Success;
+            var dir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(directory, dependency.Directory));
+
+            var origColor = _console.ForegroundColor;
+            _console.ForegroundColor = ConsoleColor.Green;
+            _console.WriteLine("dependency:");
+            _console.WriteLine($"    name: {dependency.Configuration.Name}");
+            _console.WriteLine($"    dir: {dir}");
+            _console.WriteLine();
+            _console.ForegroundColor = origColor;
+
+            _git.WorkingDirectory = dir;
+            return ReturnCode = _git.ListMergedBranches();
         }
 
         /// <summary>
@@ -54,9 +61,7 @@ namespace GitDepend.Visitors
         /// <returns>The return code.</returns>
         public ReturnCode VisitProject(string directory, GitDependFile config)
         {
-            _console.WriteLine($"Creating the {_branchName} branch on {config.Name}");
-            _git.WorkingDirectory = directory;
-            return ReturnCode = _git.Branch(_branchName);
+            return ReturnCode.Success;
         }
 
         #endregion

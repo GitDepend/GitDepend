@@ -116,12 +116,15 @@
     <Compile Include="ReturnCode.cs" />
     <Compile Include="UnityConfig.cs" />
     <Compile Include="Visitors\CreateBranchVisitor.cs" />
+    <Compile Include="Visitors\DeleteBranchVisitor.cs" />
     <Compile Include="Visitors\DependencyVisitorAlgorithm.cs" />
     <Compile Include="Visitors\DisplayStatusVisitor.cs" />
     <Compile Include="Visitors\IDependencyVisitorAlgorithm.cs" />
     <Compile Include="Visitors\IVisitor.cs" />
     <Compile Include="Visitors\CheckOutBranchVisitor.cs" />
     <Compile Include="Visitors\BuildAndUpdateDependenciesVisitor.cs" />
+    <Compile Include="Visitors\ListAllBranchesVisitor.cs" />
+    <Compile Include="Visitors\ListMergedBranchesVisitor.cs" />
     <Compile Include="Visitors\NullVisitor.cs" />
   </ItemGroup>
   <ItemGroup>

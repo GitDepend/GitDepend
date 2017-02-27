@@ -25,6 +25,13 @@
         ReturnCode Checkout(string branch);
 
         /// <summary>
+        /// Creates the given branch.
+        /// </summary>
+        /// <param name="branch">The branch to create</param>
+        /// <returns>The git return code.</returns>
+        ReturnCode Branch(string branch);
+
+        /// <summary>
         /// Clones a repository.
         /// </summary>
         /// <param name="url">The repository url.</param>
@@ -45,5 +52,25 @@
         /// </summary>
         /// <returns>The git return code.</returns>
         ReturnCode Status();
+
+        /// <summary>
+        /// Deletes the specified branch.
+        /// </summary>
+        /// <param name="branch">The branch to delete.</param>
+        /// <param name="force">Should the deletion be forced or not.</param>
+        /// <returns></returns>
+        ReturnCode Delete(string branch, bool force);
+
+        /// <summary>
+        /// Lists all merged branches.
+        /// </summary>
+        /// <returns></returns>
+        ReturnCode ListMergedBranches();
+
+        /// <summary>
+        /// Lists all branches.
+        /// </summary>
+        /// <returns></returns>
+        ReturnCode ListAllBranches();
     }
 }

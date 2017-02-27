@@ -46,6 +46,11 @@
         InvalidUrlFormat = 7,
 
         /// <summary>
+        /// Indicates the supplied arguments were invalid.
+        /// </summary>
+        InvalidArguments = 9997,
+
+        /// <summary>
         /// Indicates that the command parser did not understand the specified command.
         /// </summary>
         InvalidCommand = 9998,

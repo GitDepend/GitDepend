@@ -1,28 +1,27 @@
-﻿using GitDepend.Busi;
+﻿using System.IO.Abstractions;
+using GitDepend.Busi;
 using GitDepend.Configuration;
 
 namespace GitDepend.Visitors
 {
     /// <summary>
-    /// An implementation of <see cref="IVisitor"/> that switches to the specified branch
-    /// on all dependencies.
+    /// An implementation of <see cref="IVisitor"/> that ensures that the correct branch
+    /// has been checked out on each dependency.
     /// </summary>
-    public class CheckOutBranchVisitor : IVisitor
+    public class CheckOutDependencyBranchVisitor : IVisitor
     {
-        private readonly string _branchName;
-        private readonly bool _createBranch;
         private readonly IGit _git;
+        private readonly IFileSystem _fileSystem;
+        private readonly IConsole _console;
 
         /// <summary>
-        /// Creates a new <see cref="CheckOutBranchVisitor"/>
+        /// Creates a new <see cref="CheckOutDependencyBranchVisitor"/>
         /// </summary>
-        /// <param name="branchName">The name of the branch to check out.</param>
-        /// <param name="createBranch">Should the branch be created?</param>
-        public CheckOutBranchVisitor(string branchName, bool createBranch)
+        public CheckOutDependencyBranchVisitor()
         {
-            _branchName = branchName;
-            _createBranch = createBranch;
             _git = DependencyInjection.Resolve<IGit>();
+            _fileSystem = DependencyInjection.Resolve<IFileSystem>();
+            _console = DependencyInjection.Resolve<IConsole>();
         }
 
         #region Implementation of IVisitor
@@ -40,7 +39,10 @@ namespace GitDepend.Visitors
         /// <returns>The return code.</returns>
         public ReturnCode VisitDependency(string directory, Dependency dependency)
         {
-            return ReturnCode.Success;
+            _console.WriteLine($"Checking out the {dependency.Branch} branch on {dependency.Configuration.Name}");
+
+            _git.WorkingDirectory = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(directory, dependency.Directory));
+            return ReturnCode = _git.Checkout(dependency.Branch, false);
         }
 
         /// <summary>
@@ -51,8 +53,7 @@ namespace GitDepend.Visitors
         /// <returns>The return code.</returns>
         public ReturnCode VisitProject(string directory, GitDependFile config)
         {
-            _git.WorkingDirectory = directory;
-            return ReturnCode = _git.Checkout(_branchName, _createBranch);
+            return ReturnCode.Success;
         }
 
         #endregion

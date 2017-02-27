@@ -29,10 +29,13 @@ namespace GitDepend.Busi
         /// Checks out the given branch.
         /// </summary>
         /// <param name="branch">The branch to check out.</param>
+        /// <param name="create">Should the branch be created?</param>
         /// <returns>The git return code.</returns>
-        public ReturnCode Checkout(string branch)
+        public ReturnCode Checkout(string branch, bool create)
         {
-            return ExecuteGitCommand($"checkout {branch}");
+            return ExecuteGitCommand(create
+                ? $"checkout -b {branch}"
+                : $"checkout {branch}");
         }
 
         /// <summary>

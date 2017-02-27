@@ -1,28 +1,38 @@
-﻿using System.IO.Abstractions;
-using GitDepend.Busi;
+﻿using GitDepend.Busi;
 using GitDepend.Configuration;
 
 namespace GitDepend.Visitors
 {
     /// <summary>
-    /// An implementation of <see cref="IVisitor"/> that ensures that the correct branch
-    /// has been checked out on each dependency.
+    /// An implementation of <see cref="IVisitor"/> that creates the specified branch on all dependencies.
     /// </summary>
-    public class CheckOutBranchVisitor : IVisitor
+    public class DeleteBranchVisitor : IVisitor
     {
         private readonly IGit _git;
-        private readonly IFileSystem _fileSystem;
         private readonly IConsole _console;
 
         /// <summary>
-        /// Creates a new <see cref="CheckOutBranchVisitor"/>
+        /// Creates a new <see cref="DeleteBranchVisitor"/>
         /// </summary>
-        public CheckOutBranchVisitor()
+        /// <param name="branchName">The branch name to delete.</param>
+        /// <param name="force">Should the deletion be forced or not.</param>
+        public DeleteBranchVisitor(string branchName, bool force)
         {
+            BranchName = branchName;
+            Force = force;
             _git = DependencyInjection.Resolve<IGit>();
-            _fileSystem = DependencyInjection.Resolve<IFileSystem>();
             _console = DependencyInjection.Resolve<IConsole>();
         }
+
+        /// <summary>
+        /// The name of the branch that should be deleted.
+        /// </summary>
+        public string BranchName { get; }
+
+        /// <summary>
+        /// Should the deletion be forced or not.
+        /// </summary>
+        public bool Force { get; }
 
         #region Implementation of IVisitor
 
@@ -39,10 +49,7 @@ namespace GitDepend.Visitors
         /// <returns>The return code.</returns>
         public ReturnCode VisitDependency(string directory, Dependency dependency)
         {
-            _console.WriteLine($"Checking out the {dependency.Branch} branch on {dependency.Configuration.Name}");
-
-            _git.WorkingDirectory = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(directory, dependency.Directory));
-            return ReturnCode = _git.Checkout(dependency.Branch);
+            return ReturnCode.Success;
         }
 
         /// <summary>
@@ -53,7 +60,12 @@ namespace GitDepend.Visitors
         /// <returns>The return code.</returns>
         public ReturnCode VisitProject(string directory, GitDependFile config)
         {
-            return ReturnCode.Success;
+            _console.WriteLine(Force
+                ? $"forcefully deleting the {BranchName} branch from {config.Name}"
+                : $"Deleting the {BranchName} branch from {config.Name}");
+
+            _git.WorkingDirectory = directory;
+            return ReturnCode = _git.DeleteBranch(BranchName, Force);
         }
 
         #endregion

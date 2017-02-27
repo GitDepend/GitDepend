@@ -1,12 +1,32 @@
-﻿using GitDepend.Configuration;
+﻿using GitDepend.Busi;
+using GitDepend.Configuration;
 
 namespace GitDepend.Visitors
 {
     /// <summary>
-    /// An implementation of <see cref="IVisitor"/> that does nothing
+    /// An implementation of <see cref="IVisitor"/> that creates the specified branch on all dependencies.
     /// </summary>
-    public class NullVisitor : IVisitor
+    public class CreateBranchVisitor : IVisitor
     {
+        private readonly IGit _git;
+        private readonly IConsole _console;
+
+        /// <summary>
+        /// Creates a new <see cref="CreateBranchVisitor"/>
+        /// </summary>
+        /// <param name="branchName">The branch name to create.</param>
+        public CreateBranchVisitor(string branchName)
+        {
+            BranchName = branchName;
+            _git = DependencyInjection.Resolve<IGit>();
+            _console = DependencyInjection.Resolve<IConsole>();
+        }
+
+        /// <summary>
+        /// The name of the branch that will be created.
+        /// </summary>
+        public string BranchName { get; }
+
         #region Implementation of IVisitor
 
         /// <summary>
@@ -33,7 +53,9 @@ namespace GitDepend.Visitors
         /// <returns>The return code.</returns>
         public ReturnCode VisitProject(string directory, GitDependFile config)
         {
-            return ReturnCode.Success;
+            _console.WriteLine($"Creating the {BranchName} branch on {config.Name}");
+            _git.WorkingDirectory = directory;
+            return ReturnCode = _git.CreateBranch(BranchName);
         }
 
         #endregion

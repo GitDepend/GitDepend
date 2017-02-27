@@ -70,7 +70,7 @@ namespace GitDepend.UnitTests.Busi
 
             Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
             Assert.AreEqual("git", command);
-            Assert.AreEqual($"clone {url} {directory} -b {branch}", arguments);
+            Assert.AreEqual($"clone {url} \"{directory}\" -b {branch}", arguments);
         }
 
         [Test]
@@ -93,7 +93,7 @@ namespace GitDepend.UnitTests.Busi
 
             Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
             Assert.AreEqual("git", command);
-            Assert.AreEqual("add packages.config", arguments);
+            Assert.AreEqual("add \"packages.config\"", arguments);
         }
 
         [Test]
@@ -170,6 +170,127 @@ namespace GitDepend.UnitTests.Busi
 
             Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
             Assert.AreEqual(Lib1Directory, workingDir);
+        }
+
+        [Test]
+        public void CreateBranchTest()
+        {
+            const string BRANCH = "feature/test_branch";
+
+            string command = null;
+            string arguments = null;
+            var processManager = Container.Resolve<IProcessManager>();
+            processManager.Arrange(p => p.Start(Arg.IsAny<ProcessStartInfo>()))
+                .Returns((ProcessStartInfo info) =>
+                {
+                    command = info.FileName;
+                    arguments = info.Arguments;
+
+                    return new FakeProcess();
+                });
+
+            var instance = new Git();
+            var code = instance.CreateBranch(BRANCH);
+
+            Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
+            Assert.AreEqual("git", command);
+            Assert.AreEqual($"branch {BRANCH}", arguments);
+        }
+
+        [Test]
+        public void DeleteBranchTest()
+        {
+            const string BRANCH = "feature/test_branch";
+
+            string command = null;
+            string arguments = null;
+            var processManager = Container.Resolve<IProcessManager>();
+            processManager.Arrange(p => p.Start(Arg.IsAny<ProcessStartInfo>()))
+                .Returns((ProcessStartInfo info) =>
+                {
+                    command = info.FileName;
+                    arguments = info.Arguments;
+
+                    return new FakeProcess();
+                });
+
+            var instance = new Git();
+            var code = instance.DeleteBranch(BRANCH, false);
+
+            Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
+            Assert.AreEqual("git", command);
+            Assert.AreEqual($"branch -d {BRANCH}", arguments);
+        }
+
+        [Test]
+        public void ForceDeleteBranchTest()
+        {
+            const string BRANCH = "feature/test_branch";
+
+            string command = null;
+            string arguments = null;
+            var processManager = Container.Resolve<IProcessManager>();
+            processManager.Arrange(p => p.Start(Arg.IsAny<ProcessStartInfo>()))
+                .Returns((ProcessStartInfo info) =>
+                {
+                    command = info.FileName;
+                    arguments = info.Arguments;
+
+                    return new FakeProcess();
+                });
+
+            var instance = new Git();
+            var code = instance.DeleteBranch(BRANCH, true);
+
+            Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
+            Assert.AreEqual("git", command);
+            Assert.AreEqual($"branch -D {BRANCH}", arguments);
+        }
+
+        [Test]
+        public void ListMergedBranchesTest()
+        {
+            string command = null;
+            string arguments = null;
+            var processManager = Container.Resolve<IProcessManager>();
+            processManager.Arrange(p => p.Start(Arg.IsAny<ProcessStartInfo>()))
+                .Returns((ProcessStartInfo info) =>
+                {
+                    command = info.FileName;
+                    arguments = info.Arguments;
+
+                    return new FakeProcess();
+                });
+
+            var instance = new Git();
+            var code = instance.ListMergedBranches();
+
+            Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
+            Assert.AreEqual("git", command);
+            Assert.AreEqual($"branch --merged", arguments);
+        }
+
+        [Test]
+        public void ListAllBranchesTest()
+        {
+            string command = null;
+            string arguments = null;
+            var processManager = Container.Resolve<IProcessManager>();
+            processManager.Arrange(p => p.Start(Arg.IsAny<ProcessStartInfo>()))
+                .Returns((ProcessStartInfo info) =>
+                {
+                    command = info.FileName;
+                    arguments = info.Arguments;
+
+                    return new FakeProcess();
+                });
+
+            var instance = new Git();
+            var code = instance.ListAllBranches();
+
+            Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
+            Assert.AreEqual("git", command);
+            Assert.AreEqual($"branch", arguments);
         }
     }
 }

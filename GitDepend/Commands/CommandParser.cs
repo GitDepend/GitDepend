@@ -17,11 +17,10 @@ namespace GitDepend.Commands
         /// <returns>An implementation of <see cref="ICommand"/> that matches the given arguments.</returns>
         public ICommand GetCommand(string[] args)
         {
-            var fileSystem = DependencyInjection.Resolve<IFileSystem>();
             string invokedVerb = null;
             object invokedVerbInstance = null;
 
-            if (!global::CommandLine.Parser.Default.ParseArguments(args, Options.Default,
+            if (!global::CommandLine.Parser.Default.ParseArgumentsStrict(args, Options.Default,
                 (verb, verbOptions) =>
                 {
                     invokedVerb = verb;
@@ -35,6 +34,8 @@ namespace GitDepend.Commands
 
             if (options != null)
             {
+                var fileSystem = DependencyInjection.Resolve<IFileSystem>();
+
                 options.Directory = string.IsNullOrEmpty(options.Directory)
                     ? Environment.CurrentDirectory
                     : fileSystem.Path.GetFullPath(options.Directory);
@@ -44,6 +45,9 @@ namespace GitDepend.Commands
 
             switch (invokedVerb)
             {
+                case BranchCommand.Name:
+                    command = new BranchCommand(options as BranchSubOptions);
+                    break;
                 case CloneCommand.Name:
                     command = new CloneCommand(options as CloneSubOptions);
                     break;

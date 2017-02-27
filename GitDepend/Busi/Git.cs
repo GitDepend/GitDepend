@@ -36,6 +36,16 @@ namespace GitDepend.Busi
         }
 
         /// <summary>
+        /// Creates the given branch.
+        /// </summary>
+        /// <param name="branch">The branch to create</param>
+        /// <returns>The git return code.</returns>
+        public ReturnCode CreateBranch(string branch)
+        {
+            return ExecuteGitCommand($"branch {branch}");
+        }
+
+        /// <summary>
         /// Clones a repository.
         /// </summary>
         /// <param name="url">The repository url.</param>
@@ -44,7 +54,7 @@ namespace GitDepend.Busi
         /// <returns>The git return code.</returns>
         public ReturnCode Clone(string url, string directory, string branch)
         {
-            return ExecuteGitCommand($"clone {url} {directory} -b {branch}");
+            return ExecuteGitCommand($"clone {url} \"{directory}\" -b {branch}");
         }
 
         /// <summary>
@@ -56,7 +66,7 @@ namespace GitDepend.Busi
         {
             foreach (string file in files)
             {
-                ExecuteGitCommand($"add {file}");
+                ExecuteGitCommand($"add \"{file}\"");
             }
 
             return ReturnCode.Success;
@@ -69,6 +79,37 @@ namespace GitDepend.Busi
         public ReturnCode Status()
         {
             return ExecuteGitCommand("status");
+        }
+
+        /// <summary>
+        /// Deletes the specified branch.
+        /// </summary>
+        /// <param name="branch">The branch to delete.</param>
+        /// <param name="force">Should the deletion be forced or not.</param>
+        /// <returns></returns>
+        public ReturnCode DeleteBranch(string branch, bool force)
+        {
+            return ExecuteGitCommand(force
+                ? $"branch -D {branch}"
+                : $"branch -d {branch}");
+        }
+
+        /// <summary>
+        /// Lists all merged branches.
+        /// </summary>
+        /// <returns></returns>
+        public ReturnCode ListMergedBranches()
+        {
+            return ExecuteGitCommand("branch --merged");
+        }
+
+        /// <summary>
+        /// Lists all branches.
+        /// </summary>
+        /// <returns></returns>
+        public ReturnCode ListAllBranches()
+        {
+            return ExecuteGitCommand("branch");
         }
 
         /// <summary>

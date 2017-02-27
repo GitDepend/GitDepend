@@ -79,6 +79,7 @@
     <Compile Include="Busi\GitDependFileFactoryTests.cs" />
     <Compile Include="Busi\GitTests.cs" />
     <Compile Include="Busi\NugetTests.cs" />
+    <Compile Include="Commands\BranchCommandTests.cs" />
     <Compile Include="Commands\CloneCommandTests.cs" />
     <Compile Include="Commands\CommandParserTests.cs" />
     <Compile Include="Commands\InitCommandTests.cs" />
@@ -96,10 +97,15 @@
     <Compile Include="MockingUnityContainerExtensions.cs" />
     <Compile Include="Visitors\BuildAndUpdateDependenciesVisitorTests.cs" />
     <Compile Include="Visitors\CheckOutBranchVisitorTests.cs" />
+    <Compile Include="Visitors\CreateBranchVisitorTests.cs" />
+    <Compile Include="Visitors\DeleteBranchVisitorTests.cs" />
     <Compile Include="Visitors\DependencyVisitorAlgorithmTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestFixtureBase.cs" />
     <Compile Include="Visitors\DisplayStatusVisitorTests.cs" />
+    <Compile Include="Visitors\ListAllBranchesVisitorTests.cs" />
+    <Compile Include="Visitors\ListMergedBranchesVisitorTests.cs" />
+    <Compile Include="Visitors\NullVisitorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -19,5 +19,6 @@
     <file src="bin\$configuration$\GitDepend.exe" target="tools" />
     <file src="bin\$configuration$\NuGet.exe" target="tools" />
     <file src="bin\$configuration$\*.dll" target="tools" />
+    <file src="bin\$configuration$\lib\**" target="tools\lib" />
   </files>
 </package>

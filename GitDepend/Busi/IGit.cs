@@ -21,8 +21,9 @@
         /// Checks out the given branch.
         /// </summary>
         /// <param name="branch">The branch to check out.</param>
+        /// <param name="create">Should the branch be created?</param>
         /// <returns>The git return code.</returns>
-        ReturnCode Checkout(string branch);
+        ReturnCode Checkout(string branch, bool create);
 
         /// <summary>
         /// Creates the given branch.

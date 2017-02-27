@@ -47,7 +47,7 @@ namespace GitDepend.Commands
                 _console.WriteLine("Successfully cloned all dependencies");
             }
 
-            visitor = new CheckOutBranchVisitor();
+            visitor = new CheckOutDependencyBranchVisitor();
             _algorithm.Reset();
             _algorithm.TraverseDependencies(visitor, _options.Directory);
 

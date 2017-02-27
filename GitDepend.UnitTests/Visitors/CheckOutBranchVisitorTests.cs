@@ -1,10 +1,12 @@
-﻿using System.IO.Abstractions.TestingHelpers;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using GitDepend.Busi;
-using GitDepend.Configuration;
 using GitDepend.Visitors;
 using Microsoft.Practices.Unity;
 using NUnit.Framework;
-using Telerik.JustMock;
 using Telerik.JustMock.Helpers;
 
 namespace GitDepend.UnitTests.Visitors
@@ -13,51 +15,54 @@ namespace GitDepend.UnitTests.Visitors
     public class CheckOutBranchVisitorTests : TestFixtureBase
     {
         [Test]
-        public void VisitDependency_ShouldCallGitCloneOnCorrectDirectory()
+        public void VisitDependency_ShouldReturn_Success()
         {
-            var git = Container.Resolve<IGit>();
-            RegisterMockFileSystem();
-            var instance = new CheckOutBranchVisitor();
-
-            string checkedOutDirectory = string.Empty;
-            string checkedOutBranch = string.Empty;
-
-            git.Arrange(g => g.Checkout(Arg.AnyString))
-                .Returns((string branch) =>
-                {
-                    checkedOutDirectory = git.WorkingDirectory;
-                    checkedOutBranch = branch;
-                    return ReturnCode.Success;
-                });
-
+            const string BRANCH = "hotfix/my_branch";
+            const bool CREATE = false;
+            var instance = new CheckOutBranchVisitor(BRANCH, CREATE);
             var code = instance.VisitDependency(Lib2Directory, Lib1Dependency);
 
-            Assert.AreEqual(ReturnCode.Success, code, "Invalid code returned from VisitDependency");
+            Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
             Assert.AreEqual(ReturnCode.Success, instance.ReturnCode, "Invalid Return Code");
-            Assert.AreEqual(Lib1Dependency.Branch, checkedOutBranch, "Invalid branch checked out");
-            Assert.AreEqual(Lib1Directory, checkedOutDirectory, "Invalid directory checked out.");
         }
 
         [Test]
-        public void VisitDependency_ShouldReturn_FailedToRunGitCommand_WhenGitCheckoutFails()
+        public void VisitProject_ShouldReturn_Error_WhenCheckout_Fails()
         {
+            const string BRANCH = "hotfix/my_branch";
+            const bool CREATE = false;
+
             var git = Container.Resolve<IGit>();
-            var instance = new CheckOutBranchVisitor();
 
-            git.Arrange(g => g.Checkout(Arg.AnyString))
-                .Returns(ReturnCode.FailedToRunGitCommand);
+            git.Arrange(g => g.Checkout(BRANCH, CREATE))
+                .Returns(ReturnCode.FailedToRunGitCommand)
+                .MustBeCalled();
 
-            var code = instance.VisitDependency(Lib2Directory, Lib1Dependency);
-            Assert.AreEqual(ReturnCode.FailedToRunGitCommand, code, "Invalid code returned from VisitDependency");
+            var instance = new CheckOutBranchVisitor(BRANCH, CREATE);
+            var code = instance.VisitProject(Lib2Directory, Lib2Config);
+
+            git.Assert();
+            Assert.AreEqual(ReturnCode.FailedToRunGitCommand, code, "Invalid Return Code");
             Assert.AreEqual(ReturnCode.FailedToRunGitCommand, instance.ReturnCode, "Invalid Return Code");
         }
 
         [Test]
-        public void VisitProject_ShouldReturn_Success()
+        public void VisitProject_ShouldReturn_Success_WhenCheckout_Succeeds()
         {
-            var instance = new CheckOutBranchVisitor();
+            const string BRANCH = "hotfix/my_branch";
+            const bool CREATE = false;
+
+            var git = Container.Resolve<IGit>();
+
+            git.Arrange(g => g.Checkout(BRANCH, CREATE))
+                .Returns(ReturnCode.Success)
+                .MustBeCalled();
+
+            var instance = new CheckOutBranchVisitor(BRANCH, CREATE);
             var code = instance.VisitProject(Lib2Directory, Lib2Config);
-            Assert.AreEqual(ReturnCode.Success, code, "Invalid code returned from VisitProject");
+
+            git.Assert();
+            Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
             Assert.AreEqual(ReturnCode.Success, instance.ReturnCode, "Invalid Return Code");
         }
     }

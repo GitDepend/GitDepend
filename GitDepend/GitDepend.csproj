@@ -84,6 +84,7 @@
     <Compile Include="Busi\ProcessManager.cs" />
     <Compile Include="Busi\ProcessWrapper.cs" />
     <Compile Include="CommandLine\BranchSubOptions.cs" />
+    <Compile Include="CommandLine\CheckOutSubOptions.cs" />
     <Compile Include="CommandLine\CloneSubOptions.cs" />
     <Compile Include="CommandLine\CommonSubOptions.cs" />
     <Compile Include="CommandLine\ConfigSubOptions.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="CommandLine\StatusSubOptions.cs" />
     <Compile Include="CommandLine\UpdateSubOptions.cs" />
     <Compile Include="Commands\BranchCommand.cs" />
+    <Compile Include="Commands\CheckOutCommand.cs" />
     <Compile Include="Commands\CloneCommand.cs" />
     <Compile Include="Commands\CommandParser.cs" />
     <Compile Include="Commands\ICommand.cs" />
@@ -115,13 +117,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReturnCode.cs" />
     <Compile Include="UnityConfig.cs" />
+    <Compile Include="Visitors\CheckOutBranchVisitor.cs" />
     <Compile Include="Visitors\CreateBranchVisitor.cs" />
     <Compile Include="Visitors\DeleteBranchVisitor.cs" />
     <Compile Include="Visitors\DependencyVisitorAlgorithm.cs" />
     <Compile Include="Visitors\DisplayStatusVisitor.cs" />
     <Compile Include="Visitors\IDependencyVisitorAlgorithm.cs" />
     <Compile Include="Visitors\IVisitor.cs" />
-    <Compile Include="Visitors\CheckOutBranchVisitor.cs" />
+    <Compile Include="Visitors\CheckOutDependencyBranchVisitor.cs" />
     <Compile Include="Visitors\BuildAndUpdateDependenciesVisitor.cs" />
     <Compile Include="Visitors\ListAllBranchesVisitor.cs" />
     <Compile Include="Visitors\ListMergedBranchesVisitor.cs" />

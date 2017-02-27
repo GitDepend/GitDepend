@@ -25,7 +25,7 @@ namespace GitDepend.Commands
         /// <summary>
         /// Creates a enw <see cref="BranchCommand"/>
         /// </summary>
-        /// <param name="options"></param>
+        /// <param name="options">The <see cref="BranchSubOptions"/> that controls the behavior of this command.</param>
         public BranchCommand(BranchSubOptions options)
         {
             _options = options;

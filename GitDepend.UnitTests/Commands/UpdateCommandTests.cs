@@ -24,7 +24,7 @@ namespace GitDepend.UnitTests.Commands
             algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
-                    Assert.IsNotNull(visitor as CheckOutBranchVisitor, "The first visitor should be of type CheckOutBranchVisitor");
+                    Assert.IsNotNull(visitor as CheckOutDependencyBranchVisitor, "The first visitor should be of type CheckOutDependencyBranchVisitor");
                     visitor.ReturnCode = ReturnCode.FailedToRunGitCommand;
                 });
 
@@ -45,7 +45,7 @@ namespace GitDepend.UnitTests.Commands
             algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
-                    if (visitor is CheckOutBranchVisitor)
+                    if (visitor is CheckOutDependencyBranchVisitor)
                     {
                         checkoutCalled = true;
                         visitor.ReturnCode = ReturnCode.Success;
@@ -79,7 +79,7 @@ namespace GitDepend.UnitTests.Commands
             algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
-                    if (visitor is CheckOutBranchVisitor)
+                    if (visitor is CheckOutDependencyBranchVisitor)
                     {
                         checkoutCalled = true;
                         visitor.ReturnCode = ReturnCode.Success;

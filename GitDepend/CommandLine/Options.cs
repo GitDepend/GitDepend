@@ -15,8 +15,11 @@ namespace GitDepend.CommandLine
 
         }
 
-        [VerbOption(BranchCommand.Name, HelpText = "Creates the specified branch on the current project and all dependencies.")]
+        [VerbOption(BranchCommand.Name, HelpText = "List, create, or delete branches")]
         public BranchSubOptions BranchVerb { get; set; }
+
+        [VerbOption(CheckOutCommand.Name, HelpText = "Switch branches")]
+        public CheckOutSubOptions CheckOutVerb { get; set; }
 
         [VerbOption(CloneCommand.Name, HelpText = "Recursively clones all dependencies")]
         public CloneSubOptions CloneVerb { get; set; }

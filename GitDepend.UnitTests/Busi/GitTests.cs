@@ -40,11 +40,34 @@ namespace GitDepend.UnitTests.Busi
                 });
 
             var instance = new Git();
-            var code = instance.Checkout("develop");
+            var code = instance.Checkout("develop", false);
 
             Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
             Assert.AreEqual("git", command);
             Assert.AreEqual("checkout develop", arguments);
+        }
+
+        [Test]
+        public void CheckoutAndCreateTest()
+        {
+            string command = null;
+            string arguments = null;
+            var processManager = Container.Resolve<IProcessManager>();
+            processManager.Arrange(p => p.Start(Arg.IsAny<ProcessStartInfo>()))
+                .Returns((ProcessStartInfo info) =>
+                {
+                    command = info.FileName;
+                    arguments = info.Arguments;
+
+                    return new FakeProcess();
+                });
+
+            var instance = new Git();
+            var code = instance.Checkout("develop", true);
+
+            Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
+            Assert.AreEqual("git", command);
+            Assert.AreEqual("checkout -b develop", arguments);
         }
 
         [Test]

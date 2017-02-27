@@ -1,7 +1,7 @@
 ﻿namespace GitDepend.CommandLine
 {
     /// <summary>
-    /// The options for the init verb
+    /// The options for the status verb
     /// </summary>
     public class StatusSubOptions : NamedDependenciesOptions
     {

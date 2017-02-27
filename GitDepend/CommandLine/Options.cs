@@ -36,6 +36,9 @@ namespace GitDepend.CommandLine
         [VerbOption(StatusCommand.Name, HelpText = "Displays git status on dependencies")]
         public StatusSubOptions StatusVerb { get; set; }
 
+        [VerbOption(SyncCommand.Name, HelpText = "Sets the referenced branch to the currently checked out branch on dependencies.")]
+        public SyncSubOptions SyncVerb { get; set; }
+
         [VerbOption(UpdateCommand.Name, HelpText = "Recursively builds all dependencies, and updates the current project to the newly built artifacts.")]
         public UpdateSubOptions UpdateVerb { get; set; }
 

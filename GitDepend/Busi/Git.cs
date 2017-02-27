@@ -116,6 +116,18 @@ namespace GitDepend.Busi
         }
 
         /// <summary>
+        /// Gets the current branch.
+        /// </summary>
+        /// <returns></returns>
+        public string GetCurrentBranch()
+        {
+            using (var repo = new LibGit2Sharp.Repository(WorkingDirectory))
+            {
+                return repo.Head.FriendlyName;
+            }
+        }
+
+        /// <summary>
         /// Makes a commit with the given message.
         /// </summary>
         /// <param name="message"></param>

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,59 +9,54 @@ using GitDepend.Visitors;
 namespace GitDepend.Commands
 {
     /// <summary>
-    /// An implementation of <see cref="ICommand"/> that displays git status on all dependencies.
+    /// An implementation of <see cref="NamedDependenciesCommand{T}"/> that displays git status on all dependencies.
     /// </summary>
-    public class StatusCommand : ICommand
+    public class StatusCommand : NamedDependenciesCommand<StatusSubOptions>
     {
-        private readonly StatusSubOptions _options;
-        private readonly IDependencyVisitorAlgorithm _algorithm;
-        private readonly IGit _git;
-        private readonly IConsole _console;
-
         /// <summary>
         /// The name of the verb.
         /// </summary>
         public const string Name = "status";
 
+        private readonly StatusSubOptions _options;
+        private readonly IGit _git;
+
         /// <summary>
         /// Creates a new <see cref="StatusCommand"/>
         /// </summary>
         /// <param name="options">The <see cref="StatusSubOptions"/> that configure this command.</param>
-        public StatusCommand(StatusSubOptions options)
+        public StatusCommand(StatusSubOptions options) : base(options)
         {
             _options = options;
-            _algorithm = DependencyInjection.Resolve<IDependencyVisitorAlgorithm>();
             _git = DependencyInjection.Resolve<IGit>();
-            _console = DependencyInjection.Resolve<IConsole>();
         }
 
-        #region Implementation of ICommand
+        #region Overrides of NamedDependenciesCommand<StatusSubOptions>
 
         /// <summary>
-        /// Executes the command.
+        /// Creates the visitor that will be used to traverse the dependency graph.
         /// </summary>
-        /// <returns>The return code.</returns>
-        public ReturnCode Execute()
+        /// <param name="options">The options for the command.</param>
+        /// <returns></returns>
+        protected override NamedDependenciesVisitor CreateVisitor(StatusSubOptions options)
         {
-            var visitor = new DisplayStatusVisitor(_options.Dependencies);
-            _algorithm.TraverseDependencies(visitor, _options.Directory);
-
-            var code = visitor.ReturnCode;
-            if (code == ReturnCode.Success)
-            {
-                var origColor = _console.ForegroundColor;
-                _console.ForegroundColor = ConsoleColor.Green;
-                _console.WriteLine("project:");
-                _console.WriteLine($"    dir: {_options.Directory}");
-                _console.WriteLine();
-                _console.ForegroundColor = origColor;
-
-                _git.WorkingDirectory = _options.Directory;
-                code = _git.Status();
-            }
-
-            return code;
+            return new DisplayStatusVisitor(options.Dependencies);
         }
+
+        #region Overrides of NamedDependenciesCommand<StatusSubOptions>
+
+        /// <summary>
+        /// Executes after all dependencies have been visited.
+        /// </summary>
+        /// <param name="options">The options for the command.</param>
+        /// <returns></returns>
+        protected override ReturnCode AfterDependencyTraversal(StatusSubOptions options)
+        {
+            _git.WorkingDirectory = _options.Directory;
+            return _git.Status();
+        }
+
+        #endregion
 
         #endregion
     }

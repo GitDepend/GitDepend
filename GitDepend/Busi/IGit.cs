@@ -73,5 +73,11 @@
         /// </summary>
         /// <returns></returns>
         ReturnCode ListAllBranches();
+
+        /// <summary>
+        /// Gets the current branch.
+        /// </summary>
+        /// <returns></returns>
+        string GetCurrentBranch();
     }
 }

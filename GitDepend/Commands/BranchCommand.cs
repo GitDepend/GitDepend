@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GitDepend.Busi;
 using GitDepend.CommandLine;
 using GitDepend.Visitors;
@@ -65,6 +62,11 @@ namespace GitDepend.Commands
 
             // if delete is specified the branch name must also be specified.
             if (_options.Delete && string.IsNullOrEmpty(_options.BranchName))
+            {
+                return ReturnCode.InvalidArguments;
+            }
+
+            if (_options.ListMerged && !string.IsNullOrEmpty(_options.BranchName))
             {
                 return ReturnCode.InvalidArguments;
             }

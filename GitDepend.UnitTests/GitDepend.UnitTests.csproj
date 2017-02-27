@@ -79,6 +79,7 @@
     <Compile Include="Busi\GitDependFileFactoryTests.cs" />
     <Compile Include="Busi\GitTests.cs" />
     <Compile Include="Busi\NugetTests.cs" />
+    <Compile Include="Commands\BranchCommandTests.cs" />
     <Compile Include="Commands\CloneCommandTests.cs" />
     <Compile Include="Commands\CommandParserTests.cs" />
     <Compile Include="Commands\InitCommandTests.cs" />

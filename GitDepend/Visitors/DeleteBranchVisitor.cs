@@ -1,5 +1,4 @@
-﻿using System;
-using GitDepend.Busi;
+﻿using GitDepend.Busi;
 using GitDepend.Configuration;
 
 namespace GitDepend.Visitors
@@ -9,8 +8,6 @@ namespace GitDepend.Visitors
     /// </summary>
     public class DeleteBranchVisitor : IVisitor
     {
-        private readonly string _branchName;
-        private readonly bool _force;
         private readonly IGit _git;
         private readonly IConsole _console;
 
@@ -21,11 +18,21 @@ namespace GitDepend.Visitors
         /// <param name="force">Should the deletion be forced or not.</param>
         public DeleteBranchVisitor(string branchName, bool force)
         {
-            _branchName = branchName;
-            _force = force;
+            BranchName = branchName;
+            Force = force;
             _git = DependencyInjection.Resolve<IGit>();
             _console = DependencyInjection.Resolve<IConsole>();
         }
+
+        /// <summary>
+        /// The name of the branch that should be deleted.
+        /// </summary>
+        public string BranchName { get; }
+
+        /// <summary>
+        /// Should the deletion be forced or not.
+        /// </summary>
+        public bool Force { get; }
 
         #region Implementation of IVisitor
 
@@ -53,12 +60,12 @@ namespace GitDepend.Visitors
         /// <returns>The return code.</returns>
         public ReturnCode VisitProject(string directory, GitDependFile config)
         {
-            _console.WriteLine(_force
-                ? $"forcefully deleting the {_branchName} branch from {config.Name}"
-                : $"Deleting the {_branchName} branch from {config.Name}");
+            _console.WriteLine(Force
+                ? $"forcefully deleting the {BranchName} branch from {config.Name}"
+                : $"Deleting the {BranchName} branch from {config.Name}");
 
             _git.WorkingDirectory = directory;
-            return ReturnCode = _git.Delete(_branchName, _force);
+            return ReturnCode = _git.Delete(BranchName, Force);
         }
 
         #endregion

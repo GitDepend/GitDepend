@@ -70,7 +70,7 @@ namespace GitDepend.UnitTests.Busi
 
             Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
             Assert.AreEqual("git", command);
-            Assert.AreEqual($"clone {url} {directory} -b {branch}", arguments);
+            Assert.AreEqual($"clone {url} \"{directory}\" -b {branch}", arguments);
         }
 
         [Test]
@@ -93,7 +93,7 @@ namespace GitDepend.UnitTests.Busi
 
             Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
             Assert.AreEqual("git", command);
-            Assert.AreEqual("add packages.config", arguments);
+            Assert.AreEqual("add \"packages.config\"", arguments);
         }
 
         [Test]

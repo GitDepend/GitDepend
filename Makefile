@@ -90,7 +90,7 @@ set NUNIT_CONSOLE=$(PACKAGES_DIR)\NUnit.Runners.$(NUNIT_RUNNERS_VERSION)\tools\n
 
 echo %NUNIT_CONSOLE%
 pushd .
-cd bin/Debug
+cd bin/UnitTests/Debug
 for /f "delims=" %%i in ('dir *.UnitTests.dll /s/b') do (
     ..\..\%NUNIT_CONSOLE% %%i /result=..\..\Reports\UnitTests\%%~nxi.xml
 )

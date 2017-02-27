@@ -1,5 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.IO.Abstractions;
+using System.Text;
 
 namespace GitDepend.Busi
 {
@@ -9,7 +12,6 @@ namespace GitDepend.Busi
     public class Nuget : INuget
     {
         private readonly IConsole _console;
-        private readonly IProcessManager _processManager;
 
         /// <summary>
         /// The working directory for nuget.exe
@@ -22,7 +24,6 @@ namespace GitDepend.Busi
         public Nuget()
         {
             _console = DependencyInjection.Resolve<IConsole>();
-            _processManager = DependencyInjection.Resolve<IProcessManager>();
         }
 
         /// <summary>
@@ -49,21 +50,15 @@ namespace GitDepend.Busi
 
         private ReturnCode ExecuteNuGetCommand(string arguments)
         {
-            var info = new ProcessStartInfo("NuGet.exe", arguments)
-            {
-                WorkingDirectory = WorkingDirectory,
-                UseShellExecute = false,
-                RedirectStandardOutput = true
-            };
-            _console.WriteLine($"{info.FileName} {arguments}");
+            var oldOut = Console.Out;
 
-            int code;
-            using (var proc = _processManager.Start(info))
-            {
-                proc.StandardOutput.ReadToEnd();
-                proc?.WaitForExit();
-                code = proc?.ExitCode ?? (int)ReturnCode.FailedToRunNugetCommand;
-            }
+            StringBuilder sb = new StringBuilder();
+            Console.SetOut(new StringWriter(sb));
+            var code = NuGet.CommandLine.Program.Main(arguments.Split());
+
+            Console.SetOut(oldOut);
+            
+            _console.WriteLine($"nuget {arguments}");
 
             return code != (int)ReturnCode.Success
                 ? ReturnCode.FailedToRunNugetCommand

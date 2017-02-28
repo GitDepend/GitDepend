@@ -87,5 +87,27 @@ namespace GitDepend.UnitTests.Commands
 
             Assert.IsTrue(command is BranchCommand, "Invalid Command");
         }
+
+        [Test]
+        public void GetCommand_ShouldReturn_CheckOutCommand_WhenCheckOutVerbIsSpecified()
+        {
+            string[] args = { "checkout", "my_branch" };
+            var instance = new CommandParser();
+
+            var command = instance.GetCommand(args);
+
+            Assert.IsTrue(command is CheckOutCommand, "Invalid Command");
+        }
+
+        [Test]
+        public void GetCommand_ShouldReturn_SyncCommand_WhenCheckOutVerbIsSpecified()
+        {
+            string[] args = { "sync" };
+            var instance = new CommandParser();
+
+            var command = instance.GetCommand(args);
+
+            Assert.IsTrue(command is SyncCommand, "Invalid Command");
+        }
     }
 }

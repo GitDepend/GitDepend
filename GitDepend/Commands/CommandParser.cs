@@ -48,6 +48,9 @@ namespace GitDepend.Commands
                 case BranchCommand.Name:
                     command = new BranchCommand(options as BranchSubOptions);
                     break;
+                case CheckOutCommand.Name:
+                    command = new CheckOutCommand(options as CheckOutSubOptions);
+                    break;
                 case CloneCommand.Name:
                     command = new CloneCommand(options as CloneSubOptions);
                     break;

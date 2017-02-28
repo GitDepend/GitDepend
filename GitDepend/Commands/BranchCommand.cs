@@ -93,7 +93,7 @@ namespace GitDepend.Commands
             else if (!string.IsNullOrEmpty(_options.BranchName))
             {
                 visitor = new CreateBranchVisitor(_options.BranchName);
-                successMessage = $"Successfully switched to the {_options.BranchName} branch in all repositories.";
+                successMessage = $"Successfully created the {_options.BranchName} branch in all repositories.";
             }
             else
             {

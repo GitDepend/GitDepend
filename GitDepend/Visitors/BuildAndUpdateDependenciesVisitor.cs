@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Abstractions;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitDepend.Busi;
@@ -16,6 +17,7 @@ namespace GitDepend.Visitors
     /// </summary>
     public class BuildAndUpdateDependenciesVisitor : IVisitor
     {
+        private readonly IList<string> _whitelist;
         private static readonly Regex Pattern = new Regex(@"^(?<id>.*?)\.(?<version>(?:\d\.){2,3}\d(?:-.*?)?)$", RegexOptions.Compiled);
         private readonly IGitDependFileFactory _factory;
         private readonly IGit _git;
@@ -32,8 +34,10 @@ namespace GitDepend.Visitors
         /// <summary>
         /// Creates a new <see cref="BuildAndUpdateDependenciesVisitor"/>
         /// </summary>
-        public BuildAndUpdateDependenciesVisitor()
+        /// <param name="whitelist">The dependencies to update.</param>
+        public BuildAndUpdateDependenciesVisitor(IList<string> whitelist)
         {
+            _whitelist = whitelist;
             _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
             _git = DependencyInjection.Resolve<IGit>();
             _nuget = DependencyInjection.Resolve<INuget>();
@@ -83,6 +87,15 @@ namespace GitDepend.Visitors
         /// <returns>The return code.</returns>
         public ReturnCode VisitDependency(string directory, Dependency dependency)
         {
+            // If there are specific dependencies specified
+            // and this one isn't in the list
+            // skip it.
+            if (_whitelist.Any() &&
+                _whitelist.All(d => !string.Equals(d, dependency.Configuration.Name, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                return ReturnCode.Success;
+            }
+
             string dir;
             ReturnCode code;
             var config = _factory.LoadFromDirectory(dependency.Directory, out dir, out code);
@@ -142,6 +155,15 @@ namespace GitDepend.Visitors
                 return ReturnCode = ReturnCode.Success;
             }
 
+            // If there are specific dependencies specified
+            // and this one isn't in the list
+            // skip it.
+            if (_whitelist.Any() &&
+                _whitelist.All(d => !string.Equals(d, config.Name, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                return ReturnCode.Success;
+            }
+
             if (string.IsNullOrEmpty(directory) || !_fileSystem.Directory.Exists(directory))
             {
                 return ReturnCode = ReturnCode.DirectoryDoesNotExist;
@@ -162,6 +184,15 @@ namespace GitDepend.Visitors
             {
                 foreach (var dependency in config.Dependencies)
                 {
+                    // If there are specific dependencies specified
+                    // and this one isn't in the list
+                    // skip it.
+                    if (_whitelist.Any() &&
+                        _whitelist.All(d => !string.Equals(d, dependency.Configuration.Name, StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        continue;
+                    }
+
                     var dependencyDir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(directory, dependency.Directory));
                     var dir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(dependencyDir, dependency.Configuration.Packages.Directory));
 

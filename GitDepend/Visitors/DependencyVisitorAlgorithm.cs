@@ -113,7 +113,6 @@ namespace GitDepend.Visitors
 
                 // Visit the project.
                 code = visitor.VisitProject(dir, config);
-                _console.WriteLine();
 
                 // If something went wrong visiting the project we are done.
                 if (code != ReturnCode.Success)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO.Abstractions;
+using System.Linq;
 using GitDepend.Busi;
 using GitDepend.CommandLine;
 using GitDepend.Visitors;
@@ -48,18 +49,26 @@ namespace GitDepend.Commands
                 return checkoutVisitor.ReturnCode;
             }
 
+            _console.WriteLine();
             _algorithm.Reset();
-            var buildAndUpdateVisitor = new BuildAndUpdateDependenciesVisitor();
+            var buildAndUpdateVisitor = new BuildAndUpdateDependenciesVisitor(_options.Dependencies);
             _algorithm.TraverseDependencies(buildAndUpdateVisitor, _options.Directory);
 
             if (buildAndUpdateVisitor.ReturnCode == ReturnCode.Success)
             {
-                _console.WriteLine("Updated packages: ");
-                foreach (var package in buildAndUpdateVisitor.UpdatedPackages)
+                if (buildAndUpdateVisitor.UpdatedPackages.Any())
                 {
-                    _console.WriteLine($"    {package}");
+                    _console.WriteLine("Updated packages: ");
+                    foreach (var package in buildAndUpdateVisitor.UpdatedPackages)
+                    {
+                        _console.WriteLine($"    {package}");
+                    }
+                    _console.WriteLine("Update complete!");
                 }
-                _console.WriteLine("Update complete!");
+                else
+                {
+                    _console.WriteLine("nothing was updated");
+                }
             }
 
             return buildAndUpdateVisitor.ReturnCode;

@@ -31,4 +31,5 @@ Command Line Options
    :caption: Verbs:
 
    usage/branch
+   usage/config
    usage/checkout

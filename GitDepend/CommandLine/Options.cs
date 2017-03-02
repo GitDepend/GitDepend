@@ -15,13 +15,10 @@ namespace GitDepend.CommandLine
     class Options
     {
         private static Options _default;
-        public static Options Default => _default ?? (_default = new Options(DependencyInjection.Resolve<IVersionUpdateChecker>()));
+        public static Options Default => _default ?? (_default = new Options());
 
-        private IVersionUpdateChecker _versionUpdateChecker;
-
-        private Options(IVersionUpdateChecker versionUpdateChecker)
+        private Options()
         {
-            _versionUpdateChecker = versionUpdateChecker;
         }
 
         [VerbOption(BranchCommand.Name, HelpText = "List, create, or delete branches")]
@@ -57,9 +54,11 @@ namespace GitDepend.CommandLine
         [HelpOption]
         public string GetUsage()
         {
-            var appendString = _versionUpdateChecker.CheckVersion("gitdepend", "kjjuno");
+            var versionUpdateChecker = DependencyInjection.Resolve<IVersionUpdateChecker>();
 
-            appendString += _versionUpdateChecker.CheckVersion("choco", "chocolatey");
+            var appendString = versionUpdateChecker.CheckVersion("gitdepend", "kjjuno");
+            appendString += versionUpdateChecker.CheckVersion("choco", "chocolatey");
+
             return HelpText.AutoBuild(this, (HelpText current) => HelpText.DefaultParsingErrorsHandler(this, current)) + appendString;
         }
 

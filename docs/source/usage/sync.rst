@@ -1,8 +1,6 @@
 sync
 ======
 
-.. code-block:: bash
-
     Sync will make sure that your current directory and dependencies are on the same branch.
 
     If they are, nothing will be updated.

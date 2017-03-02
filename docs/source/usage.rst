@@ -31,3 +31,4 @@ Command Line Options
    :caption: Verbs:
 
    usage/branch
+   usage/sync

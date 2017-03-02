@@ -34,4 +34,5 @@ Command Line Options
    usage/clone
    usage/config
    usage/checkout
+   usage/init
    usage/update

@@ -33,3 +33,4 @@ Command Line Options
    usage/branch
    usage/config
    usage/checkout
+   usage/init

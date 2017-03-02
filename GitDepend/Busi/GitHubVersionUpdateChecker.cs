@@ -8,25 +8,28 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 
-namespace GitDepend.Helpers
+namespace GitDepend.Busi
 {
     /// <summary>
     /// This class will check to see if there is a new version of gitdepend available from the github api.
     /// </summary>
-    internal static class VersionUpdateHelper
+    internal class GitHubVersionUpdateChecker : IVersionUpdateChecker
     {
-        public const string BaseUrl = "https://api.github.com";
-        public const string LatestReleaseApiCall = "/repos/kjjuno/gitdepend/releases/latest";
-        public const string NewVersionAvailable = "\n\nThere is a new version of GitDepend available. Please update via NuGet or visit https://github.com/repos/kjjuno/gitdepend";
-        public const string VersionNumberKey = "name";
+        private const string VersionNumberKey = "name";
+        private const string BaseUrl = "https://api.github.com";
 
-        public static string CheckVersion()
+
+        public string CheckVersion(string packageName, string owner)
         {
+            string latestReleaseApiCall = $"/repos/{owner}/{packageName}/releases/latest";
+            string newVersionAvailable =
+                $"\n\nThere is a new version of {packageName} available.Please update via NuGet or visit http://github.com/repos/{owner}/{packageName}";
+
             string appendString = string.Empty;
 
             var client = new RestClient(BaseUrl);
 
-            var request = new RestRequest(LatestReleaseApiCall, Method.GET);
+            var request = new RestRequest(latestReleaseApiCall, Method.GET);
             IRestResponse response = client.Execute(request);
 
             if (response.StatusCode == HttpStatusCode.OK)
@@ -41,7 +44,7 @@ namespace GitDepend.Helpers
 
                 if (currentRelease > currentVersion)
                 {
-                    appendString = NewVersionAvailable;
+                    appendString = newVersionAvailable;
                 }
             }
 

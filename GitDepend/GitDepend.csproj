@@ -96,6 +96,7 @@
     <Compile Include="Busi\IProcess.cs" />
     <Compile Include="Busi\IProcessManager.cs" />
     <Compile Include="Busi\ConsoleWrapper.cs" />
+    <Compile Include="Busi\IVersionUpdateChecker.cs" />
     <Compile Include="Busi\ProcessManager.cs" />
     <Compile Include="Busi\ProcessWrapper.cs" />
     <Compile Include="CommandLine\BranchSubOptions.cs" />
@@ -131,7 +132,7 @@
     <Compile Include="Busi\IGit.cs" />
     <Compile Include="Busi\INuget.cs" />
     <Compile Include="Busi\Nuget.cs" />
-    <Compile Include="Helpers\VersionUpdateHelper.cs" />
+    <Compile Include="Busi\GitHubVersionUpdateChecker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReturnCode.cs" />

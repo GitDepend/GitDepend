@@ -31,3 +31,8 @@ Command Line Options
    :caption: Verbs:
 
    usage/branch
+   usage/clone
+   usage/config
+   usage/checkout
+   usage/init
+   usage/update

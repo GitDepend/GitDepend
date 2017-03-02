@@ -35,4 +35,5 @@ Command Line Options
    usage/config
    usage/checkout
    usage/init
+   usage/list
    usage/update

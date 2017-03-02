@@ -36,3 +36,4 @@ Command Line Options
    usage/checkout
    usage/init
    usage/update
+   usage/status

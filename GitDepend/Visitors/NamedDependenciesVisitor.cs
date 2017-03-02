@@ -13,7 +13,7 @@ namespace GitDepend.Visitors
     /// </summary>
     public abstract class NamedDependenciesVisitor : IVisitor
     {
-        private readonly IList<string> _whilelist;
+        private readonly IList<string> _whitelist;
 
         /// <summary>
         /// The <see cref="IConsole"/> to use in this visitor.
@@ -28,10 +28,10 @@ namespace GitDepend.Visitors
         /// <summary>
         /// Creates a new <see cref="DisplayStatusVisitor"/>
         /// </summary>
-        /// <param name="whilelist">The projects to visit. If this list is null or empty all projects will be visited.</param>
-        protected NamedDependenciesVisitor(IList<string> whilelist)
+        /// <param name="whitelist">The projects to visit. If this list is null or empty all projects will be visited.</param>
+        protected NamedDependenciesVisitor(IList<string> whitelist)
         {
-            _whilelist = whilelist ?? new List<string>();
+            _whitelist = whitelist ?? new List<string>();
             Console = DependencyInjection.Resolve<IConsole>();
 
             FileSystem = DependencyInjection.Resolve<IFileSystem>();
@@ -61,8 +61,8 @@ namespace GitDepend.Visitors
         /// <returns>The return code.</returns>
         public ReturnCode VisitDependency(string directory, Dependency dependency)
         {
-            var shouldExecute = _whilelist.Count == 0 ||
-                                _whilelist.Any(d => string.Equals(d, dependency.Configuration.Name, StringComparison.CurrentCultureIgnoreCase));
+            var shouldExecute = _whitelist.Count == 0 ||
+                                _whitelist.Any(d => string.Equals(d, dependency.Configuration.Name, StringComparison.CurrentCultureIgnoreCase));
 
             if (!shouldExecute)
             {
@@ -79,7 +79,7 @@ namespace GitDepend.Visitors
             Console.WriteLine();
             Console.ForegroundColor = origColor;
 
-            return ReturnCode = OnVisitDependency(dir, dependency);
+            return ReturnCode = OnVisitDependency(directory, dependency);
         }
 
         /// <summary>

@@ -51,6 +51,11 @@
         MissingDependency = 8,
 
         /// <summary>
+        /// Specifies that an invalid branch is checked out on a dependency.
+        /// </summary>
+        InvalidBranchCheckedOut,
+
+        /// <summary>
         /// Indicates the supplied arguments were invalid.
         /// </summary>
         InvalidArguments = 9997,

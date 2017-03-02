@@ -23,7 +23,7 @@ namespace GitDepend.Busi
         {
             string latestReleaseApiCall = $"/repos/{owner}/{packageName}/releases/latest";
             string newVersionAvailable =
-                $"\n\nThere is a new version of {packageName} available.Please update via NuGet or visit http://github.com/repos/{owner}/{packageName}";
+                $"\n\nThere is a new version of {packageName} available.Please update via NuGet.org, chocolatey.org or visit http://github.com/repos/{owner}/{packageName}";
 
             string appendString = string.Empty;
 

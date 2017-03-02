@@ -57,7 +57,6 @@ namespace GitDepend.CommandLine
             var versionUpdateChecker = DependencyInjection.Resolve<IVersionUpdateChecker>();
 
             var appendString = versionUpdateChecker.CheckVersion("gitdepend", "kjjuno");
-            appendString += versionUpdateChecker.CheckVersion("choco", "chocolatey");
 
             return HelpText.AutoBuild(this, (HelpText current) => HelpText.DefaultParsingErrorsHandler(this, current)) + appendString;
         }

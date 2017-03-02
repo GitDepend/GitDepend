@@ -18,13 +18,13 @@ namespace GitDepend.UnitTests.Commands
     public class UpdateCommandTests : TestFixtureBase
     {
         [Test]
-        public void Execute_ReturnsError_WhenCheckOutBranchVisitor_Fails()
+        public void Execute_ReturnsError_WhenVerifyCorrectBranchVisitor_Fails()
         {
             var algorithm = Container.Resolve<IDependencyVisitorAlgorithm>();
             algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
-                    Assert.IsNotNull(visitor as CheckOutDependencyBranchVisitor, "The first visitor should be of type CheckOutDependencyBranchVisitor");
+                    Assert.IsNotNull(visitor as VerifyCorrectBranchVisitor, "The first visitor should be of type VerifyCorrectBranchVisitor");
                     visitor.ReturnCode = ReturnCode.FailedToRunGitCommand;
                 });
 
@@ -45,7 +45,7 @@ namespace GitDepend.UnitTests.Commands
             algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
-                    if (visitor is CheckOutDependencyBranchVisitor)
+                    if (visitor is VerifyCorrectBranchVisitor)
                     {
                         checkoutCalled = true;
                         visitor.ReturnCode = ReturnCode.Success;
@@ -79,7 +79,7 @@ namespace GitDepend.UnitTests.Commands
             algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
-                    if (visitor is CheckOutDependencyBranchVisitor)
+                    if (visitor is VerifyCorrectBranchVisitor)
                     {
                         checkoutCalled = true;
                         visitor.ReturnCode = ReturnCode.Success;

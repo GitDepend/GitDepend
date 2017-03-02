@@ -40,13 +40,13 @@ namespace GitDepend.Commands
         /// <returns>The return code.</returns>
         public ReturnCode Execute()
         {
-            var checkoutVisitor = new CheckOutDependencyBranchVisitor();
-            _algorithm.TraverseDependencies(checkoutVisitor, _options.Directory);
+            var verifyVisitor = new VerifyCorrectBranchVisitor(_options.Dependencies);
+            _algorithm.TraverseDependencies(verifyVisitor, _options.Directory);
 
-            if (checkoutVisitor.ReturnCode != ReturnCode.Success)
+            if (verifyVisitor.ReturnCode != ReturnCode.Success)
             {
-                _console.WriteLine("Could not ensure the correct branch on all dependencies.");
-                return checkoutVisitor.ReturnCode;
+                _console.WriteLine("Not all dependencies are on the correct branch.");
+                return verifyVisitor.ReturnCode;
             }
 
             _console.WriteLine();

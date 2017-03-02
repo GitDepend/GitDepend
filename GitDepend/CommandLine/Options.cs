@@ -1,7 +1,14 @@
-﻿using CommandLine;
+﻿using System;
+using System.Net;
+using System.Net.Http;
+using System.Reflection;
+using CommandLine;
 using CommandLine.Text;
+using GitDepend.Busi;
 using GitDepend.Commands;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using RestSharp;
 
 namespace GitDepend.CommandLine
 {
@@ -12,7 +19,6 @@ namespace GitDepend.CommandLine
 
         private Options()
         {
-
         }
 
         [VerbOption(BranchCommand.Name, HelpText = "List, create, or delete branches")]
@@ -48,7 +54,11 @@ namespace GitDepend.CommandLine
         [HelpOption]
         public string GetUsage()
         {
-            return HelpText.AutoBuild(this, (HelpText current) => HelpText.DefaultParsingErrorsHandler(this, current));
+            var versionUpdateChecker = DependencyInjection.Resolve<IVersionUpdateChecker>();
+
+            var appendString = versionUpdateChecker.CheckVersion("gitdepend", "kjjuno");
+
+            return HelpText.AutoBuild(this, (HelpText current) => HelpText.DefaultParsingErrorsHandler(this, current)) + appendString;
         }
 
         [HelpVerbOption]

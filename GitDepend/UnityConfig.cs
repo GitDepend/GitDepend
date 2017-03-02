@@ -29,7 +29,8 @@ namespace GitDepend
                 .RegisterType<IGit, Git>()
                 .RegisterType<IGitDependFileFactory, GitDependFileFactory>()
                 .RegisterType<INuget, Nuget>()
-                .RegisterType<IProcessManager, ProcessManager>();
+                .RegisterType<IProcessManager, ProcessManager>()
+                .RegisterType<IVersionUpdateChecker, GitHubVersionUpdateChecker>();
 
             // Visitor
             container

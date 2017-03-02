@@ -15,8 +15,8 @@ namespace GitDepend.Visitors
         /// <summary>
         /// Creates a new <see cref="DisplayStatusVisitor"/>
         /// </summary>
-        /// <param name="whilelist">The projects to visit. If this list is null or empty all projects will be visited.</param>
-        public DisplayStatusVisitor(IList<string> whilelist) : base(whilelist)
+        /// <param name="whitelist">The projects to visit. If this list is null or empty all projects will be visited.</param>
+        public DisplayStatusVisitor(IList<string> whitelist) : base(whitelist)
         {
             _git = DependencyInjection.Resolve<IGit>();
         }

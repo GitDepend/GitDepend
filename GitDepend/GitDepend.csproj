@@ -90,6 +90,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Busi\DependencyExtensions.cs" />
     <Compile Include="Busi\GitDependFileFactory.cs" />
     <Compile Include="Busi\IConsole.cs" />
     <Compile Include="Busi\IGitDependFileFactory.cs" />
@@ -150,7 +151,7 @@
     <Compile Include="Visitors\ListMergedBranchesVisitor.cs" />
     <Compile Include="Visitors\NamedDependenciesVisitor.cs" />
     <Compile Include="Visitors\NullVisitor.cs" />
-    <Compile Include="Visitors\SyncConfigWithCurrentBranchVisitor.cs" />
+    <Compile Include="Visitors\VerifyCorrectBranchVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

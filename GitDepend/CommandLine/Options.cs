@@ -1,7 +1,14 @@
-﻿using CommandLine;
+﻿using System;
+using System.Net;
+using System.Net.Http;
+using System.Reflection;
+using CommandLine;
 using CommandLine.Text;
 using GitDepend.Commands;
+using GitDepend.Helpers;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using RestSharp;
 
 namespace GitDepend.CommandLine
 {
@@ -48,7 +55,8 @@ namespace GitDepend.CommandLine
         [HelpOption]
         public string GetUsage()
         {
-            return HelpText.AutoBuild(this, (HelpText current) => HelpText.DefaultParsingErrorsHandler(this, current));
+            var appendString = VersionUpdateHelper.CheckVersion();
+            return HelpText.AutoBuild(this, (HelpText current) => HelpText.DefaultParsingErrorsHandler(this, current)) + appendString;
         }
 
         [HelpVerbOption]

@@ -1,17 +1,33 @@
-Command Line Arguments
-======================
+Command Line Options
+====================
 
 .. code-block:: bash
 
-      config    Displays the full configuration file
+      branch      List, create, or delete branches
 
-      init      Assists you in creating a GitDepend.json
+      checkout    Switch branches
 
-      status    Displays git status on dependencies
+      clone       Recursively clones all dependencies
 
-      clone     Recursively clones all dependencies
+      config      Displays the full configuration file
 
-      update    Recursively builds all dependencies, and updates the current
-                project to the newly built artifacts.
+      init        Assists you in creating a GitDepend.json
 
-      help      Display this help screen.
+      list        Lists all repository dependencies
+
+      status      Displays git status on dependencies
+
+      sync        Sets the referenced branch to the currently checked out branch on
+                  dependencies.
+
+      update      Recursively builds all dependencies, and updates the current
+                  project to the newly built artifacts.
+
+      help        Display this help screen.
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Verbs:
+
+   usage/branch

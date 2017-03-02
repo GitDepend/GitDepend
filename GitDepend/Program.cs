@@ -24,6 +24,17 @@ namespace GitDepend
             else
             {
                 var code = command.Execute();
+
+                if (code != ReturnCode.Success)
+                {
+                    var strings = DependencyInjection.Resolve<IUiStrings>();
+                    var console = DependencyInjection.Resolve<IConsole>();
+
+                    var key = code.GetResxKey();
+                    var str = strings.GetString(key);
+                    console.WriteLine(str);
+                }
+
                 Environment.ExitCode = (int)code;
             }
         }

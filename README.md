@@ -53,14 +53,14 @@ Simple setup for the sole purpose of reservering names on github.com and nuget.o
 
 [gitter]:          https://badges.gitter.im/GitDepend/Lobby.svg
 [gitter-badge]:    https://gitter.im/GitDepend/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
-[appveyor]:        https://ci.appveyor.com/project/kjjuno/gitdepend/branch/develop
-[appveyor-badge]:  https://ci.appveyor.com/api/projects/status/github/kjjuno/GitDepend?branch=develop&svg=true
+[appveyor]:        https://ci.appveyor.com/project/gitdepend/gitdepend/branch/develop
+[appveyor-badge]:  https://ci.appveyor.com/api/projects/status/github/gitdepend/GitDepend?branch=develop&svg=true
 [docs]:            http://gitdepend.readthedocs.org/en/stable/
 [docs-badge]:      https://readthedocs.org/projects/gitdepend/badge/?version=stable
 [docs-pre]:        http://gitdepend.readthedocs.org/en/latest/
 [docs-pre-badge]:  https://readthedocs.org/projects/gitdepend/badge/?version=latest
-[gh-rel]:          https://github.com/kjjuno/GitDepend/releases/latest
-[gh-rel-badge]:    https://img.shields.io/github/release/kjjuno/gitdepend.svg
+[gh-rel]:          https://github.com/gitdepend/GitDepend/releases/latest
+[gh-rel-badge]:    https://img.shields.io/github/release/gitdepend/gitdepend.svg
 [choco]:           https://chocolatey.org/packages/GitDepend.Portable
 [choco-badge]:     https://img.shields.io/chocolatey/v/gitepend.portable.svg
 [choco-pre-badge]: https://img.shields.io/chocolatey/vpre/gitdepend.portable.svg

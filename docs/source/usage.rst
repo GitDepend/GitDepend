@@ -31,11 +31,11 @@ Command Line Options
    :caption: Verbs:
 
    usage/branch
+   usage/checkout
    usage/clone
    usage/config
-   usage/checkout
    usage/init
    usage/list
-   usage/update
    usage/status
    usage/sync
+   usage/update

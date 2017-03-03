@@ -18,6 +18,15 @@ Solves the problem of working with multiple git repositories where lower level r
 * [Why do I need GitDepend](http://gitdepend.readthedocs.io/en/latest/why.html)
 * [How does it work?](http://gitdepend.readthedocs.io/en/latest/usage_example.html)
 
+## v0.4.0
+* chocolatey install adds dep as an alias for GitDepend
+* Multiple new commands have been added improve the usability of GitDepend.
+* Branches are no longer switched without giving the user a chance to say no
+* The help page will tell the user if there is an updated version to download.
+* If there is an error during execution there is at least some kind of english explanation for why.
+* Improvements to documentation
+* `GitDepend help <verb>` now correctly displays help for a specific verb.
+
 ## v0.3.1
 Recovery build. This fixes a NullReferenceException.
 

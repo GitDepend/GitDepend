@@ -116,6 +116,7 @@
     <Compile Include="CommandLine\ListSubOptons.cs" />
     <Compile Include="CommandLine\ManageSubOptions.cs" />
     <Compile Include="CommandLine\NamedDependenciesOptions.cs" />
+    <Compile Include="CommandLine\RemoveSubOptions.cs" />
     <Compile Include="CommandLine\StatusSubOptions.cs" />
     <Compile Include="CommandLine\SyncSubOptions.cs" />
     <Compile Include="CommandLine\UpdateSubOptions.cs" />

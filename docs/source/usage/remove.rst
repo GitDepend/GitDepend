@@ -6,6 +6,6 @@ Removes a dependency based on it's name.
 
 ..code-block:: bash
 
-    remove dependencyName
+    -n, --name      Name of the dependency to remove.
 
 ..

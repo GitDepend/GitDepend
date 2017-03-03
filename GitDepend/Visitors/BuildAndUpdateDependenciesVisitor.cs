@@ -182,6 +182,9 @@ namespace GitDepend.Visitors
 
             foreach (var solution in solutions)
             {
+                var path = solution.Remove(0, directory.Length + 1);
+                commitMessage.AppendLine(path);
+
                 foreach (var dependency in config.Dependencies)
                 {
                     // If there are specific dependencies specified

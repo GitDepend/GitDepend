@@ -1,11 +1,13 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 
 namespace GitDepend.Busi
 {
     /// <summary>
     /// An abstraction of <see cref="Process"/>
     /// </summary>
-    public interface IProcess
+    public interface IProcess : IDisposable
     {
         /// <summary>
         /// Gets the value that the associated process specified when it terminated.
@@ -21,5 +23,10 @@ namespace GitDepend.Busi
         /// Instructs the <see cref="IProcess"/> to wait indefinitely for the associated process to exit.
         /// </summary>
         void WaitForExit();
+
+        /// <summary>
+        /// Gets a handle to the standard output stream.
+        /// </summary>
+        StreamReader StandardOutput { get; }
     }
 }

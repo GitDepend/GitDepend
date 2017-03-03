@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO.Abstractions;
 using GitDepend.Busi;
 
@@ -68,7 +67,7 @@ namespace GitDepend.Visitors
                 // If the dependency does not exist on disk we need to clone it.
                 if (!_fileSystem.Directory.Exists(dependency.Directory))
                 {
-                    _console.WriteLine($"Cloning {dependency.Name} into {dependency.Directory}");
+                    _console.WriteLine($"Cloning {dependency.Url} into {dependency.Directory}");
 
                     code = _git.Clone(dependency.Url, dependency.Directory, dependency.Branch);
                     _console.WriteLine();
@@ -114,7 +113,6 @@ namespace GitDepend.Visitors
 
                 // Visit the project.
                 code = visitor.VisitProject(dir, config);
-                _console.WriteLine();
 
                 // If something went wrong visiting the project we are done.
                 if (code != ReturnCode.Success)

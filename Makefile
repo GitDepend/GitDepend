@@ -90,7 +90,7 @@ set NUNIT_CONSOLE=$(PACKAGES_DIR)\NUnit.Runners.$(NUNIT_RUNNERS_VERSION)\tools\n
 
 echo %NUNIT_CONSOLE%
 pushd .
-cd bin/Debug
+cd bin/UnitTests/Debug
 for /f "delims=" %%i in ('dir *.UnitTests.dll /s/b') do (
     ..\..\%NUNIT_CONSOLE% %%i /result=..\..\Reports\UnitTests\%%~nxi.xml
 )
@@ -227,6 +227,13 @@ goto :eof
 <<
 
     @echo ##teamcity[blockClosed name='Generate NuGet Packages (Debug)']
+
+install: package-debug
+    @call <<install.bat
+@echo off
+set /p VERSION= < version.txt
+choco install GitDepend.Portable -version %VERSION% -y -pre --force --allow-downgrade -source artifacts\Chocolatey\Debug
+<<
 
 build-release: version restore
     @echo ##teamcity[blockOpened name='Build Solution (Release)']

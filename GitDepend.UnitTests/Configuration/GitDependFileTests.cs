@@ -31,17 +31,16 @@ namespace GitDepend.UnitTests.Configuration
         public void ToStringTest()
         {
             var expected = "{\r\n" +
+                           "  \"name\": \"Lib2\",\r\n" +
                            "  \"build\": {\r\n" +
-                           "    \"script\": \"make.bat\",\r\n" +
-                           "    \"arguments\": null\r\n" +
+                           "    \"script\": \"make.bat\"\r\n" +
                            "  },\r\n" +
                            "  \"packages\": {\r\n" +
                            "    \"dir\": \"artifacts/NuGet/Debug\"\r\n" +
                            "  },\r\n" +
                            "  \"dependencies\": [\r\n" +
                            "    {\r\n" +
-                           "      \"name\": \"Lib1\",\r\n" +
-                           "      \"url\": \"git@github.com:kjjuno/Lib1.git\",\r\n" +
+                           "      \"url\": \"https://github.com/kjjuno/Lib1.git\",\r\n" +
                            "      \"dir\": \"..\\\\Lib1\",\r\n" +
                            "      \"branch\": \"develop\"\r\n" +
                            "    }\r\n" +

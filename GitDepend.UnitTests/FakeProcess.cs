@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,23 @@ namespace GitDepend.UnitTests
         public void WaitForExit()
         {
 
+        }
+
+        /// <summary>
+        /// Gets a handle to the standard output stream.
+        /// </summary>
+        public StreamReader StandardOutput => new StreamReader(new MemoryStream());
+
+        #endregion
+
+        #region Implementation of IDisposable
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            
         }
 
         #endregion

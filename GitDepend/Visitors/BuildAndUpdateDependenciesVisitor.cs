@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Abstractions;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using GitDepend.Busi;
 using GitDepend.Configuration;
@@ -14,6 +17,7 @@ namespace GitDepend.Visitors
     /// </summary>
     public class BuildAndUpdateDependenciesVisitor : IVisitor
     {
+        private readonly IList<string> _whitelist;
         private static readonly Regex Pattern = new Regex(@"^(?<id>.*?)\.(?<version>(?:\d\.){2,3}\d(?:-.*?)?)$", RegexOptions.Compiled);
         private readonly IGitDependFileFactory _factory;
         private readonly IGit _git;
@@ -23,10 +27,17 @@ namespace GitDepend.Visitors
         private readonly IConsole _console;
 
         /// <summary>
+        /// The list of packages that were updated.
+        /// </summary>
+        public HashSet<string> UpdatedPackages { get; } = new HashSet<string>();
+
+        /// <summary>
         /// Creates a new <see cref="BuildAndUpdateDependenciesVisitor"/>
         /// </summary>
-        public BuildAndUpdateDependenciesVisitor()
+        /// <param name="whitelist">The dependencies to update.</param>
+        public BuildAndUpdateDependenciesVisitor(IList<string> whitelist)
         {
+            _whitelist = whitelist;
             _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
             _git = DependencyInjection.Resolve<IGit>();
             _nuget = DependencyInjection.Resolve<INuget>();
@@ -76,6 +87,15 @@ namespace GitDepend.Visitors
         /// <returns>The return code.</returns>
         public ReturnCode VisitDependency(string directory, Dependency dependency)
         {
+            // If there are specific dependencies specified
+            // and this one isn't in the list
+            // skip it.
+            if (_whitelist.Any() &&
+                _whitelist.All(d => !string.Equals(d, dependency.Configuration.Name, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                return ReturnCode.Success;
+            }
+
             string dir;
             ReturnCode code;
             var config = _factory.LoadFromDirectory(dependency.Directory, out dir, out code);
@@ -99,8 +119,12 @@ namespace GitDepend.Visitors
                 UseShellExecute = false
             };
 
-            var proc = _processManager.Start(info);
-            proc?.WaitForExit();
+            int exitCode;
+            using (var proc = _processManager.Start(info))
+            {
+                proc.WaitForExit();
+                exitCode = proc.ExitCode;
+            }
 
 
             var artifactsDir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(directory, dependency.Directory, dependency.Configuration.Packages.Directory));
@@ -113,8 +137,9 @@ namespace GitDepend.Visitors
                 }
             }
 
-            var codeNum = proc?.ExitCode ?? (int)ReturnCode.FailedToRunBuildScript;
-            return ReturnCode = (ReturnCode)codeNum;
+            return ReturnCode = exitCode == 0
+                ? ReturnCode.Success
+                : ReturnCode.FailedToRunBuildScript;
         }
 
         /// <summary>
@@ -130,40 +155,71 @@ namespace GitDepend.Visitors
                 return ReturnCode = ReturnCode.Success;
             }
 
+            // If there are specific dependencies specified
+            // and this one isn't in the list
+            // skip it.
+            if (_whitelist.Any() &&
+                _whitelist.All(d => !string.Equals(d, config.Name, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                return ReturnCode.Success;
+            }
+
             if (string.IsNullOrEmpty(directory) || !_fileSystem.Directory.Exists(directory))
             {
                 return ReturnCode = ReturnCode.DirectoryDoesNotExist;
             }
 
-            foreach (var dependency in config.Dependencies)
+            StringBuilder commitMessage = new StringBuilder();
+            commitMessage.AppendLine("GitDepend: updating dependencies");
+            commitMessage.AppendLine();
+
+            var solutions = _fileSystem.Directory.GetFiles(directory, "*.sln", SearchOption.AllDirectories);
+
+            foreach (var solution in solutions)
             {
-                var dependencyDir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(directory, dependency.Directory));
-                var dir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(dependencyDir, dependency.Configuration.Packages.Directory));
+                _nuget.Restore(solution);
+            }
 
-                foreach (var file in _fileSystem.Directory.GetFiles(dir, "*.nupkg"))
+            foreach (var solution in solutions)
+            {
+                foreach (var dependency in config.Dependencies)
                 {
-                    var name = _fileSystem.Path.GetFileNameWithoutExtension(file);
-
-
-                    if (string.IsNullOrEmpty(name))
+                    // If there are specific dependencies specified
+                    // and this one isn't in the list
+                    // skip it.
+                    if (_whitelist.Any() &&
+                        _whitelist.All(d => !string.Equals(d, dependency.Configuration.Name, StringComparison.InvariantCultureIgnoreCase)))
                     {
                         continue;
                     }
 
-                    var match = Pattern.Match(name);
+                    var dependencyDir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(directory, dependency.Directory));
+                    var dir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(dependencyDir, dependency.Configuration.Packages.Directory));
 
-                    if (!match.Success)
+                    foreach (var file in _fileSystem.Directory.GetFiles(dir, "*.nupkg"))
                     {
-                        continue;
-                    }
+                        var name = _fileSystem.Path.GetFileNameWithoutExtension(file);
 
-                    var id = match.Groups["id"].Value;
-                    var version = match.Groups["version"].Value;
 
-                    _nuget.WorkingDirectory = directory;
+                        if (string.IsNullOrEmpty(name))
+                        {
+                            continue;
+                        }
 
-                    foreach (var solution in _fileSystem.Directory.GetFiles(directory, "*.sln", SearchOption.AllDirectories))
-                    {
+                        var match = Pattern.Match(name);
+
+                        if (!match.Success)
+                        {
+                            continue;
+                        }
+
+                        var id = match.Groups["id"].Value;
+                        var version = match.Groups["version"].Value;
+
+                        commitMessage.AppendLine($"* {id}.{version}");
+
+                        _nuget.WorkingDirectory = directory;
+
                         var cacheDir = GetCacheDirectory();
 
                         if (string.IsNullOrEmpty(cacheDir))
@@ -171,8 +227,13 @@ namespace GitDepend.Visitors
                             return ReturnCode = ReturnCode.CouldNotCreateCacheDirectory;
                         }
 
-                        _nuget.Restore(solution);
                         _nuget.Update(solution, id, version, cacheDir);
+
+                        var package = $"{id}.{version}";
+                        if (!UpdatedPackages.Contains(package))
+                        {
+                            UpdatedPackages.Add(package);
+                        }
                     }
                 }
             }
@@ -183,7 +244,8 @@ namespace GitDepend.Visitors
             _git.Add("*.csproj", @"*\packages.config");
             _console.WriteLine("================================================================================");
             _git.Status();
-            _git.Commit("GitDepend: updating dependencies");
+
+            _git.Commit(commitMessage.ToString());
 
             return ReturnCode = ReturnCode.Success;
         }

@@ -6,11 +6,11 @@
     <title>GitDepend.CommandLine</title>
     <authors>kjjuno and Contributors</authors>
     <owners>kjjuno and Contributors</owners>
-    <licenseUrl>https://github.com/kjjuno/GitDepend/blob/master/LICENSE</licenseUrl>
-    <projectUrl>https://github.com/kjjuno/GitDepend</projectUrl>
+    <licenseUrl>https://github.com/GitDepend/GitDepend/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/GitDepend/GitDepend</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A tool to handle dependency trees with multiple git repositories without using submodules.</description>
-    <releaseNotes>https://github.com/kjjuno/GitDepend/releases</releaseNotes>
+    <releaseNotes>https://github.com/GitDepend/GitDepend/releases</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>Git Submodules Subtree GitVersion Dependency Repository Repo</tags>
     <developmentDependency>true</developmentDependency>
@@ -19,5 +19,6 @@
     <file src="bin\$configuration$\GitDepend.exe" target="tools" />
     <file src="bin\$configuration$\NuGet.exe" target="tools" />
     <file src="bin\$configuration$\*.dll" target="tools" />
+    <file src="bin\$configuration$\lib\**" target="tools\lib" />
   </files>
 </package>

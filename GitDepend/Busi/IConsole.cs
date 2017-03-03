@@ -9,6 +9,11 @@ namespace GitDepend.Busi
     public interface IConsole
     {
         /// <summary>
+        /// Gets or sets the foreground color of the console.
+        /// </summary>
+        ConsoleColor ForegroundColor { get; set; }
+
+        /// <summary>
         /// Gets the standard output stream.
         /// </summary>
         TextWriter Out { get; }

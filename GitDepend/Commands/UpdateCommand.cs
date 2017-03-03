@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO.Abstractions;
+using System.Linq;
 using GitDepend.Busi;
 using GitDepend.CommandLine;
 using GitDepend.Visitors;
@@ -39,25 +40,38 @@ namespace GitDepend.Commands
         /// <returns>The return code.</returns>
         public ReturnCode Execute()
         {
-            IVisitor visitor = new CheckOutBranchVisitor();
-            _algorithm.TraverseDependencies(visitor, _options.Directory);
+            var verifyVisitor = new VerifyCorrectBranchVisitor(_options.Dependencies);
+            _algorithm.TraverseDependencies(verifyVisitor, _options.Directory);
 
-            if (visitor.ReturnCode != ReturnCode.Success)
+            if (verifyVisitor.ReturnCode != ReturnCode.Success)
             {
-                _console.WriteLine("Could not ensure the correct branch on all dependencies.");
-                return visitor.ReturnCode;
+                _console.WriteLine("Not all dependencies are on the correct branch.");
+                return verifyVisitor.ReturnCode;
             }
 
+            _console.WriteLine();
             _algorithm.Reset();
-            visitor = new BuildAndUpdateDependenciesVisitor();
-            _algorithm.TraverseDependencies(visitor, _options.Directory);
+            var buildAndUpdateVisitor = new BuildAndUpdateDependenciesVisitor(_options.Dependencies);
+            _algorithm.TraverseDependencies(buildAndUpdateVisitor, _options.Directory);
 
-            if (visitor.ReturnCode == ReturnCode.Success)
+            if (buildAndUpdateVisitor.ReturnCode == ReturnCode.Success)
             {
-                _console.WriteLine("Update complete!");
+                if (buildAndUpdateVisitor.UpdatedPackages.Any())
+                {
+                    _console.WriteLine("Updated packages: ");
+                    foreach (var package in buildAndUpdateVisitor.UpdatedPackages)
+                    {
+                        _console.WriteLine($"    {package}");
+                    }
+                    _console.WriteLine("Update complete!");
+                }
+                else
+                {
+                    _console.WriteLine("nothing was updated");
+                }
             }
 
-            return visitor.ReturnCode;
+            return buildAndUpdateVisitor.ReturnCode;
         }
 
         #endregion

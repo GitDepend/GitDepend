@@ -30,7 +30,7 @@ namespace GitDepend.UnitTests.Commands
 
             var command = instance.GetCommand(args);
 
-            Assert.IsTrue(command is ShowConfigCommand, "Invalid Command");
+            Assert.IsTrue(command is ConfigCommand, "Invalid Command");
         }
 
         [Test]
@@ -53,6 +53,61 @@ namespace GitDepend.UnitTests.Commands
             var command = instance.GetCommand(args);
 
             Assert.IsTrue(command is UpdateCommand, "Invalid Command");
+        }
+
+        [Test]
+        public void GetCommand_ShouldReturn_StatusCommand_WhenStatusVerbIsSpecified()
+        {
+            string[] args = { "status", "lib1" };
+            var instance = new CommandParser();
+
+            var command = instance.GetCommand(args);
+
+            Assert.IsTrue(command is StatusCommand, "Invalid Command");
+        }
+
+        [Test]
+        public void GetCommand_ShouldReturn_ListCommand_WhenListVerbIsSpecified()
+        {
+            string[] args = { "list" };
+            var instance = new CommandParser();
+
+            var command = instance.GetCommand(args);
+
+            Assert.IsTrue(command is ListCommand, "Invalid Command");
+        }
+
+        [Test]
+        public void GetCommand_ShouldReturn_BranchCommand_WhenBranchVerbIsSpecified()
+        {
+            string[] args = { "branch" };
+            var instance = new CommandParser();
+
+            var command = instance.GetCommand(args);
+
+            Assert.IsTrue(command is BranchCommand, "Invalid Command");
+        }
+
+        [Test]
+        public void GetCommand_ShouldReturn_CheckOutCommand_WhenCheckOutVerbIsSpecified()
+        {
+            string[] args = { "checkout", "my_branch" };
+            var instance = new CommandParser();
+
+            var command = instance.GetCommand(args);
+
+            Assert.IsTrue(command is CheckOutCommand, "Invalid Command");
+        }
+
+        [Test]
+        public void GetCommand_ShouldReturn_SyncCommand_WhenCheckOutVerbIsSpecified()
+        {
+            string[] args = { "sync" };
+            var instance = new CommandParser();
+
+            var command = instance.GetCommand(args);
+
+            Assert.IsTrue(command is SyncCommand, "Invalid Command");
         }
     }
 }

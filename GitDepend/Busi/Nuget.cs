@@ -1,5 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.IO.Abstractions;
+using System.Text;
 
 namespace GitDepend.Busi
 {
@@ -8,7 +11,7 @@ namespace GitDepend.Busi
     /// </summary>
     public class Nuget : INuget
     {
-        private readonly IProcessManager _processManager;
+        private readonly IConsole _console;
 
         /// <summary>
         /// The working directory for nuget.exe
@@ -20,7 +23,7 @@ namespace GitDepend.Busi
         /// </summary>
         public Nuget()
         {
-            _processManager = DependencyInjection.Resolve<IProcessManager>();
+            _console = DependencyInjection.Resolve<IConsole>();
         }
 
         /// <summary>
@@ -47,15 +50,15 @@ namespace GitDepend.Busi
 
         private ReturnCode ExecuteNuGetCommand(string arguments)
         {
-            var info = new ProcessStartInfo("NuGet.exe", arguments)
-            {
-                WorkingDirectory = WorkingDirectory,
-                UseShellExecute = false,
-            };
-            var proc = _processManager.Start(info);
-            proc?.WaitForExit();
+            var oldOut = Console.Out;
 
-            var code = proc?.ExitCode ?? (int)ReturnCode.FailedToRunNugetCommand;
+            StringBuilder sb = new StringBuilder();
+            Console.SetOut(new StringWriter(sb));
+            var code = NuGet.CommandLine.Program.Main(arguments.Split());
+
+            Console.SetOut(oldOut);
+            
+            _console.WriteLine($"nuget {arguments}");
 
             return code != (int)ReturnCode.Success
                 ? ReturnCode.FailedToRunNugetCommand

@@ -15,6 +15,7 @@ namespace GitDepend.Commands
         /// The name of the verb.
         /// </summary>
         public const string Name = "clone";
+
         private readonly CloneSubOptions _options;
         private readonly IDependencyVisitorAlgorithm _algorithm;
         private readonly IConsole _console;
@@ -38,12 +39,21 @@ namespace GitDepend.Commands
         /// <returns>The return code.</returns>
         public ReturnCode Execute()
         {
-            var visitor = new CheckOutBranchVisitor();
+            IVisitor visitor = new NullVisitor();
             _algorithm.TraverseDependencies(visitor, _options.Directory);
 
             if (visitor.ReturnCode == ReturnCode.Success)
             {
                 _console.WriteLine("Successfully cloned all dependencies");
+            }
+
+            visitor = new CheckOutDependencyBranchVisitor();
+            _algorithm.Reset();
+            _algorithm.TraverseDependencies(visitor, _options.Directory);
+
+            if (visitor.ReturnCode == ReturnCode.Success)
+            {
+                _console.WriteLine("All dependencies on the correct branch");
             }
 
             return visitor.ReturnCode;

@@ -20,6 +20,15 @@ Solves the problem of working with multiple git repositories where lower level r
 * [Why do I need GitDepend](http://gitdepend.readthedocs.io/en/latest/why.html)
 * [How does it work?](http://gitdepend.readthedocs.io/en/latest/usage_example.html)
 
+## v0.4.0
+* chocolatey install adds dep as an alias for GitDepend
+* Multiple new commands have been added improve the usability of GitDepend.
+* Branches are no longer switched without giving the user a chance to say no
+* The help page will tell the user if there is an updated version to download.
+* If there is an error during execution there is at least some kind of english explanation for why.
+* Improvements to documentation
+* `GitDepend help <verb>` now correctly displays help for a specific verb.
+
 ## v0.3.1
 Recovery build. This fixes a NullReferenceException.
 
@@ -47,14 +56,14 @@ Simple setup for the sole purpose of reservering names on github.com and nuget.o
 [icon]:            https://raw.githubusercontent.com/GitDepend/GitDepend/master/docs/img/gitdependsmall.png
 [gitter]:          https://badges.gitter.im/GitDepend/Lobby.svg
 [gitter-badge]:    https://gitter.im/GitDepend/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
-[appveyor]:        https://ci.appveyor.com/project/kjjuno/gitdepend/branch/develop
-[appveyor-badge]:  https://ci.appveyor.com/api/projects/status/github/kjjuno/GitDepend?branch=develop&svg=true
+[appveyor]:        https://ci.appveyor.com/project/gitdepend/gitdepend/branch/develop
+[appveyor-badge]:  https://ci.appveyor.com/api/projects/status/github/gitdepend/GitDepend?branch=develop&svg=true
 [docs]:            http://gitdepend.readthedocs.org/en/stable/
 [docs-badge]:      https://readthedocs.org/projects/gitdepend/badge/?version=stable
 [docs-pre]:        http://gitdepend.readthedocs.org/en/latest/
 [docs-pre-badge]:  https://readthedocs.org/projects/gitdepend/badge/?version=latest
-[gh-rel]:          https://github.com/kjjuno/GitDepend/releases/latest
-[gh-rel-badge]:    https://img.shields.io/github/release/kjjuno/gitdepend.svg
+[gh-rel]:          https://github.com/gitdepend/GitDepend/releases/latest
+[gh-rel-badge]:    https://img.shields.io/github/release/gitdepend/gitdepend.svg
 [choco]:           https://chocolatey.org/packages/GitDepend.Portable
 [choco-badge]:     https://img.shields.io/chocolatey/v/gitepend.portable.svg
 [choco-pre-badge]: https://img.shields.io/chocolatey/vpre/gitdepend.portable.svg

@@ -30,15 +30,15 @@ namespace GitDepend.UnitTests
         {
             Lib1Config = new GitDependFile
             {
+                Name = "Lib1",
                 Build = { Script = "make.bat" },
                 Packages = { Directory = "artifacts/NuGet/Debug" }
             };
 
             Lib1Dependency = new Dependency
             {
-                Name = "Lib1",
                 Directory = "..\\Lib1",
-                Url = "git@github.com:kjjuno/Lib1.git",
+                Url = "https://github.com/kjjuno/Lib1.git",
                 Branch = "develop",
                 Configuration = Lib1Config
             };
@@ -52,6 +52,7 @@ namespace GitDepend.UnitTests
 
             Lib2Config = new GitDependFile
             {
+                Name = "Lib2",
                 Build = { Script = "make.bat" },
                 Packages = { Directory = "artifacts/NuGet/Debug" },
                 Dependencies = { Lib1Dependency }
@@ -100,57 +101,6 @@ namespace GitDepend.UnitTests
                 EnsureDirectory(fileSystem, dir);
 
                 fileSystem.File.WriteAllBytes(path, new byte[] { 0x01, 0x02, 0x03 });
-            }
-        }
-
-        protected static void AssertThrows<T>(Action del, string exceptionMessage) where T : Exception
-        {
-            try
-            {
-                del();
-                Assert.Fail("Did not throw the expected exception");
-            }
-            catch (Exception ex)
-            {
-                if (!(ex is T && ex.Message == exceptionMessage))
-                {
-                    Assert.Fail("Expected: " + exceptionMessage + Environment.NewLine + "Actual: " + ex.Message);
-                }
-            }
-        }
-
-        protected static async Task AssertThrows<T>(Func<Task> del, string exceptionMessage) where T : Exception
-        {
-            try
-            {
-                await del();
-                Assert.Fail("Did not throw the expected exception");
-            }
-            catch (Exception ex)
-            {
-                if (!(ex is T && ex.Message == exceptionMessage))
-                {
-                    Assert.Fail("Expected: " + exceptionMessage + Environment.NewLine + "Actual: " + ex.Message);
-                }
-            }
-        }
-
-        protected static void AssertBytesAreEqual(byte[] expected, byte[] actual)
-        {
-            Assert.IsNotNull(actual, "The data should not be null");
-            Assert.AreEqual(expected.Length, actual.Length, "The data length does not match the expected length");
-            for (int i = 0; i < expected.Length; i++)
-            {
-                Assert.AreEqual(expected[i], actual[i], "Data mismatch at position " + i);
-            }
-        }
-
-        protected static void AssertArraysAreEqual<T>(T[] expected, T[] actual)
-        {
-            Assert.AreEqual(expected.Length, actual.Length, "Incorrect length");
-            for (int i = 0; i < expected.Length; i++)
-            {
-                Assert.AreEqual(expected[i], actual[i], "Data mismatch at position " + i);
             }
         }
     }

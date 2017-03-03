@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO.Abstractions;
 
 namespace GitDepend.Busi
 {
@@ -8,6 +9,7 @@ namespace GitDepend.Busi
     public class Git : IGit
     {
         private readonly IProcessManager _processManager;
+        private readonly IFileSystem _fileSystem;
 
         /// <summary>
         /// The working directory for all git operations.
@@ -20,16 +22,30 @@ namespace GitDepend.Busi
         public Git()
         {
             _processManager = DependencyInjection.Resolve<IProcessManager>();
+            _fileSystem = DependencyInjection.Resolve<IFileSystem>();
         }
 
         /// <summary>
         /// Checks out the given branch.
         /// </summary>
         /// <param name="branch">The branch to check out.</param>
+        /// <param name="create">Should the branch be created?</param>
         /// <returns>The git return code.</returns>
-        public ReturnCode Checkout(string branch)
+        public ReturnCode Checkout(string branch, bool create)
         {
-            return ExecuteGitCommand($"checkout {branch}");
+            return ExecuteGitCommand(create
+                ? $"checkout -b {branch}"
+                : $"checkout {branch}");
+        }
+
+        /// <summary>
+        /// Creates the given branch.
+        /// </summary>
+        /// <param name="branch">The branch to create</param>
+        /// <returns>The git return code.</returns>
+        public ReturnCode CreateBranch(string branch)
+        {
+            return ExecuteGitCommand($"branch {branch}");
         }
 
         /// <summary>
@@ -41,7 +57,7 @@ namespace GitDepend.Busi
         /// <returns>The git return code.</returns>
         public ReturnCode Clone(string url, string directory, string branch)
         {
-            return ExecuteGitCommand($"clone {url} {directory} -b {branch}");
+            return ExecuteGitCommand($"clone {url} \"{directory}\" -b {branch}");
         }
 
         /// <summary>
@@ -53,7 +69,7 @@ namespace GitDepend.Busi
         {
             foreach (string file in files)
             {
-                ExecuteGitCommand($"add {file}");
+                ExecuteGitCommand($"add \"{file}\"");
             }
 
             return ReturnCode.Success;
@@ -69,13 +85,62 @@ namespace GitDepend.Busi
         }
 
         /// <summary>
+        /// Deletes the specified branch.
+        /// </summary>
+        /// <param name="branch">The branch to delete.</param>
+        /// <param name="force">Should the deletion be forced or not.</param>
+        /// <returns></returns>
+        public ReturnCode DeleteBranch(string branch, bool force)
+        {
+            return ExecuteGitCommand(force
+                ? $"branch -D {branch}"
+                : $"branch -d {branch}");
+        }
+
+        /// <summary>
+        /// Lists all merged branches.
+        /// </summary>
+        /// <returns></returns>
+        public ReturnCode ListMergedBranches()
+        {
+            return ExecuteGitCommand("branch --merged");
+        }
+
+        /// <summary>
+        /// Lists all branches.
+        /// </summary>
+        /// <returns></returns>
+        public ReturnCode ListAllBranches()
+        {
+            return ExecuteGitCommand("branch");
+        }
+
+        /// <summary>
+        /// Gets the current branch.
+        /// </summary>
+        /// <returns></returns>
+        public string GetCurrentBranch()
+        {
+            using (var repo = new LibGit2Sharp.Repository(WorkingDirectory))
+            {
+                return repo.Head.FriendlyName;
+            }
+        }
+
+        /// <summary>
         /// Makes a commit with the given message.
         /// </summary>
         /// <param name="message"></param>
         /// <returns>The git return code.</returns>
         public ReturnCode Commit(string message)
         {
-            return ExecuteGitCommand($"commit -m \"{message}\"");
+            var file = _fileSystem.Path.GetTempFileName();
+            _fileSystem.File.WriteAllText(file, message);
+
+            var code = ExecuteGitCommand($"commit --file=\"{file}\"");
+
+            _fileSystem.File.Delete(file);
+            return code;
         }
 
         private ReturnCode ExecuteGitCommand(string arguments)

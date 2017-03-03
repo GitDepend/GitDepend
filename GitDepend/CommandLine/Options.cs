@@ -1,10 +1,16 @@
-﻿using CommandLine;
+﻿using System;
+using System.Net;
+using System.Net.Http;
+using System.Reflection;
+using CommandLine;
 using CommandLine.Text;
-using GitDepend.CommandLine;
+using GitDepend.Busi;
 using GitDepend.Commands;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using RestSharp;
 
-namespace GitDepend
+namespace GitDepend.CommandLine
 {
     class Options
     {
@@ -13,20 +19,34 @@ namespace GitDepend
 
         private Options()
         {
-
         }
 
-        [VerbOption(ShowConfigCommand.Name, HelpText = "Displays the full configuration file")]
-        public ConfigSubOptions ConfigVerb { get; set; }
+        [VerbOption(BranchCommand.Name, HelpText = "List, create, or delete branches")]
+        public BranchSubOptions BranchVerb { get; set; } = new BranchSubOptions();
 
-        [VerbOption(InitCommand.Name, HelpText = "Assists you in creating a GitDepend.json")]
-        public InitSubOptions InitVerb { get; set; }
+        [VerbOption(CheckOutCommand.Name, HelpText = "Switch branches")]
+        public CheckOutSubOptions CheckOutVerb { get; set; } = new CheckOutSubOptions();
 
         [VerbOption(CloneCommand.Name, HelpText = "Recursively clones all dependencies")]
-        public CloneSubOptions CloneVerb { get; set; }
+        public CloneSubOptions CloneVerb { get; set; } = new CloneSubOptions();
+
+        [VerbOption(ConfigCommand.Name, HelpText = "Displays the full configuration file")]
+        public ConfigSubOptions ConfigVerb { get; set; } = new ConfigSubOptions();
+
+        [VerbOption(InitCommand.Name, HelpText = "Assists you in creating a GitDepend.json")]
+        public InitSubOptions InitVerb { get; set; } = new InitSubOptions();
+
+        [VerbOption(ListCommand.Name, HelpText = "Lists all repository dependencies")]
+        public ListSubOptons ListVerb { get; set; } = new ListSubOptons();
+
+        [VerbOption(StatusCommand.Name, HelpText = "Displays git status on dependencies")]
+        public StatusSubOptions StatusVerb { get; set; } = new StatusSubOptions();
+
+        [VerbOption(SyncCommand.Name, HelpText = "Sets the referenced branch to the currently checked out branch on dependencies.")]
+        public SyncSubOptions SyncVerb { get; set; } = new SyncSubOptions();
 
         [VerbOption(UpdateCommand.Name, HelpText = "Recursively builds all dependencies, and updates the current project to the newly built artifacts.")]
-        public UpdateSubOptions UpdateVerb { get; set; }
+        public UpdateSubOptions UpdateVerb { get; set; } = new UpdateSubOptions();
 
         [ParserState]
         public IParserState LastParserState { get; set; }
@@ -34,12 +54,23 @@ namespace GitDepend
         [HelpOption]
         public string GetUsage()
         {
-            return HelpText.AutoBuild(this, (HelpText current) => HelpText.DefaultParsingErrorsHandler(this, current));
+            var versionUpdateChecker = DependencyInjection.Resolve<IVersionUpdateChecker>();
+
+            var appendString = versionUpdateChecker.CheckVersion("gitdepend", "kjjuno");
+
+            return HelpText.AutoBuild(this, (HelpText current) => HelpText.DefaultParsingErrorsHandler(this, current)) + appendString;
         }
 
         [HelpVerbOption]
         public string GetUsage(string verb)
         {
+            var args = Environment.GetCommandLineArgs();
+
+            if (args.Length == 3 && string.Equals(args[1], "help", StringComparison.OrdinalIgnoreCase))
+            {
+                verb = args[2];
+            }
+
             return HelpText.AutoBuild(this, verb);
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO.Abstractions;
 using System.Linq;
+using System.Text.RegularExpressions;
 using GitDepend.Configuration;
 using Newtonsoft.Json;
 
@@ -64,11 +65,18 @@ namespace GitDepend.Busi
                     {
                         var json = _fileSystem.File.ReadAllText(file);
                         var gitDependFile = JsonConvert.DeserializeObject<GitDependFile>(json);
+
                         code = ReturnCode.Success;
                         dir = current;
 
                         foreach (var dependency in gitDependFile.Dependencies)
                         {
+                            if (!IsValidUrl(dependency.Url))
+                            {
+                                code = ReturnCode.InvalidUrlFormat;
+                                return null;
+                            }
+
                             string subdir;
                             ReturnCode subcode;
                             var path = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(dir, dependency.Directory));
@@ -90,6 +98,11 @@ namespace GitDepend.Busi
 
             code = ReturnCode.GitRepositoryNotFound;
             return null;
+        }
+
+        private bool IsValidUrl(string url)
+        {
+            return Regex.IsMatch(url, @"^https://.*?$");
         }
     }
 }

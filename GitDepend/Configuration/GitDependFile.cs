@@ -13,6 +13,12 @@ namespace GitDepend.Configuration
         private Packages _packages;
 
         /// <summary>
+        /// The name of this repository
+        /// </summary>
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        /// <summary>
         /// The build section.
         /// </summary>
         [JsonProperty("build")]
@@ -40,7 +46,12 @@ namespace GitDepend.Configuration
         /// </returns>
         public override string ToString()
         {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
+            JsonSerializerSettings settings = new JsonSerializerSettings
+            {
+                DefaultValueHandling = DefaultValueHandling.Ignore,
+                NullValueHandling = NullValueHandling.Ignore
+            };
+            return JsonConvert.SerializeObject(this, Formatting.Indented, settings);
         }
 
         #endregion

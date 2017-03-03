@@ -1,15 +1,17 @@
 manage
 ======
 
-Manage dependencies in your current directory or other dependencies
+Manage dependencies in your current directory
 
 .. code-block:: bash
 
-    --url       Updates/sets the dependency url
+    -n, --name      Name of the dependency to update
 
-    --set-dir   Updates/sets the dir given.
+    -u, --url       Updates/sets the dependency url
 
-    --branch    Sets the branch for the given named dependency, or updates all if no depname is given
+    -d, --dir       Updates/sets the dir given.
+
+    -b, --branch    Sets the branch for the given named dependency, or updates all if no depname is given
 
 ..
 

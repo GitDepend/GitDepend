@@ -37,3 +37,4 @@ Command Line Options
    usage/init
    usage/update
    usage/status
+   usage/sync

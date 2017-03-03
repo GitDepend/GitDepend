@@ -8,6 +8,7 @@
     <owners>kjjuno and Contributors</owners>
     <licenseUrl>https://github.com/GitDepend/GitDepend/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/GitDepend/GitDepend</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/GitDepend/GitDepend/master/docs/img/package_icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A tool to handle dependency trees with multiple git repositories without using submodules.</description>
     <releaseNotes>https://github.com/GitDepend/GitDepend/releases</releaseNotes>

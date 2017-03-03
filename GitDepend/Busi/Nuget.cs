@@ -2,7 +2,9 @@
 using System.Diagnostics;
 using System.IO;
 using System.IO.Abstractions;
+using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace GitDepend.Busi
 {
@@ -54,7 +56,12 @@ namespace GitDepend.Busi
 
             StringBuilder sb = new StringBuilder();
             Console.SetOut(new StringWriter(sb));
-            var code = NuGet.CommandLine.Program.Main(arguments.Split());
+            var args = Regex.Matches(arguments, @"[\""].+?[\""]|[^ ]+")
+                .Cast<Match>()
+                .Select(m => m.Value.Trim('"'))
+                .ToArray();
+
+            var code = NuGet.CommandLine.Program.Main(args);
 
             Console.SetOut(oldOut);
             

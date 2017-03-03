@@ -189,7 +189,7 @@ namespace GitDepend.UnitTests.Visitors
             fileSystem.Directory.Arrange(d => d.GetFiles(Arg.AnyString, "*.nupkg"))
                 .Returns(Lib1Packages.ToArray());
             fileSystem.Directory.Arrange(d => d.GetFiles(Arg.AnyString, "*.sln", Arg.IsAny<SearchOption>()))
-                .Returns(Lib2Solutions.ToArray());
+                .Returns(Lib2Solutions.Select(s => Lib2Directory + "\\" + s).ToArray());
 
             fileSystem.Path.Arrange(p => p.GetFileNameWithoutExtension(Arg.AnyString))
                 .Returns(Path.GetFileNameWithoutExtension);

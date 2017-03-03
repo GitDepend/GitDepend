@@ -38,3 +38,4 @@ Command Line Options
    usage/list
    usage/update
    usage/status
+   usage/sync

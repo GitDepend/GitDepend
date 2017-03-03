@@ -15,7 +15,7 @@ In the root of your repository you will include a ``GitDepend.json`` file
       },
       "dependencies": [
         {
-          "url": "git@github.com:kjjuno/Lib1.git",
+          "url": "git@github.com:GitDepend/Lib1.git",
           "dir": "../Lib1",
           "branch": "develop"
         }
@@ -44,8 +44,8 @@ Try it out!
 
 Take a look at some example projects and try it out for yourself.
 
-* `Lib1 <https://github.com/kjjuno/Lib1/>`_
-* `Lib2 <https://github.com/kjjuno/Lib2/>`_
+* `Lib1 <https://github.com/GitDepend/Lib1/>`_
+* `Lib2 <https://github.com/GitDepend/Lib2/>`_
 
 Lib2 depends on Lib1
 
@@ -53,7 +53,7 @@ Clone Lib2
 
 .. code-block:: bash
 
-    git clone git@github.com:kjjuno/Lib2.git
+    git clone git@github.com:GitDepend/Lib2.git
 
 from the root of Lib2 run
 

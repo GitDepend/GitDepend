@@ -228,6 +228,13 @@ goto :eof
 
     @echo ##teamcity[blockClosed name='Generate NuGet Packages (Debug)']
 
+install: package-debug
+    @call <<install.bat
+@echo off
+set /p VERSION= < version.txt
+choco install GitDepend.Portable -version %VERSION% -y -pre --force --allow-downgrade -source artifacts\Chocolatey\Debug
+<<
+
 build-release: version restore
     @echo ##teamcity[blockOpened name='Build Solution (Release)']
     @echo ##teamcity[compilationStarted compiler='MSBuild']

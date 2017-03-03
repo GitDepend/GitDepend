@@ -11,7 +11,7 @@ namespace GitDepend.Commands
     /// <summary>
     /// This command lets you manage the dependencies and their configuration files.
     /// </summary>
-    public class Manage : ICommand
+    public class ManageCommand : ICommand
     {
         /// <summary>
         /// The name of the verb.
@@ -23,10 +23,10 @@ namespace GitDepend.Commands
         private readonly IConsole _console;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Manage"/> class.
+        /// Initializes a new instance of the <see cref="ManageCommand"/> class.
         /// </summary>
         /// <param name="options">The <see cref="ManageSubOptions"/> that configure manage</param>
-        public Manage(ManageSubOptions options)
+        public ManageCommand(ManageSubOptions options)
         {
             _options = options;
             _factory = DependencyInjection.Resolve<IGitDependFileFactory>();

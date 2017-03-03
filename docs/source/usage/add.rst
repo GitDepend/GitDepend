@@ -3,9 +3,9 @@ add
 
 Add a dependency
 
-Add a dependency
+The following are all required.
 .. code-block:: bash
 
-    manage  --add --url url --set-dir dir --branch branch
-
-..
+    -u, --url       Set the url for the dependency
+    -d, --dir       Set the directory for the dependency
+    -b, --branch    Set the branch for the dependency

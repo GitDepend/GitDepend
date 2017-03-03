@@ -106,6 +106,7 @@
     <Compile Include="Busi\ProcessWrapper.cs" />
     <Compile Include="Busi\ReturnCodeExtensions.cs" />
     <Compile Include="Busi\UiStrings.cs" />
+    <Compile Include="CommandLine\AddSubOptions.cs" />
     <Compile Include="CommandLine\BranchSubOptions.cs" />
     <Compile Include="CommandLine\CheckOutSubOptions.cs" />
     <Compile Include="CommandLine\CloneSubOptions.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="CommandLine\StatusSubOptions.cs" />
     <Compile Include="CommandLine\SyncSubOptions.cs" />
     <Compile Include="CommandLine\UpdateSubOptions.cs" />
+    <Compile Include="Commands\AddCommand.cs" />
     <Compile Include="Commands\BranchCommand.cs" />
     <Compile Include="Commands\CheckOutCommand.cs" />
     <Compile Include="Commands\CloneCommand.cs" />
@@ -126,8 +128,9 @@
     <Compile Include="Commands\InitCommand.cs" />
     <Compile Include="Commands\ConfigCommand.cs" />
     <Compile Include="Commands\ListCommand.cs" />
-    <Compile Include="Commands\Manage.cs" />
+    <Compile Include="Commands\ManageCommand.cs" />
     <Compile Include="Commands\NamedDependenciesCommand.cs" />
+    <Compile Include="Commands\RemoveCommand.cs" />
     <Compile Include="Commands\StatusCommand.cs" />
     <Compile Include="Commands\SyncCommand.cs" />
     <Compile Include="Commands\UpdateCommand.cs" />

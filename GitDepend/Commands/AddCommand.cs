@@ -41,13 +41,13 @@ namespace GitDepend.Commands
             string dir;
             ReturnCode code;
 
-            var config = _factory.LoadFromDirectory(".\\", out dir, out code);
+            var config = _factory.LoadFromDirectory(_options.Directory, out dir, out code);
 
             if (code == ReturnCode.Success)
             {
                 Dependency dep = new Dependency()
                 {
-                    Directory = _options.Directory,
+                    Directory = _options.DependencyDirectory,
                     Branch = _options.Branch,
                     Url = _options.Url
                 };

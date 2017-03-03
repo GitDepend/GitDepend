@@ -113,6 +113,7 @@
     <Compile Include="CommandLine\ConfigSubOptions.cs" />
     <Compile Include="CommandLine\InitSubOptions.cs" />
     <Compile Include="CommandLine\ListSubOptons.cs" />
+    <Compile Include="CommandLine\ManageSubOptions.cs" />
     <Compile Include="CommandLine\NamedDependenciesOptions.cs" />
     <Compile Include="CommandLine\StatusSubOptions.cs" />
     <Compile Include="CommandLine\SyncSubOptions.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="Commands\InitCommand.cs" />
     <Compile Include="Commands\ConfigCommand.cs" />
     <Compile Include="Commands\ListCommand.cs" />
+    <Compile Include="Commands\Manage.cs" />
     <Compile Include="Commands\NamedDependenciesCommand.cs" />
     <Compile Include="Commands\StatusCommand.cs" />
     <Compile Include="Commands\SyncCommand.cs" />

@@ -18,7 +18,8 @@ if /i "%1%" == "" (
     goto :NMAKE
 ) else if /i "%1%" == "clean" (
     goto :NMAKE
-)
+) else if /i "%1%" == "install" (
+    goto :NMAKE
 ) else (
     goto :SHOW_USAGE
 )
@@ -49,3 +50,4 @@ echo                 and captures coverage information
 echo   teamcity    : Runs the full build (same as all) but does not generate
 echo                 html reports
 echo   clean       : Cleans the build
+echo   install     : Builds and installs the latest chocolatey package.

@@ -45,7 +45,7 @@ Try it out!
 Take a look at some example projects and try it out for yourself.
 
 * `Lib1 <https://github.com/kjjuno/Lib1/>`_
-* `Lib2 <https://github.com/kjjuno/Lib1/>`_
+* `Lib2 <https://github.com/kjjuno/Lib2/>`_
 
 Lib2 depends on Lib1
 

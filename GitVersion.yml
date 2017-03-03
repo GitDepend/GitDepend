@@ -17,5 +17,9 @@ branches:
     tag: pr-{BranchName}
   tests?[/-]:
     tag: pr-{BranchName}
+    increment: Inherit
+  bugfix[/-]:
+    tag: pr-{BranchName}
+    increment: Inherit
 ignore:
   sha: []

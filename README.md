@@ -1,3 +1,5 @@
+![Icon][icon]
+
 # GitDepend
 
 Solves the problem of working with multiple git repositories where lower level repositories produce nuget packages that are consumed by other repositories.
@@ -42,6 +44,7 @@ Minimum Viable Product implementation
 ## v0.1.0
 Simple setup for the sole purpose of reservering names on github.com and nuget.org
 
+[icon]:            https://raw.github.com/GitDepend/GitDepend/master/img/gitdependsmall.png
 [gitter]:          https://badges.gitter.im/GitDepend/Lobby.svg
 [gitter-badge]:    https://gitter.im/GitDepend/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 [appveyor]:        https://ci.appveyor.com/project/kjjuno/gitdepend/branch/develop

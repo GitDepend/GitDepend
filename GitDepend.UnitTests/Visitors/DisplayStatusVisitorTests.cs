@@ -51,10 +51,15 @@ namespace GitDepend.UnitTests.Visitors
         [Test]
         public void VisitDependency_ShouldReturn_Success_WhenGitStatusSucceeds()
         {
+            RegisterMockFileSystem();
             var git = Container.Resolve<IGit>();
 
             git.Arrange(g => g.Status())
-                .Returns(ReturnCode.Success);
+                .Returns(() =>
+                {
+                    Assert.AreEqual(Lib1Directory, git.WorkingDirectory, "Invalid working directory");
+                    return ReturnCode.Success;
+                });
 
             IList<string> whilelist = new List<string>();
             var instance = new DisplayStatusVisitor(whilelist);

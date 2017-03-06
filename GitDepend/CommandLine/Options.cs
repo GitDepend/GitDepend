@@ -21,6 +21,9 @@ namespace GitDepend.CommandLine
         {
         }
 
+        [VerbOption(BranchCommand.Name, HelpText = "Add a dependency to an existing configuration")]
+        public AddSubOptions AddVerb { get; set; } = new AddSubOptions();
+
         [VerbOption(BranchCommand.Name, HelpText = "List, create, or delete branches")]
         public BranchSubOptions BranchVerb { get; set; } = new BranchSubOptions();
 
@@ -38,6 +41,12 @@ namespace GitDepend.CommandLine
 
         [VerbOption(ListCommand.Name, HelpText = "Lists all repository dependencies")]
         public ListSubOptons ListVerb { get; set; } = new ListSubOptons();
+
+        [VerbOption(ManageCommand.Name, HelpText = "Manage dependency url, directory, branch in config.")]
+        public ManageSubOptions ManageVerb { get; set; } = new ManageSubOptions();
+
+        [VerbOption(RemoveCommand.Name, HelpText = "Removes a dependency based on its name.")]
+        public RemoveSubOptions RemoveVerb { get; set; } = new RemoveSubOptions();
 
         [VerbOption(StatusCommand.Name, HelpText = "Displays git status on dependencies")]
         public StatusSubOptions StatusVerb { get; set; } = new StatusSubOptions();

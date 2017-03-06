@@ -14,8 +14,8 @@ In the root of your repository you will include a ``GitDepend.json`` file
         "dir": "artifacts/NuGet/Debug"
       },
       "dependencies": [
-        {
-          "url": "https://github.com/GitDepend/Lib1.git",
+        {
+          "url": "https://github.com/GitDepend/Lib1.git",
           "dir": "../Lib1",
           "branch": "develop"
         }

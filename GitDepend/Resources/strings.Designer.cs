@@ -151,6 +151,15 @@ namespace GitDepend.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Name did not match.
+        /// </summary>
+        internal static string RET_NAME_DID_NOT_MATCH {
+            get {
+                return ResourceManager.GetString("RET_NAME_DID_NOT_MATCH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to execute a nuget command.
         /// </summary>
         internal static string RET_NUGET_COMMAND_FAILED {

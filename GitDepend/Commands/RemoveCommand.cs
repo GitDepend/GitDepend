@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO.Abstractions;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using GitDepend.Busi;
 using GitDepend.CommandLine;
+using GitDepend.Resources;
+using GitDepend.Visitors;
 
 namespace GitDepend.Commands
 {
@@ -18,18 +22,19 @@ namespace GitDepend.Commands
         private readonly RemoveSubOptions _options;
         private readonly IGitDependFileFactory _factory;
         private readonly IFileSystem _fileSystem;
+        private readonly IDependencyVisitorAlgorithm _algorithm;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoveCommand"/> class.
         /// </summary>
         /// <param name="options">The options.</param>
-        /// <param name="factory">The factory.</param>
-        /// <param name="fileSystem">The file system.</param>
-        public RemoveCommand(RemoveSubOptions options, IGitDependFileFactory factory, IFileSystem fileSystem)
+        public RemoveCommand(RemoveSubOptions options)
         {
             _options = options;
-            _factory = factory;
-            _fileSystem = fileSystem;
+            _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
+            _fileSystem = DependencyInjection.Resolve<IFileSystem>();
+            _algorithm = DependencyInjection.Resolve<IDependencyVisitorAlgorithm>();
+
         }
 
         /// <summary>
@@ -38,7 +43,17 @@ namespace GitDepend.Commands
         /// <exception cref="System.NotImplementedException"></exception>
         public ReturnCode Execute()
         {
-            throw new NotImplementedException();
+            var visitor = new RemoveDependencyConfigurationVisitor(_options.DependencyName);
+
+            _algorithm.TraverseDependencies(visitor, _options.Directory);
+
+            if (visitor.ReturnCode == ReturnCode.NameDidNotMatchRequestedDependency)
+            {
+                Console.WriteLine(strings.ResourceManager.GetString("RET_GIT_COMMAND_FAILED", CultureInfo.CurrentCulture));
+                return visitor.ReturnCode;
+            }
+
+            return visitor.ReturnCode;
         }
     }
 }

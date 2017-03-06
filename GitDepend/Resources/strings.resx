@@ -147,6 +147,9 @@
   <data name="RET_MISSING_DEPENDENCY" xml:space="preserve">
     <value>Missing Dependency</value>
   </data>
+  <data name="RET_NAME_DID_NOT_MATCH" xml:space="preserve">
+    <value>Name did not match</value>
+  </data>
   <data name="RET_NUGET_COMMAND_FAILED" xml:space="preserve">
     <value>Failed to execute a nuget command</value>
   </data>

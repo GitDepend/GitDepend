@@ -66,10 +66,10 @@
         InvalidBranchCheckedOut = 9,
 
         /// <summary>
-        /// The found requested dependency
+        /// The name did not match the requested dependency
         /// </summary>
-        [ResxKey("RET_FOUND_REQUESTED_DEPENDENCY")]
-        FoundRequestedDependency = 10,
+        [ResxKey("RET_NAME_DID_NOT_MATCH")]
+        NameDidNotMatchRequestedDependency = 10,
 
         /// <summary>
         /// Indicates the supplied arguments were invalid.

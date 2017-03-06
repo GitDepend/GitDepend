@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,17 +12,20 @@ namespace GitDepend.Visitors
     /// <summary>
     /// 
     /// </summary>
-    public class ConfigurationVisitor : IVisitor
+    public class RemoveDependencyConfigurationVisitor : IVisitor
     {
         private readonly IGitDependFileFactory _factory;
+        private readonly string _dependencyNameToRemove;
+        private string _foundDependencyDirectory;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConfigurationVisitor"/> class.
+        /// Initializes a new instance of the <see cref="RemoveDependencyConfigurationVisitor"/> class.
         /// </summary>
-        public ConfigurationVisitor()
+        public RemoveDependencyConfigurationVisitor(string dependencyNameToRemove)
         {
             _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
-
+            _dependencyNameToRemove = dependencyNameToRemove;
+            _foundDependencyDirectory = string.Empty;
         }
 
         /// <summary>
@@ -43,13 +47,20 @@ namespace GitDepend.Visitors
             ReturnCode returnCode;
 
             //visit dependency and get the configuration
-            _factory.LoadFromDirectory(directory, out dir, out returnCode);
+            var configFile = _factory.LoadFromDirectory(directory, out dir, out returnCode);
+            if (returnCode == ReturnCode.Success)
+            {
+                if (configFile.Name == _dependencyNameToRemove)
+                {
+                    _foundDependencyDirectory = dir;
+                }
+            }
 
-
+            return ReturnCode.Success;
         }
 
         /// <summary>
-        /// Visits a project.
+        /// Visits a project, removes the dependency named by the user.
         /// </summary>
         /// <param name="directory">The directory of the project.</param>
         /// <param name="config">The <see cref="GitDependFile" /> with project configuration information.</param>
@@ -59,8 +70,27 @@ namespace GitDepend.Visitors
         /// <exception cref="System.NotImplementedException"></exception>
         public ReturnCode VisitProject(string directory, GitDependFile config)
         {
+            if (_foundDependencyDirectory == string.Empty)
+            {
+                return ReturnCode.NameDidNotMatchRequestedDependency;
+            }
             //visit the project and load the config and delete the configuration.
-            throw new NotImplementedException();
+            int indexToRemove = -1;
+            int index = 0;
+            foreach (var dep in config.Dependencies)
+            {
+                var directoryName = Path.GetDirectoryName(dep.Directory);
+                var dependencyDirectoryName = Path.GetDirectoryName(_foundDependencyDirectory);
+                if (directoryName == dependencyDirectoryName)
+                {
+                    indexToRemove = index;
+                    break;
+                }
+            }
+
+            config.Dependencies.RemoveAt(indexToRemove);
+
+            return ReturnCode.Success;
         }
     }
 }

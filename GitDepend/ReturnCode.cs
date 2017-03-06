@@ -63,7 +63,13 @@
         /// Specifies that an invalid branch is checked out on a dependency.
         /// </summary>
         [ResxKey("RET_INVALID_BRANCH_CHECKED_OUT")]
-        InvalidBranchCheckedOut,
+        InvalidBranchCheckedOut = 9,
+
+        /// <summary>
+        /// The found requested dependency
+        /// </summary>
+        [ResxKey("RET_FOUND_REQUESTED_DEPENDENCY")]
+        FoundRequestedDependency = 10,
 
         /// <summary>
         /// Indicates the supplied arguments were invalid.

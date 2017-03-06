@@ -157,6 +157,7 @@
     </Compile>
     <Compile Include="UnityConfig.cs" />
     <Compile Include="Visitors\CheckOutBranchVisitor.cs" />
+    <Compile Include="Visitors\ConfigurationVisitor.cs" />
     <Compile Include="Visitors\CreateBranchVisitor.cs" />
     <Compile Include="Visitors\DeleteBranchVisitor.cs" />
     <Compile Include="Visitors\DependencyVisitorAlgorithm.cs" />

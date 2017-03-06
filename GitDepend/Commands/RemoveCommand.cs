@@ -19,6 +19,11 @@ namespace GitDepend.Commands
     /// <seealso cref="GitDepend.Commands.ICommand" />
     public class RemoveCommand : ICommand
     {
+        /// <summary>
+        /// The name
+        /// </summary>
+        public const string Name = "remove";
+
         private readonly RemoveSubOptions _options;
         private readonly IGitDependFileFactory _factory;
         private readonly IFileSystem _fileSystem;

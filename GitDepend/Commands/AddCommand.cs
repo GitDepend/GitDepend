@@ -15,8 +15,13 @@ namespace GitDepend.Commands
     /// Adds a dependency to the current configuration.
     /// </summary>
     /// <seealso cref="GitDepend.Commands.ICommand" />
-    public class AddCommand : ICommand 
+    public class AddCommand : ICommand
     {
+        /// <summary>
+        /// The name of the verb.
+        /// </summary>
+        public const string Name = "add";
+
         private readonly AddSubOptions _options;
         private readonly IGitDependFileFactory _factory;
         private readonly IFileSystem _fileSystem;
@@ -54,7 +59,7 @@ namespace GitDepend.Commands
 
                 config.Dependencies.Add(dep);
 
-                _fileSystem.File.WriteAllText(_fileSystem.Path.Combine("", "GitDepend.json"), config.ToString());
+                _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(_options.Directory, "GitDepend.json"), config.ToString());
 
                 Console.WriteLine($"Dependency with dir {_options.Directory} has been added successfully.");
             }

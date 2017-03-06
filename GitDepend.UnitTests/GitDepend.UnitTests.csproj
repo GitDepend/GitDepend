@@ -107,6 +107,7 @@
     <Compile Include="Visitors\ListAllBranchesVisitorTests.cs" />
     <Compile Include="Visitors\ListMergedBranchesVisitorTests.cs" />
     <Compile Include="Visitors\NullVisitorTests.cs" />
+    <Compile Include="Visitors\RemoveDependencyVisitorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

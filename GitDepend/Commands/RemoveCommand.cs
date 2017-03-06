@@ -43,7 +43,7 @@ namespace GitDepend.Commands
         /// <exception cref="System.NotImplementedException"></exception>
         public ReturnCode Execute()
         {
-            var visitor = new RemoveDependencyConfigurationVisitor(_options.DependencyName);
+            var visitor = new RemoveDependencyVisitor(_options.DependencyName);
 
             _algorithm.TraverseDependencies(visitor, _options.Directory);
 

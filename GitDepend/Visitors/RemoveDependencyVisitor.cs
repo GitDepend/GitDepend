@@ -12,16 +12,16 @@ namespace GitDepend.Visitors
     /// <summary>
     /// 
     /// </summary>
-    public class RemoveDependencyConfigurationVisitor : IVisitor
+    public class RemoveDependencyVisitor : IVisitor
     {
         private readonly IGitDependFileFactory _factory;
         private readonly string _dependencyNameToRemove;
         private string _foundDependencyDirectory;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RemoveDependencyConfigurationVisitor"/> class.
+        /// Initializes a new instance of the <see cref="RemoveDependencyVisitor"/> class.
         /// </summary>
-        public RemoveDependencyConfigurationVisitor(string dependencyNameToRemove)
+        public RemoveDependencyVisitor(string dependencyNameToRemove)
         {
             _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
             _dependencyNameToRemove = dependencyNameToRemove;

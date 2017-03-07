@@ -177,7 +177,11 @@ namespace GitDepend.Visitors
 
             foreach (var solution in solutions)
             {
-                _nuget.Restore(solution);
+                var returnCode = _nuget.Restore(solution);
+                if (returnCode != ReturnCode.Success)
+                {
+                    return returnCode;
+                }
             }
 
             foreach (var solution in solutions)
@@ -230,7 +234,11 @@ namespace GitDepend.Visitors
                             return ReturnCode = ReturnCode.CouldNotCreateCacheDirectory;
                         }
 
-                        _nuget.Update(solution, id, version, cacheDir);
+                        var returnCode = _nuget.Update(solution, id, version, cacheDir);
+                        if (returnCode != ReturnCode.Success)
+                        {
+                            return returnCode;
+                        }
 
                         var package = $"{id}.{version}";
                         if (!UpdatedPackages.Contains(package))

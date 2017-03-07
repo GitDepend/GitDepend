@@ -14,6 +14,7 @@ namespace GitDepend.Busi
     public class Nuget : INuget
     {
         private readonly IConsole _console;
+        private const int ErrorEncountered = 1;
 
         /// <summary>
         /// The working directory for nuget.exe
@@ -71,7 +72,7 @@ namespace GitDepend.Busi
             if (hasWarnings)
             {
                 _console.WriteLine(output);
-                code = 3;
+                code = ErrorEncountered;
             }
 
             return code != (int)ReturnCode.Success

@@ -177,7 +177,11 @@ namespace GitDepend.Visitors
 
             foreach (var solution in solutions)
             {
-                _nuget.Restore(solution);
+                var returnCode = _nuget.Restore(solution);
+                if (returnCode != ReturnCode.Success)
+                {
+                    return returnCode;
+                }
             }
 
             foreach (var solution in solutions)

@@ -25,8 +25,7 @@ namespace GitDepend.Commands
         public const string Name = "remove";
 
         private readonly RemoveSubOptions _options;
-        private readonly IGitDependFileFactory _factory;
-        private readonly IFileSystem _fileSystem;
+        
         private readonly IDependencyVisitorAlgorithm _algorithm;
 
         /// <summary>
@@ -36,10 +35,7 @@ namespace GitDepend.Commands
         public RemoveCommand(RemoveSubOptions options)
         {
             _options = options;
-            _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
-            _fileSystem = DependencyInjection.Resolve<IFileSystem>();
             _algorithm = DependencyInjection.Resolve<IDependencyVisitorAlgorithm>();
-
         }
 
         /// <summary>
@@ -54,7 +50,7 @@ namespace GitDepend.Commands
 
             if (visitor.ReturnCode == ReturnCode.NameDidNotMatchRequestedDependency)
             {
-                Console.WriteLine(strings.ResourceManager.GetString("RET_GIT_COMMAND_FAILED", CultureInfo.CurrentCulture));
+                Console.WriteLine(strings.ResourceManager.GetString("RET_NAME_DID_NOT_MATCH", CultureInfo.CurrentCulture));
                 return visitor.ReturnCode;
             }
 

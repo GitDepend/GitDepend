@@ -31,8 +31,6 @@ namespace GitDepend.UnitTests.Commands
             {
                 GitDependConfigFile
             });
-            var tuple = new Tuple<string, GitDependFile>(GitDependConfigFile, Lib2Config);
-            WriteFile(_fileSystem, Lib2Directory, tuple);
         }
 
 

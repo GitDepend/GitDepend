@@ -47,7 +47,7 @@ namespace GitDepend.Busi
         /// <returns>The nuget return code.</returns>
         public ReturnCode Update(string soluton, string id, string version, string sourceDirectory)
         {
-            return ExecuteNuGetCommand($"update {soluton} -Id {id} -Version {version} -Source \"{sourceDirectory}\" -Pre");
+            return ExecuteNuGetCommand($"update {soluton} -Id {id} -Version {version} -Source \"{sourceDirectory}\" -Pre -verbosity quiet");
         }
 
         private ReturnCode ExecuteNuGetCommand(string arguments)
@@ -62,10 +62,17 @@ namespace GitDepend.Busi
                 .ToArray();
 
             var code = NuGet.CommandLine.Program.Main(args);
-
+            var output = sb.ToString();
+            var hasWarnings = output.ToLower().Contains("warning");
+            
             Console.SetOut(oldOut);
             
             _console.WriteLine($"nuget {arguments}");
+            if (hasWarnings)
+            {
+                _console.WriteLine(output);
+                code = 3;
+            }
 
             return code != (int)ReturnCode.Success
                 ? ReturnCode.FailedToRunNugetCommand

@@ -72,6 +72,12 @@
         NameDidNotMatchRequestedDependency = 10,
 
         /// <summary>
+        /// The dependency already exists
+        /// </summary>
+        [ResxKey("RET_DEPENDENCY_ALREADY_EXISTS")]
+        DependencyAlreadyExists = 11,
+
+        /// <summary>
         /// Indicates the supplied arguments were invalid.
         /// </summary>
         [ResxKey("RET_INVALID_ARGS")]

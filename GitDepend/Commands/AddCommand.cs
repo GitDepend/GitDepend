@@ -48,6 +48,13 @@ namespace GitDepend.Commands
 
             var config = _factory.LoadFromDirectory(_options.Directory, out dir, out code);
 
+            var exists = CheckForExistingDependency(config);
+
+            if (exists)
+            {
+                return ReturnCode.DependencyAlreadyExists;
+            }
+
             if (code == ReturnCode.Success)
             {
                 Dependency dep = new Dependency()
@@ -65,6 +72,18 @@ namespace GitDepend.Commands
             }
 
             return code;
+        }
+
+        private bool CheckForExistingDependency(GitDependFile dependConfiguration)
+        {
+            foreach (var dep in dependConfiguration.Dependencies)
+            {
+                if (string.Equals(dep.Directory.ToLower(), _options.DependencyDirectory.ToLower()) || string.Equals(dep.Url.ToLower(), _options.Url.ToLower()))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

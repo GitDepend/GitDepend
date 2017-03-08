@@ -29,12 +29,17 @@ namespace GitDepend.Visitors
         /// <summary>
         /// Contains a list of the name of the dependencies that need building
         /// </summary>
-        public List<string> DependenciesThatNeedBuilding;
+        public List<string> DependenciesThatNeedBuilding { get; set; }
 
         /// <summary>
         /// The projects that need nuget update
         /// </summary>
-        public List<string> ProjectsThatNeedNugetUpdate;
+        public List<string> ProjectsThatNeedNugetUpdate { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether dependencies and projects are [up to date].
+        /// </summary>
+        public bool UpToDate { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CheckArtifactsVisitor"/> class.
@@ -83,7 +88,8 @@ namespace GitDepend.Visitors
             if (_dependencyPackageNamesAndVersions.Count == EMPTY)
             {
                 DependenciesThatNeedBuilding.Add(dependency.Configuration.Name);
-                return ReturnCode.DependencyPackagesNotBuilt;
+                UpToDate = false;
+
             }
 
             return ReturnCode.Success;
@@ -110,7 +116,7 @@ namespace GitDepend.Visitors
             if (misMatching.Count != 0)
             {
                 ProjectsThatNeedNugetUpdate.Add(config.Name);
-                return ReturnCode.DependencyPackagesMisMatch;
+                UpToDate = false;
             }
 
             return ReturnCode.Success;

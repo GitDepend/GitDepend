@@ -56,13 +56,13 @@ namespace GitDepend.Commands
             var checkArtifactsVisitor = new CheckArtifactsVisitor();
             _algorithm.TraverseDependencies(checkArtifactsVisitor, _options.Directory);
 
-            if (checkArtifactsVisitor.ReturnCode == ReturnCode.Success)
+            if (checkArtifactsVisitor.ReturnCode == ReturnCode.Success && checkArtifactsVisitor.UpToDate)
             {
                 Console.WriteLine("All packages are up to date");
                 return ReturnCode.Success;
             }
 
-            HashSet<string> needToBuild = new HashSet<string>();
+            var needToBuild = new HashSet<string>();
             needToBuild.AddRange(checkArtifactsVisitor.DependenciesThatNeedBuilding);
             needToBuild.AddRange(checkArtifactsVisitor.ProjectsThatNeedNugetUpdate);
 

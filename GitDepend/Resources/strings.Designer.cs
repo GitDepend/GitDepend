@@ -79,24 +79,6 @@ namespace GitDepend.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The packages in packages.config due not match currently built packages..
-        /// </summary>
-        internal static string RET_DEPENDENCY_PACKAGES_MISTMATCH {
-            get {
-                return ResourceManager.GetString("RET_DEPENDENCY_PACKAGES_MISTMATCH", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Dependency packages need to be built..
-        /// </summary>
-        internal static string RET_DEPENDENCY_PACKAGES_NOT_BUILT {
-            get {
-                return ResourceManager.GetString("RET_DEPENDENCY_PACKAGES_NOT_BUILT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Directory does not exist.
         /// </summary>
         internal static string RET_DIRECTORY_DOES_NOT_EXIST {

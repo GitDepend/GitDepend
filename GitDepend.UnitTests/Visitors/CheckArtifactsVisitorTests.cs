@@ -37,16 +37,17 @@ namespace GitDepend.UnitTests.Visitors
         }
 
         [Test]
-        public void ArtifactsDontExist_ReturnsOutOfDate()
+        public void ArtifactsDontExist_FalseUpToDate()
         {
             var visitor = new CheckArtifactsVisitor();
             var code = visitor.VisitDependency(Lib1Directory, Lib1Dependency);
 
-            Assert.AreEqual(ReturnCode.DependencyPackagesNotBuilt, code);
+            Assert.AreEqual(ReturnCode.Success, code);
+            Assert.AreEqual(false, visitor.UpToDate);
         }
 
         [Test]
-        public void ArtifactsOutOfDate_LowerVersion_ReturnsMismatch()
+        public void ArtifactsOutOfDate_LowerVersion_FalseUpToDate()
         {
         
             const string LOWER_VERSION = "0002";
@@ -58,11 +59,12 @@ namespace GitDepend.UnitTests.Visitors
 
             var code = visitor.VisitProject(Lib2Directory, Lib2Config);
 
-            Assert.AreEqual(ReturnCode.DependencyPackagesMisMatch, code);
+            Assert.AreEqual(ReturnCode.Success, code);
+            Assert.AreEqual(false, visitor.UpToDate);
         }
 
         [Test]
-        public void ArtifactsOutOfDate_HigherVersion_ReturnsMisMatch()
+        public void ArtifactsOutOfDate_HigherVersion_FalseUpToDate()
         {
             const string HIGHER_VERSION = "0481";
             EnsureFiles(_fileSystem, Lib1PackagesDirectory, Lib1Packages);
@@ -73,7 +75,8 @@ namespace GitDepend.UnitTests.Visitors
 
             var code = visitor.VisitProject(Lib2Directory, Lib2Config);
 
-            Assert.AreEqual(ReturnCode.DependencyPackagesMisMatch, code);
+            Assert.AreEqual(ReturnCode.Success, code);
+            Assert.AreEqual(false, visitor.UpToDate);
         }
 
         private string CreateNugetFile(string alphaVersion)

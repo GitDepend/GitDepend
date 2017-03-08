@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
 using GitDepend.Configuration;
 using Microsoft.Practices.ObjectBuilder2;
 using NuGet;
@@ -18,6 +19,9 @@ namespace GitDepend.Visitors
     /// <seealso cref="GitDepend.Visitors.IVisitor" />
     public class CheckArtifactsVisitor : IVisitor
     {
+        private const string NUMBERS = "0123456789";
+        private const string ALPHABET = "abcdefghijklmnopqrstuvwxyz";
+
         private readonly IFileSystem _fileSystem;
         private Dictionary<string, string> _dependencyPackageNamesAndVersions;
         private const int EMPTY = 0;
@@ -47,7 +51,7 @@ namespace GitDepend.Visitors
         public ReturnCode VisitDependency(string directory, Dependency dependency)
         {
             //read in the nuget packages created in the artifacts folder
-            var nugetPackageFiles = _fileSystem.Directory.EnumerateFiles(dependency.Configuration.Packages.Directory);
+            var nugetPackageFiles = _fileSystem.Directory.EnumerateFiles(directory + '/' + dependency.Configuration.Packages.Directory);
             //get the versionNumbers, they come in the format of {ProjectName}.{version#}.nupkg
             var directoryLess = nugetPackageFiles.Select(file => Path.GetFileName(file));
 
@@ -100,9 +104,35 @@ namespace GitDepend.Visitors
         private void GetPackageNameAndVersion(string file, out string versionNumber, out string packageName)
         {
 
-            var index = file.IndexOfAny("0123456789".ToCharArray());
-            versionNumber = file.Substring(index);
-            packageName = file.Substring(0, index - 1);
+            string afterHyphen = file.IndexOf('-') > 0 ? file.Substring(file.IndexOf('-')) : "";
+            string hyphenLess = file.Substring(0, file.IndexOf('-'));
+            int indexOfNumber = hyphenLess.IndexOfAny(NUMBERS.ToCharArray());
+            string subPackage = hyphenLess.Substring(0, indexOfNumber);
+            string subVersion = hyphenLess.Substring(indexOfNumber);
+
+            var alphabet = ALPHABET.ToCharArray();
+            var numbers = NUMBERS.ToCharArray();
+            //check subversion for characters
+            int indexOfChar = subVersion.IndexOfAny(alphabet);
+            var hasCharacters = indexOfChar >= 0;
+            while (hasCharacters)
+            {
+                if (hasCharacters)
+                {
+                    indexOfNumber = subVersion.IndexOfAny(numbers);
+                    if (indexOfNumber == 0)
+                    {
+                        indexOfNumber++;
+                    }
+                    subPackage = subPackage + subVersion.Substring(0, indexOfNumber);
+                    subVersion = subVersion.Substring(indexOfNumber);
+                }
+                indexOfChar = subVersion.IndexOfAny(alphabet);
+                hasCharacters = indexOfChar >= 0;
+            }
+            packageName = subPackage.Substring(0, subPackage.LastIndexOf('.'));
+            versionNumber = subVersion + afterHyphen;
+
         }
 
         private Dictionary<string, string> GetPackagesFromPackagesConfigFiles(string[] packagesFiles)
@@ -110,12 +140,12 @@ namespace GitDepend.Visitors
             var packagesDictionary = new Dictionary<string, string>();
             foreach (var packageFile in packagesFiles)
             {
-                var packageReference = new PackageReferenceFile(packageFile);
-                foreach(var reference in packageReference.GetPackageReferences())
+                
+                foreach(var reference in GetPackageReferences(packageFile))
                 {
                     if (!packagesDictionary.ContainsKey(reference.Id))
                     {
-                        packagesDictionary.Add(reference.Id, reference.Version.ToNormalizedString());
+                        packagesDictionary.Add(reference.Id, reference.Version);
                     }
                 }
             }
@@ -139,5 +169,32 @@ namespace GitDepend.Visitors
             return misMatching;
         }
 
+
+        IEnumerable<NugetPackageReference> GetPackageReferences(string filePath)
+        {
+            var references = new List<NugetPackageReference>();
+            var document = GetDocument(filePath);
+
+            if (document == null)
+            {
+                return null;
+            }
+
+            foreach (var reference in document.Root.Elements("package"))
+            {
+                references.Add(new NugetPackageReference
+                {
+                    Id = reference.GetOptionalAttributeValue("id"),
+                    Version = reference.GetOptionalAttributeValue("version"),
+                    TargetFramework = reference.GetOptionalAttributeValue("targetFramework")
+                });
+            }
+            return references;
+        }
+
+        private XDocument GetDocument(string filePath)
+        {
+            return XDocument.Parse(_fileSystem.File.ReadAllText(filePath));
+        }
     }
 }

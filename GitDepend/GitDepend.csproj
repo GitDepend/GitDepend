@@ -132,6 +132,7 @@
     <Compile Include="Configuration\Build.cs" />
     <Compile Include="Configuration\Dependency.cs" />
     <Compile Include="Configuration\GitDependFile.cs" />
+    <Compile Include="Configuration\NugetPackageReference.cs" />
     <Compile Include="Configuration\Packages.cs" />
     <Compile Include="CommandLine\Options.cs" />
     <Compile Include="DependencyInjection.cs" />

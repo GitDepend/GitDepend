@@ -123,6 +123,12 @@
   <data name="RET_CREATE_CACHE_DIR_FAILED" xml:space="preserve">
     <value>Failed to create the nuget cache directory</value>
   </data>
+  <data name="RET_DEPENDENCY_PACKAGES_MISTMATCH" xml:space="preserve">
+    <value>The packages in packages.config due not match currently built packages.</value>
+  </data>
+  <data name="RET_DEPENDENCY_PACKAGES_NOT_BUILT" xml:space="preserve">
+    <value>Dependency packages need to be built.</value>
+  </data>
   <data name="RET_DIRECTORY_DOES_NOT_EXIST" xml:space="preserve">
     <value>Directory does not exist</value>
   </data>

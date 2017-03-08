@@ -63,7 +63,19 @@
         /// Specifies that an invalid branch is checked out on a dependency.
         /// </summary>
         [ResxKey("RET_INVALID_BRANCH_CHECKED_OUT")]
-        InvalidBranchCheckedOut,
+        InvalidBranchCheckedOut = 9,
+
+        /// <summary>
+        /// Specifies the dependency are packages not built 
+        /// </summary>
+        [ResxKey("RET_DEPENDENCY_PACKAGES_NOT_BUILT")]
+        DependencyPackagesNotBuilt = 10,
+
+        /// <summary>
+        /// Specifies the dependency packages are mismatching
+        /// </summary>
+        [ResxKey("RET_DEPENDENCY_PACKAGES_MISTMATCH")]
+        DependencyPackagesMisMatch = 11,
 
         /// <summary>
         /// Indicates the supplied arguments were invalid.

@@ -49,6 +49,19 @@ namespace GitDepend.Commands
                 return verifyVisitor.ReturnCode;
             }
 
+            //checkArtifactsVisitor this will check to see if we are up to date with the artifacts.
+            _algorithm.Reset();
+            var checkArtifactsVisitor = new CheckArtifactsVisitor();
+            _algorithm.TraverseDependencies(checkArtifactsVisitor, _options.Directory);
+
+            if (checkArtifactsVisitor.ReturnCode == ReturnCode.Success)
+            {
+                Console.WriteLine("All packages are up to date");
+            }
+            else if(checkArtifactsVisitor.ReturnCode == ReturnCode.DependencyPackagesMisMatch)
+            {
+                
+            }
             _console.WriteLine();
             _algorithm.Reset();
             var buildAndUpdateVisitor = new BuildAndUpdateDependenciesVisitor(_options.Dependencies);

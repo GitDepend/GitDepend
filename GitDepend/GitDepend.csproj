@@ -75,6 +75,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\NuGet.exe</HintPath>
     </Reference>
+    <Reference Include="NuGet.Core, Version=2.14.0.832, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\NuGet.Core.2.14.0\lib\net40-Client\NuGet.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
       <Private>True</Private>
@@ -150,6 +154,7 @@
       <DependentUpon>strings.resx</DependentUpon>
     </Compile>
     <Compile Include="UnityConfig.cs" />
+    <Compile Include="Visitors\CheckArtifactsVisitor.cs" />
     <Compile Include="Visitors\CheckOutBranchVisitor.cs" />
     <Compile Include="Visitors\CreateBranchVisitor.cs" />
     <Compile Include="Visitors\DeleteBranchVisitor.cs" />
@@ -173,6 +178,7 @@
     <EmbeddedResource Include="Resources\strings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>strings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

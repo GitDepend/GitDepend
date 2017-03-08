@@ -57,7 +57,10 @@ namespace GitDepend.Visitors
             {
                 string versionNumber, packageName;
                 GetPackageNameAndVersion(file, out versionNumber, out packageName);
-                _dependencyPackageNamesAndVersions.Add(packageName, versionNumber);
+                if (!_dependencyPackageNamesAndVersions.ContainsKey(packageName))
+                {
+                    _dependencyPackageNamesAndVersions.Add(packageName, versionNumber);
+                }
             }
 
             if (_dependencyPackageNamesAndVersions.Count == EMPTY)
@@ -110,7 +113,10 @@ namespace GitDepend.Visitors
                 var packageReference = new PackageReferenceFile(packageFile);
                 foreach(var reference in packageReference.GetPackageReferences())
                 {
-                    packagesDictionary.Add(reference.Id, reference.Version.ToNormalizedString());
+                    if (!packagesDictionary.ContainsKey(reference.Id))
+                    {
+                        packagesDictionary.Add(reference.Id, reference.Version.ToNormalizedString());
+                    }
                 }
             }
             return packagesDictionary;

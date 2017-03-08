@@ -57,6 +57,7 @@ namespace GitDepend.Commands
             if (checkArtifactsVisitor.ReturnCode == ReturnCode.Success)
             {
                 Console.WriteLine("All packages are up to date");
+                return ReturnCode.Success;
             }
             else if(checkArtifactsVisitor.ReturnCode == ReturnCode.DependencyPackagesMisMatch)
             {

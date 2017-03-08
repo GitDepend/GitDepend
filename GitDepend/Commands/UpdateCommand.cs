@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
 using GitDepend.Busi;
 using GitDepend.CommandLine;
 using GitDepend.Visitors;
+using NuGet;
 
 namespace GitDepend.Commands
 {
@@ -59,13 +61,14 @@ namespace GitDepend.Commands
                 Console.WriteLine("All packages are up to date");
                 return ReturnCode.Success;
             }
-            else if(checkArtifactsVisitor.ReturnCode == ReturnCode.DependencyPackagesMisMatch)
-            {
-                
-            }
+
+            HashSet<string> needToBuild = new HashSet<string>();
+            needToBuild.AddRange(checkArtifactsVisitor.DependenciesThatNeedBuilding);
+            needToBuild.AddRange(checkArtifactsVisitor.ProjectsThatNeedNugetUpdate);
+
             _console.WriteLine();
             _algorithm.Reset();
-            var buildAndUpdateVisitor = new BuildAndUpdateDependenciesVisitor(_options.Dependencies);
+            var buildAndUpdateVisitor = new BuildAndUpdateDependenciesVisitor(needToBuild.ToList());
             _algorithm.TraverseDependencies(buildAndUpdateVisitor, _options.Directory);
 
             if (buildAndUpdateVisitor.ReturnCode == ReturnCode.Success)

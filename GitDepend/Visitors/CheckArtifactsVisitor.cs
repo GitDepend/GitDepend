@@ -25,6 +25,17 @@ namespace GitDepend.Visitors
         private readonly IFileSystem _fileSystem;
         private Dictionary<string, string> _dependencyPackageNamesAndVersions;
         private const int EMPTY = 0;
+        
+        /// <summary>
+        /// Contains a list of the name of the dependencies that need building
+        /// </summary>
+        public List<string> DependenciesThatNeedBuilding;
+
+        /// <summary>
+        /// The projects that need nuget update
+        /// </summary>
+        public List<string> ProjectsThatNeedNugetUpdate;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CheckArtifactsVisitor"/> class.
         /// </summary>
@@ -32,6 +43,8 @@ namespace GitDepend.Visitors
         {
             _fileSystem = DependencyInjection.Resolve<IFileSystem>();
             _dependencyPackageNamesAndVersions = new Dictionary<string, string>();
+            DependenciesThatNeedBuilding = new List<string>();
+            ProjectsThatNeedNugetUpdate = new List<string>();
         }
         
         /// <summary>
@@ -69,6 +82,7 @@ namespace GitDepend.Visitors
 
             if (_dependencyPackageNamesAndVersions.Count == EMPTY)
             {
+                DependenciesThatNeedBuilding.Add(dependency.Configuration.Name);
                 return ReturnCode.DependencyPackagesNotBuilt;
             }
 
@@ -95,6 +109,7 @@ namespace GitDepend.Visitors
 
             if (misMatching.Count != 0)
             {
+                ProjectsThatNeedNugetUpdate.Add(config.Name);
                 return ReturnCode.DependencyPackagesMisMatch;
             }
 

@@ -90,7 +90,7 @@ namespace GitDepend.UnitTests.Commands
                     if (visitor is CheckArtifactsVisitor)
                     {
                         checkArtifacts = true;
-                        visitor.ReturnCode = ReturnCode.DependencyPackagesMisMatch;
+                        visitor.ReturnCode = ReturnCode.Success;
                         return;
                     }
 

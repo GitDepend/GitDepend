@@ -61,11 +61,47 @@ namespace GitDepend.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Checking out the {0} branch on {1}.
+        /// </summary>
+        internal static string CHECKING_OUT_BRANCH_ON_REPONAME {
+            get {
+                return ResourceManager.GetString("CHECKING_OUT_BRANCH_ON_REPONAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Successfully cloned all dependencies.
         /// </summary>
         internal static string CLONED_ALL_DEPS {
             get {
                 return ResourceManager.GetString("CLONED_ALL_DEPS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cloning {0} into {1}.
+        /// </summary>
+        internal static string CLONING_DEP_INTO_DIRECTORY {
+            get {
+                return ResourceManager.GetString("CLONING_DEP_INTO_DIRECTORY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Creating the {0} branch on {1}.
+        /// </summary>
+        internal static string CREATING_BRANCH_ON_REPONAME {
+            get {
+                return ResourceManager.GetString("CREATING_BRANCH_ON_REPONAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to dependency:.
+        /// </summary>
+        internal static string DEPENDENCY {
+            get {
+                return ResourceManager.GetString("DEPENDENCY", resourceCulture);
             }
         }
         
@@ -93,6 +129,15 @@ namespace GitDepend.Resources {
         internal static string MAKING_UPDATE_COMMIT_ON {
             get {
                 return ResourceManager.GetString("MAKING_UPDATE_COMMIT_ON", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to     name: .
+        /// </summary>
+        internal static string NAME {
+            get {
+                return ResourceManager.GetString("NAME", resourceCulture);
             }
         }
         

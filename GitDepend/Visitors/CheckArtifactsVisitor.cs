@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
@@ -19,6 +20,8 @@ namespace GitDepend.Visitors
     /// <seealso cref="GitDepend.Visitors.IVisitor" />
     public class CheckArtifactsVisitor : IVisitor
     {
+        private static readonly Regex NugetPackageRegex = new Regex(@"^(?<id>.*?)\.(?<version>(?:\d\.){2,3}\d(?:-.*?)?)$", RegexOptions.Compiled);
+
         private const string NUMBERS = "0123456789";
         private const string ALPHABET = "abcdefghijklmnopqrstuvwxyz";
 
@@ -124,36 +127,9 @@ namespace GitDepend.Visitors
         
         private void GetPackageNameAndVersion(string file, out string versionNumber, out string packageName)
         {
-
-            string afterHyphen = file.IndexOf('-') > 0 ? file.Substring(file.IndexOf('-')) : "";
-            string hyphenLess = file.Substring(0, file.IndexOf('-'));
-            int indexOfNumber = hyphenLess.IndexOfAny(NUMBERS.ToCharArray());
-            string subPackage = hyphenLess.Substring(0, indexOfNumber);
-            string subVersion = hyphenLess.Substring(indexOfNumber);
-
-            var alphabet = ALPHABET.ToCharArray();
-            var numbers = NUMBERS.ToCharArray();
-            //check subversion for characters
-            int indexOfChar = subVersion.IndexOfAny(alphabet);
-            var hasCharacters = indexOfChar >= 0;
-            while (hasCharacters)
-            {
-                if (hasCharacters)
-                {
-                    indexOfNumber = subVersion.IndexOfAny(numbers);
-                    if (indexOfNumber == 0)
-                    {
-                        indexOfNumber++;
-                    }
-                    subPackage = subPackage + subVersion.Substring(0, indexOfNumber);
-                    subVersion = subVersion.Substring(indexOfNumber);
-                }
-                indexOfChar = subVersion.IndexOfAny(alphabet);
-                hasCharacters = indexOfChar >= 0;
-            }
-            packageName = subPackage.Substring(0, subPackage.LastIndexOf('.'));
-            versionNumber = subVersion + afterHyphen;
-
+            var match = NugetPackageRegex.Match(file);
+            packageName = match.Groups["id"].Value;
+            versionNumber = match.Groups["version"].Value;
         }
 
         private Dictionary<string, string> GetPackagesFromPackagesConfigFiles(string[] packagesFiles)

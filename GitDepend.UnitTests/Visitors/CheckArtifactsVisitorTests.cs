@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO.Abstractions;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GitDepend.Busi;
+﻿using System.IO.Abstractions;
 using GitDepend.Visitors;
 using NUnit.Framework;
 
@@ -14,6 +7,7 @@ namespace GitDepend.UnitTests.Visitors
     [TestFixture]
     public class CheckArtifactsVisitorTests : TestFixtureBase
     {
+
         private IFileSystem _fileSystem;
         [SetUp]
         public void Setup()

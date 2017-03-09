@@ -22,9 +22,6 @@ namespace GitDepend.Visitors
     {
         private static readonly Regex NugetPackageRegex = new Regex(@"^(?<id>.*?)\.(?<version>(?:\d\.){2,3}\d(?:-.*?)?)$", RegexOptions.Compiled);
 
-        private const string NUMBERS = "0123456789";
-        private const string ALPHABET = "abcdefghijklmnopqrstuvwxyz";
-
         private readonly IFileSystem _fileSystem;
         private Dictionary<string, string> _dependencyPackageNamesAndVersions;
         private const int EMPTY = 0;

@@ -61,6 +61,10 @@ namespace GitDepend.Commands
                 Console.WriteLine("All packages are up to date");
                 return ReturnCode.Success;
             }
+            if(checkArtifactsVisitor.ReturnCode != ReturnCode.Success)
+            {
+                return checkArtifactsVisitor.ReturnCode;
+            }
 
             var needToBuild = new HashSet<string>();
             needToBuild.AddRange(checkArtifactsVisitor.DependenciesThatNeedBuilding);

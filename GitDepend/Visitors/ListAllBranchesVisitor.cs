@@ -2,6 +2,7 @@ using System;
 using System.IO.Abstractions;
 using GitDepend.Busi;
 using GitDepend.Configuration;
+using GitDepend.Resources;
 
 namespace GitDepend.Visitors
 {
@@ -43,9 +44,9 @@ namespace GitDepend.Visitors
 
             var origColor = _console.ForegroundColor;
             _console.ForegroundColor = ConsoleColor.Green;
-            _console.WriteLine("dependency:");
-            _console.WriteLine($"    name: {dependency.Configuration.Name}");
-            _console.WriteLine($"    dir: {dir}");
+            _console.WriteLine(strings.DEPENDENCY);
+            _console.WriteLine(strings.NAME + dependency.Configuration.Name);
+            _console.WriteLine(strings.DIRECTORY + dir);
             _console.WriteLine();
             _console.ForegroundColor = origColor;
 

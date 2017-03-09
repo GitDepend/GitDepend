@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GitDepend.Busi;
 using GitDepend.CommandLine;
+using GitDepend.Resources;
 using GitDepend.Visitors;
 
 namespace GitDepend.Commands
@@ -77,7 +78,7 @@ namespace GitDepend.Commands
                 {
                     dep.Branch = branch;
                     dirty = true;
-                    Console.WriteLine($"using {dep.Branch} for {dep.Configuration.Name}");
+                    Console.WriteLine(strings.USING_BRANCH_FOR_CONFIG, dep.Branch, dep.Configuration.Name);
                 }
             }
 
@@ -86,7 +87,7 @@ namespace GitDepend.Commands
                 _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(dir, "GitDepend.json"), config.ToString());
             }
 
-            Console.WriteLine($"all dependency branches synchronized successfully!");
+            Console.WriteLine(strings.SYNC_SUCCESS);
 
             return ReturnCode.Success;
         }

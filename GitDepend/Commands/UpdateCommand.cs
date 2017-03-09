@@ -59,7 +59,7 @@ namespace GitDepend.Commands
 
             if (checkArtifactsVisitor.ReturnCode == ReturnCode.Success && checkArtifactsVisitor.UpToDate)
             {
-                Console.WriteLine("All packages are up to date");
+                _console.WriteLine(strings.PACKAGES_UP_TO_DATE);
                 return ReturnCode.Success;
             }
             if(checkArtifactsVisitor.ReturnCode != ReturnCode.Success)

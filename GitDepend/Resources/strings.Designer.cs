@@ -196,6 +196,15 @@ namespace GitDepend.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &quot;All packages are up to date&quot;.
+        /// </summary>
+        internal static string PACKAGES_UP_TO_DATE {
+            get {
+                return ResourceManager.GetString("PACKAGES_UP_TO_DATE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to project:.
         /// </summary>
         internal static string PROJECT {

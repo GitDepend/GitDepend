@@ -61,6 +61,69 @@ namespace GitDepend.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Successfully cloned all dependencies.
+        /// </summary>
+        internal static string CLONED_ALL_DEPS {
+            get {
+                return ResourceManager.GetString("CLONED_ALL_DEPS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All dependencies on the correct branch.
+        /// </summary>
+        internal static string DEPS_CORRECT_BRANCH {
+            get {
+                return ResourceManager.GetString("DEPS_CORRECT_BRANCH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to     dir: .
+        /// </summary>
+        internal static string DIRECTORY {
+            get {
+                return ResourceManager.GetString("DIRECTORY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Making update commit on .
+        /// </summary>
+        internal static string MAKING_UPDATE_COMMIT_ON {
+            get {
+                return ResourceManager.GetString("MAKING_UPDATE_COMMIT_ON", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not all dependencies are on the correct branch..
+        /// </summary>
+        internal static string NOT_ALL_DEPS_CORRECT_BRANCH {
+            get {
+                return ResourceManager.GetString("NOT_ALL_DEPS_CORRECT_BRANCH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to nothing was updated.
+        /// </summary>
+        internal static string NOTHING_UPDATED {
+            get {
+                return ResourceManager.GetString("NOTHING_UPDATED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to project:.
+        /// </summary>
+        internal static string PROJECT {
+            get {
+                return ResourceManager.GetString("PROJECT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The build script failed.
         /// </summary>
         internal static string RET_BUILD_SCRIPT_FAILED {
@@ -174,6 +237,60 @@ namespace GitDepend.Resources {
         internal static string RET_UNKNOWN_ERROR {
             get {
                 return ResourceManager.GetString("RET_UNKNOWN_ERROR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successfully created the {0} branch in all repositories..
+        /// </summary>
+        internal static string SUCCESFULLY_CREATED_BRANCH_ALL_REPOS {
+            get {
+                return ResourceManager.GetString("SUCCESFULLY_CREATED_BRANCH_ALL_REPOS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successfully deleted the {0} branch in all repositories..
+        /// </summary>
+        internal static string SUCCESFULLY_DELETED_BRANCH_ALL_REPOS {
+            get {
+                return ResourceManager.GetString("SUCCESFULLY_DELETED_BRANCH_ALL_REPOS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to all dependency branches synchronized successfully!.
+        /// </summary>
+        internal static string SYNC_SUCCESS {
+            get {
+                return ResourceManager.GetString("SYNC_SUCCESS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update complete!.
+        /// </summary>
+        internal static string UPDATE_COMPLETE {
+            get {
+                return ResourceManager.GetString("UPDATE_COMPLETE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updated packages: .
+        /// </summary>
+        internal static string UPDATED_PACKAGES {
+            get {
+                return ResourceManager.GetString("UPDATED_PACKAGES", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using {0} for {1}.
+        /// </summary>
+        internal static string USING_BRANCH_FOR_CONFIG {
+            get {
+                return ResourceManager.GetString("USING_BRANCH_FOR_CONFIG", resourceCulture);
             }
         }
     }

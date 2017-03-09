@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using GitDepend.Busi;
 using GitDepend.Configuration;
+using GitDepend.Resources;
 
 namespace GitDepend.Visitors
 {
@@ -250,7 +251,7 @@ namespace GitDepend.Visitors
             }
 
             _console.WriteLine("================================================================================");
-            _console.WriteLine($"Making update commit on {directory}");
+            _console.WriteLine(strings.MAKING_UPDATE_COMMIT_ON  + directory);
             _git.WorkingDirectory = directory;
             _git.Add("*.csproj", @"*\packages.config");
             _console.WriteLine("================================================================================");

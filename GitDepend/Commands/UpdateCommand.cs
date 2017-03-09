@@ -3,6 +3,7 @@ using System.IO.Abstractions;
 using System.Linq;
 using GitDepend.Busi;
 using GitDepend.CommandLine;
+using GitDepend.Resources;
 using GitDepend.Visitors;
 
 namespace GitDepend.Commands
@@ -45,7 +46,7 @@ namespace GitDepend.Commands
 
             if (verifyVisitor.ReturnCode != ReturnCode.Success)
             {
-                _console.WriteLine("Not all dependencies are on the correct branch.");
+                _console.WriteLine(strings.NOT_ALL_DEPS_CORRECT_BRANCH);
                 return verifyVisitor.ReturnCode;
             }
 
@@ -58,16 +59,16 @@ namespace GitDepend.Commands
             {
                 if (buildAndUpdateVisitor.UpdatedPackages.Any())
                 {
-                    _console.WriteLine("Updated packages: ");
+                    _console.WriteLine(strings.UPDATED_PACKAGES);
                     foreach (var package in buildAndUpdateVisitor.UpdatedPackages)
                     {
                         _console.WriteLine($"    {package}");
                     }
-                    _console.WriteLine("Update complete!");
+                    _console.WriteLine(strings.UPDATE_COMPLETE);
                 }
                 else
                 {
-                    _console.WriteLine("nothing was updated");
+                    _console.WriteLine(strings.NOTHING_UPDATED);
                 }
             }
 

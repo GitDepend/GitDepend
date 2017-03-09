@@ -124,6 +124,42 @@ namespace GitDepend.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to     expected {0} but was {1}.
+        /// </summary>
+        internal static string EXPECTED_BRANCH_BUT_WAS_BRANCH {
+            get {
+                return ResourceManager.GetString("EXPECTED_BRANCH_BUT_WAS_BRANCH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 3. Give up. I&apos;ll figure it out myself..
+        /// </summary>
+        internal static string GIVE_UP_OPTION {
+            get {
+                return ResourceManager.GetString("GIVE_UP_OPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Branch!.
+        /// </summary>
+        internal static string INVALID_BRANCH {
+            get {
+                return ResourceManager.GetString("INVALID_BRANCH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to everything looks good..
+        /// </summary>
+        internal static string LOOKS_GOOD {
+            get {
+                return ResourceManager.GetString("LOOKS_GOOD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Making update commit on .
         /// </summary>
         internal static string MAKING_UPDATE_COMMIT_ON {
@@ -304,6 +340,15 @@ namespace GitDepend.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 2. Switch branch to .
+        /// </summary>
+        internal static string SWITCH_BRANCH_OPTION {
+            get {
+                return ResourceManager.GetString("SWITCH_BRANCH_OPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to all dependency branches synchronized successfully!.
         /// </summary>
         internal static string SYNC_SUCCESS {
@@ -313,11 +358,29 @@ namespace GitDepend.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Huh? Try again..
+        /// </summary>
+        internal static string TRY_AGAIN {
+            get {
+                return ResourceManager.GetString("TRY_AGAIN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Update complete!.
         /// </summary>
         internal static string UPDATE_COMPLETE {
             get {
                 return ResourceManager.GetString("UPDATE_COMPLETE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1. Update config to point to .
+        /// </summary>
+        internal static string UPDATE_CONFIG {
+            get {
+                return ResourceManager.GetString("UPDATE_CONFIG", resourceCulture);
             }
         }
         
@@ -336,6 +399,24 @@ namespace GitDepend.Resources {
         internal static string USING_BRANCH_FOR_CONFIG {
             get {
                 return ResourceManager.GetString("USING_BRANCH_FOR_CONFIG", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verifying the checked out branch.
+        /// </summary>
+        internal static string VERIFYING_CHECKED_OUT_BRANCH {
+            get {
+                return ResourceManager.GetString("VERIFYING_CHECKED_OUT_BRANCH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to What should I do?.
+        /// </summary>
+        internal static string WHAT_SHOULD_I_DO {
+            get {
+                return ResourceManager.GetString("WHAT_SHOULD_I_DO", resourceCulture);
             }
         }
     }

@@ -196,7 +196,7 @@ namespace GitDepend.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &quot;All packages are up to date&quot;.
+        ///   Looks up a localized string similar to All packages are up to date.
         /// </summary>
         internal static string PACKAGES_UP_TO_DATE {
             get {

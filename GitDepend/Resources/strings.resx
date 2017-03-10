@@ -157,7 +157,7 @@
     <value>    name: </value>
   </data>
   <data name="PACKAGES_UP_TO_DATE" xml:space="preserve">
-    <value>"All packages are up to date"</value>
+    <value>All packages are up to date</value>
   </data>
   <data name="NOT_ALL_DEPS_CORRECT_BRANCH" xml:space="preserve">
     <value>Not all dependencies are on the correct branch.</value>

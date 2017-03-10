@@ -50,8 +50,14 @@ namespace GitDepend.Commands
                 return code;
             }
 
+            var dirName = _fileSystem.Path.GetFileName(dir);
+            _console.Write($"name [{config.Name ?? dirName}]: ");
+            config.Name = ReadLine(config.Name ?? dirName);
+
             _console.Write($"build script [{config.Build.Script}]: ");
             config.Build.Script = ReadLine(config.Build.Script);
+            
+            config.Build.Arguments = ReadLine(config.Build.Arguments);
 
             _console.Write($"artifacts dir [{config.Packages.Directory}]: ");
             config.Packages.Directory = ReadLine(config.Packages.Directory);

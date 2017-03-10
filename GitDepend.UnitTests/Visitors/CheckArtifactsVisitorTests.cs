@@ -73,6 +73,18 @@ namespace GitDepend.UnitTests.Visitors
             Assert.AreEqual(false, visitor.UpToDate);
         }
 
+        [Test]
+        public void ArtifactsFolderMissing_DoesntThrowException_AndMarksOutOfDate_NeedsToBuild()
+        {
+            _fileSystem.Directory.Delete(Lib1PackagesDirectory + @"..\..\..\..\", true);
+            var visitor = new CheckArtifactsVisitor();
+            var code = visitor.VisitDependency(Lib1Directory, Lib1Dependency);
+
+            Assert.AreEqual(ReturnCode.Success, code);
+            Assert.AreEqual(visitor.UpToDate, false);
+            Assert.Greater(visitor.DependenciesThatNeedBuilding.Count, 0);
+        }
+
         private string CreateNugetFile(string alphaVersion)
         {
             string nugetFile = $@"<?xml version=""1.0"" encoding=""utf-8""?>
@@ -84,5 +96,7 @@ namespace GitDepend.UnitTests.Visitors
 
             return nugetFile;
         }
+
+        
     }
 }

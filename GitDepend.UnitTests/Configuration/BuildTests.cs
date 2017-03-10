@@ -17,7 +17,7 @@ namespace GitDepend.UnitTests.Configuration
             var build = new Build();
 
             Assert.AreEqual("make.bat", build.Script);
-            Assert.AreEqual(null, build.Arguments);
+            Assert.AreEqual(string.Empty, build.Arguments);
         }
 
         [Test]

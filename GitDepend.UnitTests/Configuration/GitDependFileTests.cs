@@ -33,7 +33,8 @@ namespace GitDepend.UnitTests.Configuration
             var expected = "{\r\n" +
                            "  \"name\": \"Lib2\",\r\n" +
                            "  \"build\": {\r\n" +
-                           "    \"script\": \"make.bat\"\r\n" +
+                           "    \"script\": \"make.bat\",\r\n" +
+                           "    \"arguments\": \"\"\r\n" +
                            "  },\r\n" +
                            "  \"packages\": {\r\n" +
                            "    \"dir\": \"artifacts/NuGet/Debug\"\r\n" +

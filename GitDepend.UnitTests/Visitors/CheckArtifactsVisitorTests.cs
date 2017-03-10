@@ -96,7 +96,5 @@ namespace GitDepend.UnitTests.Visitors
 
             return nugetFile;
         }
-
-        
     }
 }

@@ -50,7 +50,9 @@ namespace GitDepend.UnitTests.Commands
 
             int index = 0;
             string[] responses = {
+                "testapp",
                 "buildall.bat",
+                "",
                 "Nuget\\Debug"
             };
             console.Arrange(c => c.ReadLine())
@@ -61,8 +63,10 @@ namespace GitDepend.UnitTests.Commands
             var code = instance.Execute();
             Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
             fileSystem.Assert("WriteAllText should have been caleld");
-            Assert.AreEqual(responses[0], Lib1Config.Build.Script, "Invalid Build Script");
-            Assert.AreEqual(responses[1], Lib1Config.Packages.Directory, "Invalid Packages Directory");
+            Assert.AreEqual(responses[0], Lib1Config.Name, "Invalid Name");
+            Assert.AreEqual(responses[1], Lib1Config.Build.Script, "Invalid Build Script");
+            Assert.AreEqual(responses[2], Lib1Config.Build.Arguments, "Invalid Build Script Arguments");
+            Assert.AreEqual(responses[3], Lib1Config.Packages.Directory, "Invalid Packages Directory");
         }
 
         [Test]
@@ -83,6 +87,8 @@ namespace GitDepend.UnitTests.Commands
 
             int index = 0;
             string[] responses = {
+                "",
+                "",
                 "",
                 ""
             };

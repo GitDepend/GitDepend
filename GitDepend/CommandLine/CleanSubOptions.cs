@@ -45,5 +45,11 @@ namespace GitDepend.CommandLine
         /// </value>
         [Option('x', DefaultValue = true, HelpText = "Removes untracked files -- performs -x argument in git")]
         public bool RemoveUntrackedFiles { get; set; }
+
+        /// <summary>
+        /// Specifies which dependency to clean.
+        /// </summary>
+        [Option("name", HelpText = "The specific named dependency to clean")]
+        public string Name { get; set; }
     }
 }

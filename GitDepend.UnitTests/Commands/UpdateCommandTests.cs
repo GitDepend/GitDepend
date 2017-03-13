@@ -91,6 +91,7 @@ namespace GitDepend.UnitTests.Commands
                     {
                         checkArtifacts = true;
                         visitor.ReturnCode = ReturnCode.Success;
+                        ((CheckArtifactsVisitor)visitor).UpToDate = false;
                         return;
                     }
 
@@ -126,7 +127,8 @@ namespace GitDepend.UnitTests.Commands
             Assert.IsTrue(checkoutCalled, "Dependencies should have been checked out first.");
             Assert.IsTrue(checkArtifacts, "Artifacts should have been checked");
             Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
-            Assert.AreEqual(expected, output.ToString());
+            var actual = output.ToString();
+            Assert.AreEqual(expected, actual);
         }
     }
 }

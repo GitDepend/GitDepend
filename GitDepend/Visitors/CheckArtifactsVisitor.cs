@@ -50,6 +50,7 @@ namespace GitDepend.Visitors
             _dependencyPackageNamesAndVersions = new Dictionary<string, string>();
             DependenciesThatNeedBuilding = new List<string>();
             ProjectsThatNeedNugetUpdate = new List<string>();
+            UpToDate = true;
         }
         
         /// <summary>
@@ -68,24 +69,31 @@ namespace GitDepend.Visitors
         /// <exception cref="NotImplementedException"></exception>
         public ReturnCode VisitDependency(string directory, Dependency dependency)
         {
+            string path = dependency.Directory + '/' + dependency.Configuration.Packages.Directory;
             //read in the nuget packages created in the artifacts folder
-            var nugetPackageFiles = _fileSystem.Directory.EnumerateFiles(directory + '/' + dependency.Configuration.Packages.Directory);
-            //get the versionNumbers, they come in the format of {ProjectName}.{version#}.nupkg
-            var directoryLess = nugetPackageFiles.Select(file => Path.GetFileName(file));
-
-            var extensionLess = directoryLess.Select(file => file.Replace(".nupkg", "")).ToList();
-
-            foreach (var file in extensionLess)
+            var localArtifacts = new Dictionary<string, string>();
+            if (_fileSystem.Directory.Exists(path))
             {
-                string versionNumber, packageName;
-                GetPackageNameAndVersion(file, out versionNumber, out packageName);
-                if (!_dependencyPackageNamesAndVersions.ContainsKey(packageName))
+                var nugetPackageFiles = _fileSystem.Directory.EnumerateFiles(path);
+                //get the versionNumbers, they come in the format of {ProjectName}.{version#}.nupkg
+                var directoryLess = nugetPackageFiles.Select(file => Path.GetFileName(file));
+
+                var extensionLess = directoryLess.Select(file => file.Replace(".nupkg", "")).ToList();
+                
+                foreach (var file in extensionLess)
                 {
-                    _dependencyPackageNamesAndVersions.Add(packageName, versionNumber);
+                    string versionNumber, packageName;
+                    
+                    GetPackageNameAndVersion(file, out versionNumber, out packageName);
+                    if (!_dependencyPackageNamesAndVersions.ContainsKey(packageName))
+                    {
+                        _dependencyPackageNamesAndVersions.Add(packageName, versionNumber);
+                        localArtifacts.Add(packageName, versionNumber);
+                    }
                 }
             }
 
-            if (_dependencyPackageNamesAndVersions.Count == EMPTY)
+            if (localArtifacts.Count == EMPTY)
             {
                 DependenciesThatNeedBuilding.Add(dependency.Configuration.Name);
                 UpToDate = false;

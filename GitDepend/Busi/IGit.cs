@@ -49,6 +49,12 @@
         ReturnCode Commit(string message);
 
         /// <summary>
+        /// Fetches the latest repository state.
+        /// </summary>
+        /// <returns>The git return code.</returns>
+        ReturnCode Fetch();
+
+        /// <summary>
         /// Shows the status of the repository.
         /// </summary>
         /// <returns>The git return code.</returns>

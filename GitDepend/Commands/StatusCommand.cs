@@ -53,6 +53,13 @@ namespace GitDepend.Commands
         protected override ReturnCode AfterDependencyTraversal(StatusSubOptions options)
         {
             _git.WorkingDirectory = _options.Directory;
+            var code = _git.Fetch();
+
+            if (code != ReturnCode.Success)
+            {
+                return code;
+            }
+
             return _git.Status();
         }
 

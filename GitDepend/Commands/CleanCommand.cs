@@ -40,7 +40,7 @@ namespace GitDepend.Commands
         /// <exception cref="NotImplementedException"></exception>
         public ReturnCode Execute()
         {
-            var visitor = new CleanDependencyVisitor(_options.DryRun, _options.Force, _options.RemoveUntrackedFiles, _options.RemoveUntrackedDirectories);
+            var visitor = new CleanDependencyVisitor(_options.DryRun, _options.Force, _options.RemoveUntrackedFiles, _options.RemoveUntrackedDirectories, _options.Name);
             
             _algorithm.TraverseDependencies(visitor, _options.Directory);
 

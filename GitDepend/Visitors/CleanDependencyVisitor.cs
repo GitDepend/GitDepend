@@ -34,7 +34,7 @@ namespace GitDepend.Visitors
         /// <param name="cleanFiles">if set to <c>true</c> [clean files].</param>
         /// <param name="cleanDirectory">if set to <c>true</c> [clean directory].</param>
         /// <param name="dependencyNameToClean">The dependency name to clean.</param>
-        public CleanDependencyVisitor(bool dryRun, bool force, bool cleanFiles, bool cleanDirectory, string dependencyNameToClean = "")
+        public CleanDependencyVisitor(bool dryRun, bool force, bool cleanFiles, bool cleanDirectory, string dependencyNameToClean)
         {
             _git = DependencyInjection.Resolve<IGit>();
             _dryRun = dryRun;

@@ -76,6 +76,15 @@ namespace GitDepend.Busi
         }
 
         /// <summary>
+        /// Fetches the latest repository state.
+        /// </summary>
+        /// <returns>The git return code.</returns>
+        public ReturnCode Fetch()
+        {
+            return ExecuteGitCommand("fetch");
+        }
+
+        /// <summary>
         /// Shows the status of the repository.
         /// </summary>
         /// <returns>The git return code.</returns>

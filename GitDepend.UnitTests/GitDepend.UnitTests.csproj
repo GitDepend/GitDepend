@@ -98,6 +98,7 @@
     <Compile Include="MockingUnityContainerExtension.cs" />
     <Compile Include="MockingUnityContainerExtensions.cs" />
     <Compile Include="Visitors\BuildAndUpdateDependenciesVisitorTests.cs" />
+    <Compile Include="Visitors\CheckArtifactsVisitorTests.cs" />
     <Compile Include="Visitors\CheckOutBranchVisitorTests.cs" />
     <Compile Include="Visitors\CheckOutDependencyBranchVisitorTests.cs" />
     <Compile Include="Visitors\CreateBranchVisitorTests.cs" />

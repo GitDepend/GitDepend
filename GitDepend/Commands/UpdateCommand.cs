@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
 using GitDepend.Busi;
 using GitDepend.CommandLine;
+using GitDepend.Resources;
 using GitDepend.Visitors;
+using NuGet;
 
 namespace GitDepend.Commands
 {
@@ -45,29 +48,48 @@ namespace GitDepend.Commands
 
             if (verifyVisitor.ReturnCode != ReturnCode.Success)
             {
-                _console.WriteLine("Not all dependencies are on the correct branch.");
+                _console.WriteLine(strings.NOT_ALL_DEPS_CORRECT_BRANCH);
                 return verifyVisitor.ReturnCode;
             }
 
+            //checkArtifactsVisitor this will check to see if we are up to date with the artifacts.
+            _algorithm.Reset();
+            var checkArtifactsVisitor = new CheckArtifactsVisitor();
+            _algorithm.TraverseDependencies(checkArtifactsVisitor, _options.Directory);
+
+            if (checkArtifactsVisitor.ReturnCode == ReturnCode.Success && checkArtifactsVisitor.UpToDate)
+            {
+                _console.WriteLine(strings.PACKAGES_UP_TO_DATE);
+                return ReturnCode.Success;
+            }
+            if(checkArtifactsVisitor.ReturnCode != ReturnCode.Success)
+            {
+                return checkArtifactsVisitor.ReturnCode;
+            }
+
+            var needToBuild = new HashSet<string>();
+            needToBuild.AddRange(checkArtifactsVisitor.DependenciesThatNeedBuilding);
+            needToBuild.AddRange(checkArtifactsVisitor.ProjectsThatNeedNugetUpdate);
+
             _console.WriteLine();
             _algorithm.Reset();
-            var buildAndUpdateVisitor = new BuildAndUpdateDependenciesVisitor(_options.Dependencies);
+            var buildAndUpdateVisitor = new BuildAndUpdateDependenciesVisitor(needToBuild.ToList());
             _algorithm.TraverseDependencies(buildAndUpdateVisitor, _options.Directory);
 
             if (buildAndUpdateVisitor.ReturnCode == ReturnCode.Success)
             {
                 if (buildAndUpdateVisitor.UpdatedPackages.Any())
                 {
-                    _console.WriteLine("Updated packages: ");
+                    _console.WriteLine(strings.UPDATED_PACKAGES);
                     foreach (var package in buildAndUpdateVisitor.UpdatedPackages)
                     {
                         _console.WriteLine($"    {package}");
                     }
-                    _console.WriteLine("Update complete!");
+                    _console.WriteLine(strings.UPDATE_COMPLETE);
                 }
                 else
                 {
-                    _console.WriteLine("nothing was updated");
+                    _console.WriteLine(strings.NOTHING_UPDATED);
                 }
             }
 

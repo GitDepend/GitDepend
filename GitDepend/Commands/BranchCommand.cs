@@ -2,6 +2,7 @@
 using System.Linq;
 using GitDepend.Busi;
 using GitDepend.CommandLine;
+using GitDepend.Resources;
 using GitDepend.Visitors;
 
 namespace GitDepend.Commands
@@ -78,7 +79,7 @@ namespace GitDepend.Commands
             if (_options.Delete)
             {
                 visitor = new DeleteBranchVisitor(_options.BranchName, _options.ForceDelete);
-                successMessage = $"Successfully deleted the {_options.BranchName} branch from all repositories.";
+                successMessage = string.Format(strings.SUCCESFULLY_DELETED_BRANCH_ALL_REPOS, _options.BranchName);
             }
             else if (_options.ListMerged)
             {
@@ -93,7 +94,7 @@ namespace GitDepend.Commands
             else if (!string.IsNullOrEmpty(_options.BranchName))
             {
                 visitor = new CreateBranchVisitor(_options.BranchName);
-                successMessage = $"Successfully created the {_options.BranchName} branch in all repositories.";
+                successMessage = string.Format(strings.SUCCESFULLY_CREATED_BRANCH_ALL_REPOS, _options.BranchName);
             }
             else
             {
@@ -113,8 +114,8 @@ namespace GitDepend.Commands
             {
                 var origColor = _console.ForegroundColor;
                 _console.ForegroundColor = ConsoleColor.Green;
-                _console.WriteLine("project:");
-                _console.WriteLine($"    dir: {_options.Directory}");
+                _console.WriteLine(strings.PROJECT);
+                _console.WriteLine(strings.DIRECTORY + _options.Directory);
                 _console.WriteLine();
                 _console.ForegroundColor = origColor;
 

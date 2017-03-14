@@ -66,16 +66,28 @@
         InvalidBranchCheckedOut = 9,
 
         /// <summary>
+        /// Specifies the dependency are packages not built 
+        /// </summary>
+        [ResxKey("RET_DEPENDENCY_PACKAGES_NOT_BUILT")]
+        DependencyPackagesNotBuilt = 10,
+
+        /// <summary>
+        /// Specifies the dependency packages are mismatching
+        /// </summary>
+        [ResxKey("RET_DEPENDENCY_PACKAGES_MISTMATCH")]
+        DependencyPackagesMisMatch = 11,
+		
+		/// <summary>
         /// The name did not match the requested dependency
         /// </summary>
         [ResxKey("RET_NAME_DID_NOT_MATCH")]
-        NameDidNotMatchRequestedDependency = 10,
+        NameDidNotMatchRequestedDependency = 12,
 
         /// <summary>
         /// The dependency already exists
         /// </summary>
         [ResxKey("RET_DEPENDENCY_ALREADY_EXISTS")]
-        DependencyAlreadyExists = 11,
+        DependencyAlreadyExists = 13,
 
         /// <summary>
         /// Indicates the supplied arguments were invalid.

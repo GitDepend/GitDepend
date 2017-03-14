@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using GitDepend.Busi;
 using GitDepend.Configuration;
+using GitDepend.Resources;
 
 namespace GitDepend.Visitors
 {
@@ -177,11 +178,18 @@ namespace GitDepend.Visitors
 
             foreach (var solution in solutions)
             {
-                _nuget.Restore(solution);
+                var returnCode = _nuget.Restore(solution);
+                if (returnCode != ReturnCode.Success)
+                {
+                    return returnCode;
+                }
             }
 
             foreach (var solution in solutions)
             {
+                var path = solution.Remove(0, directory.Length + 1);
+                commitMessage.AppendLine(path);
+
                 foreach (var dependency in config.Dependencies)
                 {
                     // If there are specific dependencies specified
@@ -227,7 +235,11 @@ namespace GitDepend.Visitors
                             return ReturnCode = ReturnCode.CouldNotCreateCacheDirectory;
                         }
 
-                        _nuget.Update(solution, id, version, cacheDir);
+                        var returnCode = _nuget.Update(solution, id, version, cacheDir);
+                        if (returnCode != ReturnCode.Success)
+                        {
+                            return returnCode;
+                        }
 
                         var package = $"{id}.{version}";
                         if (!UpdatedPackages.Contains(package))
@@ -239,7 +251,7 @@ namespace GitDepend.Visitors
             }
 
             _console.WriteLine("================================================================================");
-            _console.WriteLine($"Making update commit on {directory}");
+            _console.WriteLine(strings.MAKING_UPDATE_COMMIT_ON  + directory);
             _git.WorkingDirectory = directory;
             _git.Add("*.csproj", @"*\packages.config");
             _console.WriteLine("================================================================================");

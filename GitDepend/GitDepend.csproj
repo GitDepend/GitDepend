@@ -138,6 +138,7 @@
     <Compile Include="Configuration\Build.cs" />
     <Compile Include="Configuration\Dependency.cs" />
     <Compile Include="Configuration\GitDependFile.cs" />
+    <Compile Include="Configuration\NugetPackageReference.cs" />
     <Compile Include="Configuration\Packages.cs" />
     <Compile Include="CommandLine\Options.cs" />
     <Compile Include="DependencyInjection.cs" />
@@ -156,6 +157,7 @@
       <DependentUpon>strings.resx</DependentUpon>
     </Compile>
     <Compile Include="UnityConfig.cs" />
+    <Compile Include="Visitors\CheckArtifactsVisitor.cs" />
     <Compile Include="Visitors\CheckOutBranchVisitor.cs" />
     <Compile Include="Visitors\RemoveDependencyVisitor.cs" />
     <Compile Include="Visitors\CreateBranchVisitor.cs" />
@@ -180,6 +182,7 @@
     <EmbeddedResource Include="Resources\strings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>strings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

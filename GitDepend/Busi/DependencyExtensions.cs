@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GitDepend.Configuration;
+using GitDepend.Resources;
 
 namespace GitDepend.Busi
 {
@@ -47,7 +48,7 @@ namespace GitDepend.Busi
                 {
                     dep.Branch = branch;
                     dirty = true;
-                    Console.WriteLine($"using {dep.Branch} for {dep.Configuration.Name}");
+                    Console.WriteLine(strings.USING_BRANCH_FOR_CONFIG, dep.Branch, dep.Configuration.Name);
                 }
 
                 if (dirty)

@@ -1,6 +1,7 @@
 ﻿using System.IO.Abstractions;
 using GitDepend.Busi;
 using GitDepend.Configuration;
+using GitDepend.Resources;
 
 namespace GitDepend.Visitors
 {
@@ -39,7 +40,7 @@ namespace GitDepend.Visitors
         /// <returns>The return code.</returns>
         public ReturnCode VisitDependency(string directory, Dependency dependency)
         {
-            _console.WriteLine($"Checking out the {dependency.Branch} branch on {dependency.Configuration.Name}");
+            _console.WriteLine(strings.CHECKING_OUT_BRANCH_ON_REPONAME, dependency.Branch, dependency.Configuration.Name);
 
             _git.WorkingDirectory = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(directory, dependency.Directory));
             return ReturnCode = _git.Checkout(dependency.Branch, false);

@@ -117,6 +117,57 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CHECKING_OUT_BRANCH_ON_REPONAME">
+    <value>Checking out the {0} branch on {1}</value>
+  </data>
+  <data name="CLONED_ALL_DEPS" xml:space="preserve">
+    <value>Successfully cloned all dependencies</value>
+  </data>
+  <data name="CLONING_DEP_INTO_DIRECTORY" xml:space="preserve">
+    <value>Cloning {0} into {1}</value>
+  </data>
+  <data name="CREATING_BRANCH_ON_REPONAME">
+    <value>Creating the {0} branch on {1}</value>
+  </data>
+  <data name="DEPENDENCY" xml:space="preserve">
+    <value>dependency:</value>
+  </data>
+  <data name="DEPS_CORRECT_BRANCH" xml:space="preserve">
+    <value>All dependencies on the correct branch</value>
+  </data>
+  <data name="DIRECTORY" xml:space="preserve">
+    <value>    dir: </value>
+  </data>
+  <data name="EXPECTED_BRANCH_BUT_WAS_BRANCH" xml:space="preserve">
+    <value>    expected {0} but was {1}</value>
+  </data>
+  <data name="GIVE_UP_OPTION" xml:space="preserve">
+    <value>3. Give up. I'll figure it out myself.</value>
+  </data>
+  <data name="INVALID_BRANCH" xml:space="preserve">
+    <value>Invalid Branch!</value>
+  </data>
+  <data name="LOOKS_GOOD" xml:space="preserve">
+    <value>everything looks good.</value>
+  </data>
+  <data name="MAKING_UPDATE_COMMIT_ON" xml:space="preserve">
+    <value>Making update commit on </value>
+  </data>
+  <data name="NAME" xml:space="preserve">
+    <value>    name: </value>
+  </data>
+  <data name="PACKAGES_UP_TO_DATE" xml:space="preserve">
+    <value>All packages are up to date</value>
+  </data>
+  <data name="NOT_ALL_DEPS_CORRECT_BRANCH" xml:space="preserve">
+    <value>Not all dependencies are on the correct branch.</value>
+  </data>
+  <data name="NOTHING_UPDATED" xml:space="preserve">
+    <value>nothing was updated</value>
+  </data>
+  <data name="PROJECT" xml:space="preserve">
+    <value>project:</value>
+  </data>
   <data name="RET_BUILD_SCRIPT_FAILED" xml:space="preserve">
     <value>The build script failed</value>
   </data>
@@ -158,5 +209,38 @@
   </data>
   <data name="RET_UNKNOWN_ERROR" xml:space="preserve">
     <value>Unknown Error</value>
+  </data>
+  <data name="SUCCESFULLY_CREATED_BRANCH_ALL_REPOS" xml:space="preserve">
+    <value>Successfully created the {0} branch in all repositories.</value>
+  </data>
+  <data name="SUCCESFULLY_DELETED_BRANCH_ALL_REPOS" xml:space="preserve">
+    <value>Successfully deleted the {0} branch in all repositories.</value>
+  </data>
+  <data name="SWITCH_BRANCH_OPTION" xml:space="preserve">
+    <value>2. Switch branch to </value>
+  </data>
+  <data name="SYNC_SUCCESS" xml:space="preserve">
+    <value>all dependency branches synchronized successfully!</value>
+  </data>
+  <data name="TRY_AGAIN" xml:space="preserve">
+    <value>Huh? Try again.</value>
+  </data>
+  <data name="UPDATE_COMPLETE" xml:space="preserve">
+    <value>Update complete!</value>
+  </data>
+  <data name="UPDATE_CONFIG" xml:space="preserve">
+    <value>1. Update config to point to </value>
+  </data>
+  <data name="UPDATED_PACKAGES" xml:space="preserve">
+    <value>Updated packages: </value>
+  </data>
+  <data name="USING_BRANCH_FOR_CONFIG" xml:space="preserve">
+    <value>using {0} for {1}</value>
+  </data>
+  <data name="VERIFYING_CHECKED_OUT_BRANCH" xml:space="preserve">
+    <value>Verifying the checked out branch</value>
+  </data>
+  <data name="WHAT_SHOULD_I_DO" xml:space="preserve">
+    <value>What should I do?</value>
   </data>
 </root>

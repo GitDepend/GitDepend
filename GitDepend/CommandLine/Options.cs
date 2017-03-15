@@ -27,6 +27,9 @@ namespace GitDepend.CommandLine
         [VerbOption(CheckOutCommand.Name, HelpText = "Switch branches")]
         public CheckOutSubOptions CheckOutVerb { get; set; } = new CheckOutSubOptions();
 
+        [VerbOption(CleanCommand.Name, HelpText = "Remove named or all dependencies")]
+        public CleanSubOptions CleanVerb { get; set; } = new CleanSubOptions();
+
         [VerbOption(CloneCommand.Name, HelpText = "Recursively clones all dependencies")]
         public CloneSubOptions CloneVerb { get; set; } = new CloneSubOptions();
 

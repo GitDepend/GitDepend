@@ -72,6 +72,9 @@ namespace GitDepend.Commands
                 case UpdateCommand.Name:
                     command = new UpdateCommand(options as UpdateSubOptions);
                     break;
+                case CleanCommand.Name:
+                    command = new CleanCommand(options as CleanSubOptions);
+                    break;
             }
 
             return command;

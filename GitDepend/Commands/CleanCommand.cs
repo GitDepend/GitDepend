@@ -12,7 +12,7 @@ namespace GitDepend.Commands
     /// This command will go through the dependency tree and clean each repository, or only the one named.
     /// </summary>
     /// <seealso cref="GitDepend.Commands.ICommand" />
-    public class CleanCommand : ICommand
+    public class CleanCommand : NamedDependenciesCommand<CleanSubOptions>
     {
         private CleanSubOptions _options;
         private readonly IDependencyVisitorAlgorithm _algorithm;
@@ -25,26 +25,20 @@ namespace GitDepend.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="CleanCommand" /> class.
         /// </summary>
-        public CleanCommand(CleanSubOptions options)
+        public CleanCommand(CleanSubOptions options) : base(options)
         {
             _options = options;
             _algorithm = DependencyInjection.Resolve<IDependencyVisitorAlgorithm>();
         }
 
         /// <summary>
-        /// Executes the command.
+        /// Creates the visitor that will be used to traverse the dependency graph.
         /// </summary>
-        /// <returns>
-        /// The return code.
-        /// </returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public ReturnCode Execute()
+        /// <param name="options">The options for the command.</param>
+        /// <returns></returns>
+        protected override NamedDependenciesVisitor CreateVisitor(CleanSubOptions options)
         {
-            var visitor = new CleanDependencyVisitor(_options.DryRun, _options.Force, _options.RemoveUntrackedFiles, _options.RemoveUntrackedDirectories, _options.Name);
-            
-            _algorithm.TraverseDependencies(visitor, _options.Directory);
-
-            return visitor.ReturnCode;
+            return new CleanDependencyVisitor(_options.DryRun, _options.Force, _options.RemoveUntrackedFiles, _options.RemoveUntrackedDirectories, _options.Dependencies);
         }
     }
 }

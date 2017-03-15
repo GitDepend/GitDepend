@@ -90,9 +90,9 @@ set NUNIT_CONSOLE=$(PACKAGES_DIR)\NUnit.Runners.$(NUNIT_RUNNERS_VERSION)\tools\n
 
 echo %NUNIT_CONSOLE%
 pushd .
-cd bin/UnitTests/Debug
+cd bin\UnitTests\Debug
 for /f "delims=" %%i in ('dir *.UnitTests.dll /s/b') do (
-    ..\..\%NUNIT_CONSOLE% %%i /result=..\..\Reports\UnitTests\%%~nxi.xml
+    ..\..\..\%NUNIT_CONSOLE% %%i /result=..\..\..\Reports\UnitTests\%%~nxi.xml
 )
 popd
 <<
@@ -120,9 +120,9 @@ set NUNIT_CONSOLE=$(PACKAGES_DIR)\NUnit.Runners.$(NUNIT_RUNNERS_VERSION)\tools\n
 set DOTCOVER=$(PACKAGES_DIR)\JetBrains.dotCover.CommandLineTools.$(DOTCOVER_VERSION)\tools\dotCover.exe
 
 pushd .
-cd bin/Debug
+cd bin\UnitTests\Debug
 for /f "delims=" %%i in ('dir *.UnitTests.dll /s/b') do (
-    ..\..\%DOTCOVER% c /TargetExecutable=..\..\%NUNIT_CONSOLE% /TargetArguments="%%i /result=..\..\Reports\UnitTests\%%~nxi.xml" /Output=..\..\Reports\Coverage\%%~nxi.dcvr /TargetWorkingDir=..\..
+    ..\..\..\%DOTCOVER% c /TargetExecutable=..\..\..\%NUNIT_CONSOLE% /TargetArguments="%%i /result=..\..\..\Reports\UnitTests\%%~nxi.xml" /Output=..\..\..\Reports\Coverage\%%~nxi.dcvr /TargetWorkingDir=..\..\..
     echo ##teamcity[importData type='dotNetCoverage' tool='dotcover' path='Reports\Coverage\%%~nxi.dcvr']
 )
 popd

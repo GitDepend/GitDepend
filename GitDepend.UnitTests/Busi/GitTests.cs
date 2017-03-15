@@ -120,6 +120,29 @@ namespace GitDepend.UnitTests.Busi
         }
 
         [Test]
+        public void FetchTest()
+        {
+            string command = null;
+            string arguments = null;
+            var processManager = Container.Resolve<IProcessManager>();
+            processManager.Arrange(p => p.Start(Arg.IsAny<ProcessStartInfo>()))
+                .Returns((ProcessStartInfo info) =>
+                {
+                    command = info.FileName;
+                    arguments = info.Arguments;
+
+                    return new FakeProcess();
+                });
+
+            var instance = new Git();
+            var code = instance.Fetch();
+
+            Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
+            Assert.AreEqual("git", command);
+            Assert.AreEqual("fetch", arguments);
+        }
+
+        [Test]
         public void StatusTest()
         {
             string command = null;

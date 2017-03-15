@@ -32,6 +32,7 @@ Command Line Options
 
    usage/branch
    usage/checkout
+   usage/clean
    usage/clone
    usage/config
    usage/init

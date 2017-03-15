@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using LibGit2Sharp;
 using NUnit.Framework;
@@ -36,9 +37,14 @@ namespace GitDepend.IntegrationTests.Scenarios
 
             var info = GitDepend("clone", lib2Dir);
 
+            var lib1Exists = Directory.Exists(lib1Dir);
+            var lib2Exists = Directory.Exists(lib2Dir);
+
+            SafeDeleteDirectory(path);
+
             Assert.AreEqual(ReturnCode.Success, info.ReturnCode);
-            Assert.IsTrue(Directory.Exists(lib2Dir));
-            Assert.IsTrue(Directory.Exists(lib1Dir));
+            Assert.IsTrue(lib1Exists);
+            Assert.IsTrue(lib2Exists);
         }
     }
 }

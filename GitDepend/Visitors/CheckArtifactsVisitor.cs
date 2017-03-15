@@ -15,17 +15,16 @@ using IFileSystem = System.IO.Abstractions.IFileSystem;
 namespace GitDepend.Visitors
 {
     /// <summary>
-    /// 
+    /// Checks to see if artifacts are up to date for all dependencies.
     /// </summary>
-    /// <seealso cref="GitDepend.Visitors.IVisitor" />
-    public class CheckArtifactsVisitor : IVisitor
+    public class CheckArtifactsVisitor : NamedDependenciesVisitor
     {
         private static readonly Regex NugetPackageRegex = new Regex(@"^(?<id>.*?)\.(?<version>(?:\d\.){2,3}\d(?:-.*?)?)$", RegexOptions.Compiled);
 
         private readonly IFileSystem _fileSystem;
-        private Dictionary<string, string> _dependencyPackageNamesAndVersions;
+        private readonly Dictionary<string, string> _dependencyPackageNamesAndVersions;
         private const int EMPTY = 0;
-        
+
         /// <summary>
         /// Contains a list of the name of the dependencies that need building
         /// </summary>
@@ -39,51 +38,47 @@ namespace GitDepend.Visitors
         /// <summary>
         /// Gets or sets a value indicating whether dependencies and projects are [up to date].
         /// </summary>
-        public bool UpToDate { get; set; }
+        public bool UpToDate => DependenciesThatNeedBuilding.IsEmpty() && ProjectsThatNeedNugetUpdate.IsEmpty();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CheckArtifactsVisitor"/> class.
+        /// Creates a new <see cref="DisplayStatusVisitor"/>
         /// </summary>
-        public CheckArtifactsVisitor()
+        /// <param name="whitelist">The projects to visit. If this list is null or empty all projects will be visited.</param>
+        public CheckArtifactsVisitor(IList<string> whitelist) : base(whitelist)
         {
             _fileSystem = DependencyInjection.Resolve<IFileSystem>();
             _dependencyPackageNamesAndVersions = new Dictionary<string, string>();
             DependenciesThatNeedBuilding = new List<string>();
             ProjectsThatNeedNugetUpdate = new List<string>();
-            UpToDate = true;
         }
-        
-        /// <summary>
-        /// The return code
-        /// </summary>
-        public ReturnCode ReturnCode { get; set; }
+
+        #region Overrides of NamedDependenciesVisitor
 
         /// <summary>
-        /// Visits a project dependency.
+        /// Provides the custom hook for VisitDependency. This will only be called if the dependency
+        /// was specified in the whitelist.
         /// </summary>
         /// <param name="directory">The directory of the project.</param>
-        /// <param name="dependency">The <see cref="Dependency" /> to visit.</param>
-        /// <returns>
-        /// The return code.
-        /// </returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public ReturnCode VisitDependency(string directory, Dependency dependency)
+        /// <param name="dependency">The <see cref="Dependency"/> to visit.</param>
+        /// <returns></returns>
+        protected override ReturnCode OnVisitDependency(string directory, Dependency dependency)
         {
-            string path = dependency.Directory + '/' + dependency.Configuration.Packages.Directory;
+            string path = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(dependency.Directory, dependency.Configuration.Packages.Directory));
+
             //read in the nuget packages created in the artifacts folder
             var localArtifacts = new Dictionary<string, string>();
             if (_fileSystem.Directory.Exists(path))
             {
                 var nugetPackageFiles = _fileSystem.Directory.EnumerateFiles(path);
                 //get the versionNumbers, they come in the format of {ProjectName}.{version#}.nupkg
-                var directoryLess = nugetPackageFiles.Select(file => Path.GetFileName(file));
+                var directoryLess = nugetPackageFiles.Select(file => _fileSystem.Path.GetFileName(file));
 
                 var extensionLess = directoryLess.Select(file => file.Replace(".nupkg", "")).ToList();
-                
+
                 foreach (var file in extensionLess)
                 {
                     string versionNumber, packageName;
-                    
+
                     GetPackageNameAndVersion(file, out versionNumber, out packageName);
                     if (!_dependencyPackageNamesAndVersions.ContainsKey(packageName))
                     {
@@ -93,26 +88,21 @@ namespace GitDepend.Visitors
                 }
             }
 
-            if (localArtifacts.Count == EMPTY)
+            if (localArtifacts.IsEmpty())
             {
                 DependenciesThatNeedBuilding.Add(dependency.Configuration.Name);
-                UpToDate = false;
-
             }
 
             return ReturnCode.Success;
         }
-        
+
         /// <summary>
         /// Visists a project.
         /// </summary>
         /// <param name="directory">The directory of the project.</param>
-        /// <param name="config">The <see cref="GitDependFile" /> with project configuration information.</param>
-        /// <returns>
-        /// The return code.
-        /// </returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public ReturnCode VisitProject(string directory, GitDependFile config)
+        /// <param name="config">The <see cref="GitDependFile"/> with project configuration information.</param>
+        /// <returns>The return code.</returns>
+        public override ReturnCode VisitProject(string directory, GitDependFile config)
         {
             var packagesFiles = _fileSystem.Directory.GetFiles(directory, "packages.config", SearchOption.AllDirectories);
 
@@ -121,15 +111,16 @@ namespace GitDepend.Visitors
             //check only the ones that match
             var misMatching = CheckMatches(neededPackages);
 
-            if (misMatching.Count != 0)
+            if (misMatching.Any())
             {
                 ProjectsThatNeedNugetUpdate.Add(config.Name);
-                UpToDate = false;
             }
 
             return ReturnCode.Success;
         }
-        
+
+        #endregion
+
         private void GetPackageNameAndVersion(string file, out string versionNumber, out string packageName)
         {
             var match = NugetPackageRegex.Match(file);
@@ -142,8 +133,8 @@ namespace GitDepend.Visitors
             var packagesDictionary = new Dictionary<string, string>();
             foreach (var packageFile in packagesFiles)
             {
-                
-                foreach(var reference in GetPackageReferences(packageFile))
+
+                foreach (var reference in GetPackageReferences(packageFile))
                 {
                     if (!packagesDictionary.ContainsKey(reference.Id))
                     {

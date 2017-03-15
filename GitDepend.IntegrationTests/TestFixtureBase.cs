@@ -65,36 +65,38 @@ namespace GitDepend.IntegrationTests
             {
                 UseShellExecute = false,
                 WorkingDirectory = workingDirectory,
-                
+
+                CreateNoWindow = true,
+
                 RedirectStandardInput = true,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true
             };
 
-            var proc = Process.Start(info);
-
-            using (var writer = proc.StandardInput)
-            {
-                foreach (var line in input ?? new string[0])
-                {
-                    writer.WriteLine(line);
-                }
-            }
-
             var executionInfo = new GitDependExecutionInfo();
 
-            using (var reader = proc.StandardOutput)
+            using (var proc = Process.Start(info))
             {
-                executionInfo.StandardOut = reader.ReadToEnd();
-            }
+                using (var writer = proc.StandardInput)
+                {
+                    foreach (var line in input ?? new string[0])
+                    {
+                        writer.WriteLine(line);
+                    }
+                }
 
-            using (var reader = proc.StandardError)
-            {
-                executionInfo.StandardError = reader.ReadToEnd();
-            }
-            proc.WaitForExit();
+                using (var reader = proc.StandardOutput)
+                {
+                    executionInfo.StandardOut = reader.ReadToEnd();
+                }
 
-            executionInfo.ReturnCode = (ReturnCode)proc.ExitCode;
+                using (var reader = proc.StandardError)
+                {
+                    executionInfo.StandardError = reader.ReadToEnd();
+                }
+                proc.WaitForExit();
+                executionInfo.ReturnCode = (ReturnCode)proc.ExitCode;
+            }
 
             return executionInfo;
         }
@@ -118,6 +120,22 @@ namespace GitDepend.IntegrationTests
         protected void Clone(string sourceUrl, string workdirPath, CloneOptions options)
         {
             Repository.Clone(sourceUrl, workdirPath, options);
+        }
+
+        /// <summary>
+        /// Deletes a path without throwing an exception.
+        /// </summary>
+        /// <param name="path">The directory to delete.</param>
+        protected void SafeDeleteDirectory(string path)
+        {
+            try
+            {
+                Directory.Delete(path, true);
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
         }
     }
 }

@@ -18,7 +18,8 @@ namespace GitDepend.Visitors
     /// </summary>
     public class BuildAndUpdateDependenciesVisitor : IVisitor
     {
-        private readonly IList<string> _whitelist;
+        private readonly List<string> _dependeciesToBuild;
+        private readonly List<string> _projectsToUpdate;
         private static readonly Regex Pattern = new Regex(@"^(?<id>.*?)\.(?<version>(?:\d\.){2,3}\d(?:-.*?)?)$", RegexOptions.Compiled);
         private readonly IGitDependFileFactory _factory;
         private readonly IGit _git;
@@ -35,10 +36,12 @@ namespace GitDepend.Visitors
         /// <summary>
         /// Creates a new <see cref="BuildAndUpdateDependenciesVisitor"/>
         /// </summary>
-        /// <param name="whitelist">The dependencies to update.</param>
-        public BuildAndUpdateDependenciesVisitor(IList<string> whitelist)
+        /// <param name="dependeciesToBuild">The dependencies to build.</param>
+        /// <param name="projectsToUpdate">The projects to update.</param>
+        public BuildAndUpdateDependenciesVisitor(List<string> dependeciesToBuild, List<string> projectsToUpdate)
         {
-            _whitelist = whitelist;
+            _dependeciesToBuild = dependeciesToBuild;
+            _projectsToUpdate = projectsToUpdate;
             _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
             _git = DependencyInjection.Resolve<IGit>();
             _nuget = DependencyInjection.Resolve<INuget>();
@@ -91,8 +94,8 @@ namespace GitDepend.Visitors
             // If there are specific dependencies specified
             // and this one isn't in the list
             // skip it.
-            if (_whitelist.Any() &&
-                _whitelist.All(d => !string.Equals(d, dependency.Configuration.Name, StringComparison.InvariantCultureIgnoreCase)))
+            if (_dependeciesToBuild.Any() &&
+                _dependeciesToBuild.All(d => !string.Equals(d, dependency.Configuration.Name, StringComparison.InvariantCultureIgnoreCase)))
             {
                 return ReturnCode.Success;
             }
@@ -159,8 +162,8 @@ namespace GitDepend.Visitors
             // If there are specific dependencies specified
             // and this one isn't in the list
             // skip it.
-            if (_whitelist.Any() &&
-                _whitelist.All(d => !string.Equals(d, config.Name, StringComparison.InvariantCultureIgnoreCase)))
+            if (_projectsToUpdate.Any() &&
+                _projectsToUpdate.All(d => !string.Equals(d, config.Name, StringComparison.InvariantCultureIgnoreCase)))
             {
                 return ReturnCode.Success;
             }
@@ -195,8 +198,8 @@ namespace GitDepend.Visitors
                     // If there are specific dependencies specified
                     // and this one isn't in the list
                     // skip it.
-                    if (_whitelist.Any() &&
-                        _whitelist.All(d => !string.Equals(d, dependency.Configuration.Name, StringComparison.InvariantCultureIgnoreCase)))
+                    if (_dependeciesToBuild.Any() &&
+                        _dependeciesToBuild.All(d => !string.Equals(d, dependency.Configuration.Name, StringComparison.InvariantCultureIgnoreCase)))
                     {
                         continue;
                     }

@@ -54,11 +54,12 @@ namespace GitDepend.Commands
 
             //checkArtifactsVisitor this will check to see if we are up to date with the artifacts.
             _algorithm.Reset();
-
-            var needToBuild = new HashSet<string>();
+            
+            List<string> dependeciesToBuild = new List<string>();
+            List<string> projectsToUpdate = new List<string>();
             if (_options.Force)
             {
-                needToBuild.AddRange(_options.Dependencies);
+                dependeciesToBuild.AddRange(_options.Dependencies);
             }
             else
             {
@@ -76,13 +77,13 @@ namespace GitDepend.Commands
                     return checkArtifactsVisitor.ReturnCode;
                 }
 
-                needToBuild.AddRange(checkArtifactsVisitor.DependenciesThatNeedBuilding);
-                needToBuild.AddRange(checkArtifactsVisitor.ProjectsThatNeedNugetUpdate);
+                dependeciesToBuild.AddRange(checkArtifactsVisitor.DependenciesThatNeedBuilding);
+                projectsToUpdate.AddRange(checkArtifactsVisitor.ProjectsThatNeedNugetUpdate);
             }
 
             _console.WriteLine();
             _algorithm.Reset();
-            var buildAndUpdateVisitor = new BuildAndUpdateDependenciesVisitor(needToBuild.ToList());
+            var buildAndUpdateVisitor = new BuildAndUpdateDependenciesVisitor(dependeciesToBuild, projectsToUpdate);
             _algorithm.TraverseDependencies(buildAndUpdateVisitor, _options.Directory);
 
             if (buildAndUpdateVisitor.ReturnCode == ReturnCode.Success)

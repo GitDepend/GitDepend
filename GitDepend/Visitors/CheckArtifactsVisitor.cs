@@ -111,7 +111,7 @@ namespace GitDepend.Visitors
             //check only the ones that match
             var misMatching = CheckMatches(neededPackages);
 
-            if (misMatching.Any())
+            if (misMatching.Any() || DependenciesThatNeedBuilding.Any(d => config.Dependencies.Any(d2 => d2.Configuration.Name == d)))
             {
                 ProjectsThatNeedNugetUpdate.Add(config.Name);
             }

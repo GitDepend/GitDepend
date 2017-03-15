@@ -11,7 +11,7 @@ namespace GitDepend.CommandLine
     /// The options that can be a part of the clean command
     /// </summary>
     /// <seealso cref="GitDepend.CommandLine.CommonSubOptions" />
-    public class CleanSubOptions : CommonSubOptions
+    public class CleanSubOptions : NamedDependenciesOptions
     {
         /// <summary>
         /// Tells git to tell you all the things that it will remove
@@ -45,11 +45,5 @@ namespace GitDepend.CommandLine
         /// </value>
         [Option('x', DefaultValue = true, HelpText = "Removes untracked files -- performs -x argument in git")]
         public bool RemoveUntrackedFiles { get; set; }
-
-        /// <summary>
-        /// Specifies which dependency to clean.
-        /// </summary>
-        [Option("name", HelpText = "The specific named dependency to clean")]
-        public string Name { get; set; }
     }
 }

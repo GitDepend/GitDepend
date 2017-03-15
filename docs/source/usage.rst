@@ -7,6 +7,8 @@ Command Line Options
 
       checkout    Switch branches
 
+      clean       Cleans named or all dependencies
+
       clone       Recursively clones all dependencies
 
       config      Displays the full configuration file

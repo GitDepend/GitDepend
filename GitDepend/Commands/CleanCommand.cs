@@ -54,7 +54,7 @@ namespace GitDepend.Commands
             ReturnCode code;
             var config = _factory.LoadFromDirectory(options.Directory, out dir, out code);
             _git.WorkingDirectory = options.Directory;
-            if (options.Dependencies == null || options.Dependencies.Count > 0)
+            if (options.Dependencies == null || options.Dependencies.Count == 0)
             {
                 return GitClean(options);
             }

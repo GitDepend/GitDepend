@@ -25,7 +25,7 @@ namespace GitDepend.CommandLine
         /// <value>
         ///   <c>true</c> if force; otherwise, <c>false</c>.
         /// </value>
-        [Option('f', DefaultValue = true, HelpText = "Force -- similar to -f argument in git")]
+        [Option('f', DefaultValue = false, HelpText = "Force -- similar to -f argument in git")]
         public bool Force { get; set; }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace GitDepend.CommandLine
         /// <value>
         /// <c>true</c> if [remove untracked directories]; otherwise, <c>false</c>.
         /// </value>
-        [Option('d', DefaultValue = true, HelpText = "Remove untracked directories -- performs -d argument in git")]
+        [Option('d', DefaultValue = false, HelpText = "Remove untracked directories -- performs -d argument in git")]
         public bool RemoveUntrackedDirectories { get; set; }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace GitDepend.CommandLine
         /// <value>
         /// <c>true</c> if [remove untracked files]; otherwise, <c>false</c>.
         /// </value>
-        [Option('x', DefaultValue = true, HelpText = "Removes untracked files -- performs -x argument in git")]
+        [Option('x', DefaultValue = false, HelpText = "Removes untracked files -- performs -x argument in git")]
         public bool RemoveUntrackedFiles { get; set; }
     }
 }

@@ -143,9 +143,11 @@ namespace GitDepend.Busi
         /// <param name="force"></param>
         /// <param name="removeFiles"></param>
         /// <param name="removeDirectories"></param>
+        /// <param name="directory"></param>
         /// <returns></returns>
-        public ReturnCode Clean(bool dryRun, bool force, bool removeFiles, bool removeDirectories)
+        public ReturnCode Clean(bool dryRun, bool force, bool removeFiles, bool removeDirectories, string directory)
         {
+            WorkingDirectory = directory;
             string arguments = "-";
             if (dryRun)
             {

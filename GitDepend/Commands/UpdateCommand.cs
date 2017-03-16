@@ -54,22 +54,31 @@ namespace GitDepend.Commands
 
             //checkArtifactsVisitor this will check to see if we are up to date with the artifacts.
             _algorithm.Reset();
-            var checkArtifactsVisitor = new CheckArtifactsVisitor();
-            _algorithm.TraverseDependencies(checkArtifactsVisitor, _options.Directory);
-
-            if (checkArtifactsVisitor.ReturnCode == ReturnCode.Success && checkArtifactsVisitor.UpToDate)
-            {
-                _console.WriteLine(strings.PACKAGES_UP_TO_DATE);
-                return ReturnCode.Success;
-            }
-            if(checkArtifactsVisitor.ReturnCode != ReturnCode.Success)
-            {
-                return checkArtifactsVisitor.ReturnCode;
-            }
 
             var needToBuild = new HashSet<string>();
-            needToBuild.AddRange(checkArtifactsVisitor.DependenciesThatNeedBuilding);
-            needToBuild.AddRange(checkArtifactsVisitor.ProjectsThatNeedNugetUpdate);
+            if (_options.Force)
+            {
+                needToBuild.AddRange(_options.Dependencies);
+            }
+            else
+            {
+                var checkArtifactsVisitor = new CheckArtifactsVisitor(_options.Dependencies);
+                _algorithm.TraverseDependencies(checkArtifactsVisitor, _options.Directory);
+
+                if (checkArtifactsVisitor.ReturnCode == ReturnCode.Success && checkArtifactsVisitor.UpToDate)
+                {
+                    _console.WriteLine(strings.PACKAGES_UP_TO_DATE);
+                    return ReturnCode.Success;
+                }
+
+                if (checkArtifactsVisitor.ReturnCode != ReturnCode.Success)
+                {
+                    return checkArtifactsVisitor.ReturnCode;
+                }
+
+                needToBuild.AddRange(checkArtifactsVisitor.DependenciesThatNeedBuilding);
+                needToBuild.AddRange(checkArtifactsVisitor.ProjectsThatNeedNugetUpdate);
+            }
 
             _console.WriteLine();
             _algorithm.Reset();

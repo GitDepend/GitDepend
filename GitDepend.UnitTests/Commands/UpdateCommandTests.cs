@@ -91,7 +91,7 @@ namespace GitDepend.UnitTests.Commands
                     {
                         checkArtifacts = true;
                         visitor.ReturnCode = ReturnCode.Success;
-                        ((CheckArtifactsVisitor)visitor).UpToDate = false;
+                        ((CheckArtifactsVisitor)visitor).ProjectsThatNeedNugetUpdate.Add("Lib1");
                         return;
                     }
 

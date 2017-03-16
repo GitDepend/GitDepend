@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using GitDepend.Busi;
 using GitDepend.CommandLine;
 using GitDepend.Commands;
+using GitDepend.Configuration;
 using GitDepend.Visitors;
 using Microsoft.Practices.Unity;
 using NUnit.Framework;
@@ -19,6 +20,7 @@ namespace GitDepend.UnitTests.Commands
     {
         private CleanSubOptions _goodCleanSubOptions;
         private CleanSubOptions _badCleanSubOptions;
+        private CleanSubOptions _namedDependenciesOptions;
 
         [SetUp]
         public void Setup()
@@ -35,6 +37,20 @@ namespace GitDepend.UnitTests.Commands
             _goodCleanSubOptions = new CleanSubOptions()
             {
                 Directory = "dir",
+                DryRun = true,
+                Force = true,
+                RemoveUntrackedFiles = true,
+                RemoveUntrackedDirectories = true
+            };
+
+            _namedDependenciesOptions = new CleanSubOptions()
+            {
+                Dependencies = new List<string>()
+                {
+                    "lib1",
+                    "lib2"
+                },
+                Directory = "lib0",
                 DryRun = true,
                 Force = true,
                 RemoveUntrackedFiles = true,
@@ -61,7 +77,7 @@ namespace GitDepend.UnitTests.Commands
             {
                 visitor.ReturnCode = ReturnCode.Success;
             }).MustBeCalled();
-            
+
             var instance = new CleanCommand(_goodCleanSubOptions);
 
             var code = instance.Execute();
@@ -74,8 +90,7 @@ namespace GitDepend.UnitTests.Commands
         public void CleanCommand_Fails_GitReturnCode_FailedToRun()
         {
             var git = DependencyInjection.Resolve<IGit>();
-            ReturnCode gitReturnCode = ReturnCode.Success;
-            git.Arrange(x => x.Clean(false, false, false, false, "dir")).Returns(ReturnCode.FailedToRunGitCommand).MustBeCalled();
+            git.Arrange(x => x.Clean(false, false, false, false)).Returns(ReturnCode.FailedToRunGitCommand).MustBeCalled();
             var algorithm = DependencyInjection.Resolve<IDependencyVisitorAlgorithm>();
             algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString)).DoInstead(
                 (IVisitor visitor, string directory) =>
@@ -91,7 +106,6 @@ namespace GitDepend.UnitTests.Commands
             Assert.AreEqual(ReturnCode.FailedToRunGitCommand, code);
             algorithm.Assert("TraverseDependencies should have been called.");
         }
-
 
 
     }

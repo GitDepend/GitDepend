@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -53,7 +54,7 @@ namespace GitDepend.Visitors
         /// <exception cref="NotImplementedException"></exception>
         public override ReturnCode VisitProject(string directory, GitDependFile config)
         {
-            return _git.Clean(_dryRun, _force, _cleanFiles, _cleanDirectory, directory);
+            return ReturnCode.Success;
         }
 
         /// <summary>
@@ -65,7 +66,9 @@ namespace GitDepend.Visitors
         /// <returns></returns>
         protected override ReturnCode OnVisitDependency(string directory, Dependency dependency)
         {
-            return ReturnCode.Success;
+            _git.WorkingDirectory = dependency.Directory;
+
+            return _git.Clean(_dryRun, _force, _cleanFiles, _cleanDirectory);
         }
     }
 }

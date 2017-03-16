@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,10 +22,12 @@ namespace GitDepend.UnitTests.Commands
         private CleanSubOptions _goodCleanSubOptions;
         private CleanSubOptions _badCleanSubOptions;
         private IGitDependFileFactory _gitDependFactory;
+        private IFileSystem _fileSystem;
 
         [SetUp]
         public void Setup()
         {
+            _fileSystem = DependencyInjection.Resolve<IFileSystem>();
             _badCleanSubOptions = new CleanSubOptions()
             {
                 Directory = "dir",
@@ -105,5 +108,40 @@ namespace GitDepend.UnitTests.Commands
             algorithm.Assert("TraverseDependencies should have been called.");
         }
 
+
+        [Test]
+        public void CleanCommand_WithProject_Succeeds()
+        {
+            var git = DependencyInjection.Resolve<IGit>();
+            git.Arrange(x => x.Clean(Arg.AnyBool, Arg.AnyBool, Arg.AnyBool, Arg.AnyBool))
+                .Returns(ReturnCode.Success)
+                .MustBeCalled();
+
+            var algorithm = DependencyInjection.Resolve<IDependencyVisitorAlgorithm>();
+            algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString)).DoInstead(
+                (IVisitor visitor, string directory) =>
+                {
+                    visitor.ReturnCode = visitor.VisitProject(directory, Lib1Config);
+                }).MustBeCalled();
+            string dir;
+            ReturnCode returnCode;
+            _gitDependFactory.Arrange(x => x.LoadFromDirectory(Arg.AnyString, out dir, out returnCode)).Returns(new GitDependFile()
+            {
+                Name = "name"
+            });
+            CleanSubOptions newOptions = _goodCleanSubOptions;
+            newOptions.Dependencies = new List<string>()
+            {
+                "name"
+            };
+
+            var instance = new CleanCommand(newOptions);
+
+            var code = instance.Execute();
+
+            algorithm.Assert("TraverseDependencies should have been called");
+            git.Assert("Clean should have been called");
+            Assert.AreEqual(ReturnCode.Success, code);
+        }
     }
 }

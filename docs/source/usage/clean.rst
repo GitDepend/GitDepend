@@ -1,7 +1,7 @@
 clean
 =====
 
-All the options below coallesce to git clean arguments. Must include arguments to perform clean.
+All the options below correspond to git clean arguments. Must include arguments to perform clean.
 
 
 .. code-block:: bash

@@ -59,7 +59,7 @@ namespace GitDepend.Visitors
 
         /// <summary>
         /// Provides the custom hook for VisitDependency. This will only be called if the dependency
-        /// was specified in the whitelist.
+        /// was specified in the whitelist.f
         /// </summary>
         /// <param name="directory">The directory of the project.</param>
         /// <param name="dependency">The <see cref="Dependency" /> to visit.</param>

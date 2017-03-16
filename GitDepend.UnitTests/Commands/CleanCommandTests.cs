@@ -20,7 +20,7 @@ namespace GitDepend.UnitTests.Commands
     {
         private CleanSubOptions _goodCleanSubOptions;
         private CleanSubOptions _badCleanSubOptions;
-        private CleanSubOptions _namedDependenciesOptions;
+        private IGitDependFileFactory _gitDependFactory;
 
         [SetUp]
         public void Setup()
@@ -42,20 +42,18 @@ namespace GitDepend.UnitTests.Commands
                 RemoveUntrackedFiles = true,
                 RemoveUntrackedDirectories = true
             };
-
-            _namedDependenciesOptions = new CleanSubOptions()
+            string dir;
+            ReturnCode code;
+            _gitDependFactory = DependencyInjection.Resolve<IGitDependFileFactory>();
+            _gitDependFactory.Arrange(x => x.LoadFromDirectory("dir", out dir, out code)).Returns(() =>
             {
-                Dependencies = new List<string>()
+                dir = "dir";
+                code = ReturnCode.Success;
+                return new GitDependFile()
                 {
-                    "lib1",
-                    "lib2"
-                },
-                Directory = "lib0",
-                DryRun = true,
-                Force = true,
-                RemoveUntrackedFiles = true,
-                RemoveUntrackedDirectories = true
-            };
+                    Name = ""
+                };
+            });
         }
 
         [Test]
@@ -106,7 +104,6 @@ namespace GitDepend.UnitTests.Commands
             Assert.AreEqual(ReturnCode.FailedToRunGitCommand, code);
             algorithm.Assert("TraverseDependencies should have been called.");
         }
-
 
     }
 }

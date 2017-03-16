@@ -53,12 +53,21 @@ namespace GitDepend.Commands
             string dir;
             ReturnCode code;
             var config = _factory.LoadFromDirectory(options.Directory, out dir, out code);
-            if (options.Dependencies.Contains(config.Name) && code == ReturnCode.Success)
+            _git.WorkingDirectory = options.Directory;
+            if (options.Dependencies == null || options.Dependencies.Count > 0)
             {
-                _git.WorkingDirectory = options.Directory;
-                return _git.Clean(options.DryRun, options.Force, options.RemoveUntrackedFiles, options.RemoveUntrackedDirectories);
+                return GitClean(options);
+            }
+            if (options.Dependencies != null && config != null && options.Dependencies.Contains(config.Name) && code == ReturnCode.Success)
+            {
+                return GitClean(options);
             }
             return code;
+        }
+
+        private ReturnCode GitClean(CleanSubOptions options)
+        {
+            return _git.Clean(options.DryRun, options.Force, options.RemoveUntrackedFiles, options.RemoveUntrackedDirectories);
         }
     }
 }

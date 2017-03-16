@@ -53,7 +53,7 @@ namespace GitDepend.Visitors
         /// <exception cref="NotImplementedException"></exception>
         public override ReturnCode VisitProject(string directory, GitDependFile config)
         {
-            return _git.Clean(_dryRun, _force, _cleanFiles, _cleanDirectory);
+            return _git.Clean(_dryRun, _force, _cleanFiles, _cleanDirectory, directory);
         }
 
         /// <summary>

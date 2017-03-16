@@ -108,6 +108,7 @@
     <Compile Include="Busi\UiStrings.cs" />
     <Compile Include="CommandLine\BranchSubOptions.cs" />
     <Compile Include="CommandLine\CheckOutSubOptions.cs" />
+    <Compile Include="CommandLine\CleanSubOptions.cs" />
     <Compile Include="CommandLine\CloneSubOptions.cs" />
     <Compile Include="CommandLine\CommonSubOptions.cs" />
     <Compile Include="CommandLine\ConfigSubOptions.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="CommandLine\UpdateSubOptions.cs" />
     <Compile Include="Commands\BranchCommand.cs" />
     <Compile Include="Commands\CheckOutCommand.cs" />
+    <Compile Include="Commands\CleanCommand.cs" />
     <Compile Include="Commands\CloneCommand.cs" />
     <Compile Include="Commands\CommandParser.cs" />
     <Compile Include="Commands\ICommand.cs" />
@@ -153,6 +155,7 @@
     <Compile Include="UnityConfig.cs" />
     <Compile Include="Visitors\CheckArtifactsVisitor.cs" />
     <Compile Include="Visitors\CheckOutBranchVisitor.cs" />
+    <Compile Include="Visitors\CleanDependencyVisitor.cs" />
     <Compile Include="Visitors\CreateBranchVisitor.cs" />
     <Compile Include="Visitors\DeleteBranchVisitor.cs" />
     <Compile Include="Visitors\DependencyVisitorAlgorithm.cs" />

@@ -12,14 +12,13 @@ namespace GitDepend.Visitors
     /// 
     /// </summary>
     /// <seealso cref="GitDepend.Visitors.IVisitor" />
-    public class CleanDependencyVisitor : NamedDependenciesVisitor, IVisitor
+    public class CleanDependencyVisitor : NamedDependenciesVisitor
     {
         private readonly IGit _git;
         private bool _cleanDirectory;
         private bool _cleanFiles;
         private bool _force;
         private bool _dryRun;
-        private IList<string> _dependencyNameToClean;
 
         /// <summary>
         /// The name matched
@@ -33,15 +32,14 @@ namespace GitDepend.Visitors
         /// <param name="force">if set to <c>true</c> [force].</param>
         /// <param name="cleanFiles">if set to <c>true</c> [clean files].</param>
         /// <param name="cleanDirectory">if set to <c>true</c> [clean directory].</param>
-        /// <param name="dependencyNameToClean">The dependency name to clean.</param>
-        public CleanDependencyVisitor(bool dryRun, bool force, bool cleanFiles, bool cleanDirectory, IList<string> dependencyNameToClean) : base(dependencyNameToClean)
+        /// <param name="whitelist">The dependency name to clean.</param>
+        public CleanDependencyVisitor(bool dryRun, bool force, bool cleanFiles, bool cleanDirectory, IList<string> whitelist) : base(whitelist)
         {
             _git = DependencyInjection.Resolve<IGit>();
             _dryRun = dryRun;
             _force = force;
             _cleanFiles = cleanFiles;
             _cleanDirectory = cleanDirectory;
-            _dependencyNameToClean = dependencyNameToClean;
         }
 
         /// <summary>
@@ -53,24 +51,9 @@ namespace GitDepend.Visitors
         /// The return code.
         /// </returns>
         /// <exception cref="NotImplementedException"></exception>
-        public new ReturnCode VisitProject(string directory, GitDependFile config)
+        public override ReturnCode VisitProject(string directory, GitDependFile config)
         {
-            _git.WorkingDirectory = directory;
-            if (_dependencyNameToClean.Count > 0)
-            {
-                foreach (var item in _dependencyNameToClean)
-                {
-                    if (item == config.Name)
-                    {
-                        return _git.Clean(_dryRun, _force, _cleanFiles, _cleanDirectory);
-                    }
-                }
-            }
-            else
-            {
-                return _git.Clean(_dryRun, _force, _cleanFiles, _cleanDirectory);
-            }
-            return ReturnCode.Success;
+            return _git.Clean(_dryRun, _force, _cleanFiles, _cleanDirectory);
         }
 
         /// <summary>
@@ -82,21 +65,6 @@ namespace GitDepend.Visitors
         /// <returns></returns>
         protected override ReturnCode OnVisitDependency(string directory, Dependency dependency)
         {
-            _git.WorkingDirectory = directory;
-            if (_dependencyNameToClean.Count > 0)
-            {
-                foreach (var item in _dependencyNameToClean)
-                {
-                    if (item == dependency.Configuration.Name)
-                    {
-                        return _git.Clean(_dryRun, _force, _cleanFiles, _cleanDirectory);
-                    }
-                }
-            }
-            else
-            {
-                return _git.Clean(_dryRun, _force, _cleanFiles, _cleanDirectory);
-            }
             return ReturnCode.Success;
         }
     }

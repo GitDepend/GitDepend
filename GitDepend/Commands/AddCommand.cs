@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using GitDepend.Busi;
 using GitDepend.CommandLine;
 using GitDepend.Configuration;
+using GitDepend.Resources;
 using LibGit2Sharp;
 
 namespace GitDepend.Commands
@@ -70,7 +71,7 @@ namespace GitDepend.Commands
 
                 _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(_options.Directory, "GitDepend.json"), config.ToString());
 
-                _console.WriteLine($"Dependency with dir {_options.DependencyDirectory} has been added successfully.");
+                _console.WriteLine(strings.DEPENDENCY_ADDED_SUCCESFULLY, _options.DependencyDirectory);
             }
 
             return code;

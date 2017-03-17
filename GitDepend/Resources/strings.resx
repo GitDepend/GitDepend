@@ -132,6 +132,9 @@
   <data name="DEPENDENCY" xml:space="preserve">
     <value>dependency:</value>
   </data>
+  <data name="DEPENDENCY_ADDED_SUCCESFULLY" xml:space="preserve">
+    <value>Dependency with dir {0} has been added successfully.</value>
+  </data>
   <data name="DEPS_CORRECT_BRANCH" xml:space="preserve">
     <value>All dependencies on the correct branch</value>
   </data>

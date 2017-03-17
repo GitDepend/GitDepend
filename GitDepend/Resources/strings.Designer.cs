@@ -106,6 +106,15 @@ namespace GitDepend.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dependency with dir {0} has been added successfully..
+        /// </summary>
+        internal static string DEPENDENCY_ADDED_SUCCESFULLY {
+            get {
+                return ResourceManager.GetString("DEPENDENCY_ADDED_SUCCESFULLY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All dependencies on the correct branch.
         /// </summary>
         internal static string DEPS_CORRECT_BRANCH {

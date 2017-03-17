@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace GitDepend.Visitors
         private readonly IGitDependFileFactory _factory;
         private readonly string _dependencyNameToRemove;
         private string _foundDependencyDirectory;
+        private IFileSystem _fileSystem;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoveDependencyVisitor"/> class.
@@ -26,6 +28,7 @@ namespace GitDepend.Visitors
             _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
             _dependencyNameToRemove = dependencyNameToRemove;
             _foundDependencyDirectory = string.Empty;
+            _fileSystem = DependencyInjection.Resolve<IFileSystem>();
         }
 
         /// <summary>
@@ -52,7 +55,7 @@ namespace GitDepend.Visitors
             {
                 if (configFile.Name == _dependencyNameToRemove)
                 {
-                    _foundDependencyDirectory = dir;
+                    _foundDependencyDirectory = directory;
                 }
             }
 
@@ -70,7 +73,7 @@ namespace GitDepend.Visitors
         /// <exception cref="System.NotImplementedException"></exception>
         public ReturnCode VisitProject(string directory, GitDependFile config)
         {
-            if (_foundDependencyDirectory == string.Empty)
+            if (string.IsNullOrEmpty(_foundDependencyDirectory))
             {
                 return ReturnCode.NameDidNotMatchRequestedDependency;
             }
@@ -79,8 +82,8 @@ namespace GitDepend.Visitors
             int index = 0;
             foreach (var dep in config.Dependencies)
             {
-                var directoryName = Path.GetDirectoryName(dep.Directory);
-                var dependencyDirectoryName = Path.GetDirectoryName(_foundDependencyDirectory);
+                var directoryName = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(directory, dep.Directory));
+                var dependencyDirectoryName = _fileSystem.Path.GetDirectoryName(_foundDependencyDirectory);
                 if (directoryName == dependencyDirectoryName)
                 {
                     indexToRemove = index;

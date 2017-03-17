@@ -25,6 +25,7 @@ namespace GitDepend.Commands
         private readonly AddSubOptions _options;
         private readonly IGitDependFileFactory _factory;
         private readonly IFileSystem _fileSystem;
+        private readonly IConsole _console;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AddCommand"/> class.
@@ -35,6 +36,7 @@ namespace GitDepend.Commands
             _options = options;
             _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
             _fileSystem = DependencyInjection.Resolve<IFileSystem>();
+            _console = DependencyInjection.Resolve<IConsole>();
         }
 
         /// <summary>
@@ -68,7 +70,7 @@ namespace GitDepend.Commands
 
                 _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(_options.Directory, "GitDepend.json"), config.ToString());
 
-                Console.WriteLine($"Dependency with dir {_options.Directory} has been added successfully.");
+                _console.WriteLine($"Dependency with dir {_options.DependencyDirectory} has been added successfully.");
             }
 
             return code;

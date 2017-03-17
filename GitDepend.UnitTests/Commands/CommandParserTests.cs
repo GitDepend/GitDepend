@@ -113,7 +113,7 @@ namespace GitDepend.UnitTests.Commands
         [Test]
         public void GetCommand_ShouldReturn_AddCommand_WhenAddVerbIsSpecified()
         {
-            string[] args = {"add"};
+            string[] args = {"add", "--url", "myurl",  "--directory", "mydir", "--branch", "mybranch"};
             var instance = new CommandParser();
             var command = instance.GetCommand(args);
 

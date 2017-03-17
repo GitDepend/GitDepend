@@ -4,6 +4,8 @@ using System.IO.Abstractions;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GitDepend.CommandLine;
+using GitDepend.Commands;
 using GitDepend.Visitors;
 using NUnit.Framework;
 using Microsoft.Practices.Unity;
@@ -30,8 +32,26 @@ namespace GitDepend.UnitTests.Commands
         [Test]
         public void Execute_ShouldSucceed()
         {
-            var algorithm = Container.Resolve<IDependencyVisitorAlgorithm>();
-            algorithm.Arrange(x => x.TraverseDependencies(new RemoveDependencyVisitor("Lib1"), Lib2Directory));
+            
+            var algorithm = DependencyInjection.Resolve<IDependencyVisitorAlgorithm>();
+            algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString)).DoInstead(
+                (IVisitor visitor, string directory) =>
+                {
+                }).Returns(ReturnCode.Success);
+            
+            RemoveSubOptions options = new RemoveSubOptions()
+            {
+                Directory = Lib2Directory,
+                DependencyName = "lib1"
+            };
+
+            var command = new RemoveCommand(options);
+
+            var code = command.Execute();
+
+            Assert.AreEqual(ReturnCode.Success, code);
+            Assert.IsFalse(_fileSystem.Directory.Exists(Lib1Directory));
+            
         }
 
         [Test]

@@ -4,6 +4,7 @@ using System.IO.Abstractions;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Castle.Components.DictionaryAdapter.Xml;
 using GitDepend.Busi;
 using GitDepend.CommandLine;
 using GitDepend.Commands;
@@ -19,12 +20,16 @@ namespace GitDepend.UnitTests.Commands
     public class AddCommandTests : TestFixtureBase
     {
         private IFileSystem _fileSystem;
+        private IGitDependFileFactory _factory;
         private const string GitDependConfigFile = "GitDepend.json";
+        private IConsole _console;
 
         [SetUp]
         public void AddCommandTestsSetup()
         {
             _fileSystem = RegisterMockFileSystem();
+            _console = DependencyInjection.Resolve<IConsole>();
+            _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
             EnsureDirectory(_fileSystem, Lib1Directory);
             EnsureDirectory(_fileSystem, Lib2Directory);
             EnsureFiles(_fileSystem, Lib2Directory, new List<string>()
@@ -48,17 +53,30 @@ namespace GitDepend.UnitTests.Commands
             var command = new AddCommand(options);
 
             var code = command.Execute();
-
+            string dir;
+            ReturnCode returnCode;
+            var dependFile = _factory.LoadFromDirectory(options.Directory, out dir, out returnCode);
+            
             Assert.AreEqual(ReturnCode.Success, code);
+            Assert.IsNotNull(dependFile.Dependencies);
+            Assert.AreEqual(1, dependFile.Dependencies.Count);
+
+            var newDependency = dependFile.Dependencies.FirstOrDefault(x => x.Directory == options.DependencyDirectory);
+
+            Assert.IsNotNull(newDependency);
+            Assert.AreEqual(newDependency.Directory, options.DependencyDirectory);
+            Assert.AreEqual(newDependency.Branch, options.Branch);
+            Assert.AreEqual(newDependency.Url, options.Url);
+
         }
 
         [Test]
         public void AddCommand_ExistingDirectory_ShouldNotAdd()
         {
-            var factory = Container.Resolve<IGitDependFileFactory>();
+            
             string dir = null;
             ReturnCode loadCode;
-            factory.Arrange(f => f.LoadFromDirectory(Arg.AnyString, out dir, out loadCode)).Returns(Lib2Config);
+            _factory.Arrange(f => f.LoadFromDirectory(Arg.AnyString, out dir, out loadCode)).Returns(Lib2Config).MustBeCalled();
 
             var options = new AddSubOptions()
             {
@@ -72,6 +90,7 @@ namespace GitDepend.UnitTests.Commands
             var code = command.Execute();
 
             Assert.AreEqual(ReturnCode.DependencyAlreadyExists, code);
+            _factory.Assert("LoadFromDirectory should have been called");
         }
 
         [Test]

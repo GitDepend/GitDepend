@@ -21,7 +21,7 @@ namespace GitDepend.CommandLine
         {
         }
 
-        [VerbOption(BranchCommand.Name, HelpText = "Add a dependency to an existing configuration")]
+        [VerbOption(AddCommand.Name, HelpText = "Add a dependency to an existing configuration")]
         public AddSubOptions AddVerb { get; set; } = new AddSubOptions();
 
         [VerbOption(BranchCommand.Name, HelpText = "List, create, or delete branches")]

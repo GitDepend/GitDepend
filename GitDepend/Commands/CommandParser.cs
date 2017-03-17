@@ -66,6 +66,9 @@ namespace GitDepend.Commands
                 case ListCommand.Name:
                     command = new ListCommand(options as ListSubOptons);
                     break;
+                case ManageCommand.Name:
+                    command = new ManageCommand(options as ManageSubOptions);
+                    break;
                 case RemoveCommand.Name:
                     command = new RemoveCommand(options as RemoveSubOptions);
                     break;

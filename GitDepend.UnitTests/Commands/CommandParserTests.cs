@@ -123,7 +123,7 @@ namespace GitDepend.UnitTests.Commands
         [Test]
         public void GetCommand_ShouldReturn_RemoveCommand_WhenRemoveVerbIsSpecified()
         {
-            string[] args = {"remove"};
+            string[] args = {"remove", "-n", "libName"};
             var instance = new CommandParser();
 
             var command = instance.GetCommand(args);
@@ -134,7 +134,7 @@ namespace GitDepend.UnitTests.Commands
         [Test]
         public void GetCommand_ShouldReturn_ManageCommand_WhenManageVerbIsSpecified()
         {
-            string[] args = { "manage" };
+            string[] args = { "manage", "-n", "libName"};
             var instance = new CommandParser();
 
             var command = instance.GetCommand(args);

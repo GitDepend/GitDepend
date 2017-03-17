@@ -7,7 +7,7 @@ namespace GitDepend.CommandLine
     /// Contains the options for the Manage command.
     /// </summary>
     /// <seealso cref="GitDepend.CommandLine.CommonSubOptions" />
-    public class ManageSubOptions
+    public class ManageSubOptions : CommonSubOptions
     {
         /// <summary>
         /// The identifier of the dependency to update.

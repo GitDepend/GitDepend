@@ -50,7 +50,6 @@ namespace GitDepend.UnitTests.Commands
             var code = command.Execute();
 
             Assert.AreEqual(ReturnCode.Success, code);
-            Assert.IsFalse(_fileSystem.Directory.Exists(Lib1Directory));
             
         }
 

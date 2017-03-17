@@ -16,7 +16,7 @@ namespace GitDepend.IntegrationTests.Scenarios
         private string _lib1Dir;
 
         [TestFixtureSetUp]
-        public void Setup()
+        public void CloneLib2Repo()
         {
             _path = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
@@ -24,6 +24,18 @@ namespace GitDepend.IntegrationTests.Scenarios
             _lib2Dir = Path.Combine(_path, Lib2Name);
             _lib1Dir = Path.Combine(_path, Lib1Name);
             Clone(Lib2Url, _lib2Dir);
+        }
+
+        [TearDown]
+        public void CleanUpLib1Directory()
+        {
+            SafeDeleteDirectory(_lib1Dir);
+        }
+
+        [TestFixtureTearDown]
+        public void CleanUpDirectory()
+        {
+            SafeDeleteDirectory(_path);
         }
 
         [Test]
@@ -50,7 +62,6 @@ namespace GitDepend.IntegrationTests.Scenarios
             var lib1Exists = Directory.Exists(_lib1Dir);
             var lib2Exists = Directory.Exists(_lib2Dir);
 
-            SafeDeleteDirectory(_lib1Dir);
 
             Assert.AreEqual(ReturnCode.Success, info.ReturnCode, "Return Code was Wrong");
             Assert.IsTrue(lib1Exists, "Lib1 Doesn't Exists");
@@ -88,10 +99,5 @@ namespace GitDepend.IntegrationTests.Scenarios
             Assert.IsTrue(lib1ArtifactsExists, "Artifacts don't exists");
         }
 
-        [TestFixtureTearDown]
-        public void CleanUp()
-        {
-            SafeDeleteDirectory(_path);
-        }
     }
 }

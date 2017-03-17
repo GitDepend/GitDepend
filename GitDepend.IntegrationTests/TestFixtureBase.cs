@@ -139,7 +139,7 @@ namespace GitDepend.IntegrationTests
         }
 
         /// <summary>
-        /// Writes the text in ReplaceFile into SourceFile
+        /// Writes the text from ReplaceFile into SourceFile
         /// </summary>
         /// <param name="workdirPath"></param>
         /// <param name="sourcefile"></param>

@@ -27,6 +27,7 @@ namespace GitDepend.Commands
         private readonly RemoveSubOptions _options;
         
         private readonly IDependencyVisitorAlgorithm _algorithm;
+        private readonly IConsole _console;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoveCommand"/> class.
@@ -36,6 +37,7 @@ namespace GitDepend.Commands
         {
             _options = options;
             _algorithm = DependencyInjection.Resolve<IDependencyVisitorAlgorithm>();
+            _console = DependencyInjection.Resolve<IConsole>();
         }
 
         /// <summary>
@@ -50,7 +52,7 @@ namespace GitDepend.Commands
 
             if (visitor.ReturnCode == ReturnCode.NameDidNotMatchRequestedDependency)
             {
-                Console.WriteLine(strings.ResourceManager.GetString("RET_NAME_DID_NOT_MATCH", CultureInfo.CurrentCulture));
+                _console.WriteLine(strings.ResourceManager.GetString("RET_NAME_DID_NOT_MATCH", CultureInfo.CurrentCulture));
                 return visitor.ReturnCode;
             }
 

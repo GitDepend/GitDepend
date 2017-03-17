@@ -51,7 +51,19 @@ namespace GitDepend.UnitTests.Visitors
         [Test]
         public void RemoveDependencyShouldReturnNotFound()
         {
+            string dir;
+            ReturnCode returnCode;
+            _factory.Arrange(x => x.LoadFromDirectory(Lib1Directory, out dir, out returnCode)).Returns(Lib1Config);
+            var libToRemove = "lib3";
+            RemoveDependencyVisitor visitor = new RemoveDependencyVisitor(libToRemove);
 
+            returnCode = visitor.VisitDependency(Lib1Directory, Lib1Dependency);
+            Assert.AreEqual(ReturnCode.Success, returnCode);
+
+            returnCode = visitor.VisitProject(Lib2Directory, Lib2Config);
+
+            Assert.AreEqual(ReturnCode.NameDidNotMatchRequestedDependency, returnCode);
+            Assert.AreEqual(1, Lib2Config.Dependencies.Count);
         }
     }
 }

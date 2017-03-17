@@ -109,5 +109,37 @@ namespace GitDepend.UnitTests.Commands
 
             Assert.IsTrue(command is SyncCommand, "Invalid Command");
         }
+
+        [Test]
+        public void GetCommand_ShouldReturn_AddCommand_WhenAddVerbIsSpecified()
+        {
+            string[] args = {"add"};
+            var instance = new CommandParser();
+            var command = instance.GetCommand(args);
+
+            Assert.IsTrue(command is AddCommand, "InvalidCommand");
+        }
+
+        [Test]
+        public void GetCommand_ShouldReturn_RemoveCommand_WhenRemoveVerbIsSpecified()
+        {
+            string[] args = {"remove"};
+            var instance = new CommandParser();
+
+            var command = instance.GetCommand(args);
+            
+            Assert.IsTrue(command is RemoveCommand, "Invalid Command");
+        }
+
+        [Test]
+        public void GetCommand_ShouldReturn_ManageCommand_WhenManageVerbIsSpecified()
+        {
+            string[] args = { "manage" };
+            var instance = new CommandParser();
+
+            var command = instance.GetCommand(args);
+
+            Assert.IsTrue(command is ManageCommand, "Invalid Command");
+        }
     }
 }

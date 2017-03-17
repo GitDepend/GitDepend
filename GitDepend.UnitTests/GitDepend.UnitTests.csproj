@@ -85,6 +85,7 @@
     <Compile Include="Commands\CommandParserTests.cs" />
     <Compile Include="Commands\InitCommandTests.cs" />
     <Compile Include="Commands\ListCommandTests.cs" />
+    <Compile Include="Commands\ManageCommandTests.cs" />
     <Compile Include="Commands\RemoveCommandTests.cs" />
     <Compile Include="Commands\ShowConfigCommandTests.cs" />
     <Compile Include="Commands\StatusCommandTests.cs" />

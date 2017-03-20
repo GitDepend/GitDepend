@@ -123,7 +123,7 @@ namespace GitDepend.UnitTests.Commands
         [Test]
         public void GetCommand_ShouldReturn_RemoveCommand_WhenRemoveVerbIsSpecified()
         {
-            string[] args = {"remove"};
+            string[] args = { "remove" };
             var instance = new CommandParser();
 
             var command = instance.GetCommand(args);

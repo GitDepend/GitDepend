@@ -45,12 +45,12 @@ namespace GitDepend.Visitors
             ReturnCode returnCode;
 
             //visit dependency and get the configuration
-            var configFile = _factory.LoadFromDirectory(directory, out dir, out returnCode);
+            var configFile = _factory.LoadFromDirectory(dependency.Directory, out dir, out returnCode);
             if (returnCode == ReturnCode.Success)
             {
                 if (configFile.Name == _dependencyNameToRemove)
                 {
-                    FoundDependencyDirectory = directory;
+                    FoundDependencyDirectory = dir;
                 }
             }
 

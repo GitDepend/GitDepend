@@ -24,11 +24,8 @@ namespace GitDepend.Commands
         /// </summary>
         public const string Name = "remove";
 
-        private readonly RemoveSubOptions _options;
         private RemoveDependencyVisitor _visitor;
         
-        private readonly IDependencyVisitorAlgorithm _algorithm;
-        private readonly IConsole _console;
         private readonly IFileSystem _fileSystem;
         private IGitDependFileFactory _factory;
 
@@ -38,10 +35,7 @@ namespace GitDepend.Commands
         /// <param name="options">The options.</param>
         public RemoveCommand(RemoveSubOptions options) : base(options)
         {
-            _options = options;
-            _algorithm = DependencyInjection.Resolve<IDependencyVisitorAlgorithm>();
             _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
-            _console = DependencyInjection.Resolve<IConsole>();
             _fileSystem = DependencyInjection.Resolve<IFileSystem>();
         }
 
@@ -54,10 +48,6 @@ namespace GitDepend.Commands
         {
             string dir;
             ReturnCode code;
-            if (string.IsNullOrEmpty(_visitor.FoundDependencyDirectory))
-            {
-                return ReturnCode.NameDidNotMatchRequestedDependency;
-            }
             var config = _factory.LoadFromDirectory(options.Directory, out dir, out code);
             
             //visit the project and load the config and delete the configuration.
@@ -66,17 +56,19 @@ namespace GitDepend.Commands
             foreach (var dep in config.Dependencies)
             {
                 var directoryName = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(options.Directory, dep.Directory));
-                //var dependencyDirectoryName = _fileSystem.Path.GetDirectoryName(_visitor.FoundDependencyDirectory);
                 if (directoryName == _visitor.FoundDependencyDirectory)
                 {
                     indexToRemove = index;
                     break;
                 }
             }
-
-            config.Dependencies.RemoveAt(indexToRemove);
-
-            return ReturnCode.Success;
+            if(indexToRemove > -1)
+            { 
+                config.Dependencies.RemoveAt(indexToRemove);
+                _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(options.Directory, "GitDepend.json"), config.ToString());
+                return ReturnCode.Success;
+            }
+            return ReturnCode.NameDidNotMatchRequestedDependency;
         }
 
         /// <summary>

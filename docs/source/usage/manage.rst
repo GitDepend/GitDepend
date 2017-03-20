@@ -11,7 +11,7 @@ Manage dependencies in your current directory
 
     -d, --dir       Updates/sets the dir given.
 
-    -b, --branch    Sets the branch for the given named dependency, or updates all if no depname is given
+    -b, --branch    Sets the branch for the given named dependency
 
 ..
 

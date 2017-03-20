@@ -22,13 +22,11 @@ namespace GitDepend.UnitTests.Commands
         private IFileSystem _fileSystem;
         private IGitDependFileFactory _factory;
         private const string GitDependConfigFile = "GitDepend.json";
-        private IConsole _console;
 
         [SetUp]
         public void AddCommandTestsSetup()
         {
             _fileSystem = RegisterMockFileSystem();
-            _console = DependencyInjection.Resolve<IConsole>();
             _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
             EnsureDirectory(_fileSystem, Lib1Directory);
             EnsureDirectory(_fileSystem, Lib2Directory);

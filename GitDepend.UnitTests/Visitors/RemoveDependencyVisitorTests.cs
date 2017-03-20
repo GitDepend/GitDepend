@@ -33,8 +33,7 @@ namespace GitDepend.UnitTests.Visitors
             string dir;
             ReturnCode returnCode;
             _factory.Arrange(x => x.LoadFromDirectory(Lib1Directory, out dir, out returnCode)).Returns(Lib1Config);
-            //lib2 depends on lib1
-            //remove lib1 reference
+
             var libToRemove = Lib1Config.Name;
             RemoveDependencyVisitor visitor = new RemoveDependencyVisitor(libToRemove);
             

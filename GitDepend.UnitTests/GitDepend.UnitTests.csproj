@@ -110,6 +110,7 @@
     <Compile Include="Visitors\DisplayStatusVisitorTests.cs" />
     <Compile Include="Visitors\ListAllBranchesVisitorTests.cs" />
     <Compile Include="Visitors\ListMergedBranchesVisitorTests.cs" />
+    <Compile Include="Visitors\ManageDependenciesVisitorTests.cs" />
     <Compile Include="Visitors\NullVisitorTests.cs" />
     <Compile Include="Visitors\RemoveDependencyVisitorTests.cs" />
   </ItemGroup>

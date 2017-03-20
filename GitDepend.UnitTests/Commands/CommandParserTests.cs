@@ -134,7 +134,7 @@ namespace GitDepend.UnitTests.Commands
         [Test]
         public void GetCommand_ShouldReturn_ManageCommand_WhenManageVerbIsSpecified()
         {
-            string[] args = { "manage", "-n", "libName"};
+            string[] args = { "manage"};
             var instance = new CommandParser();
 
             var command = instance.GetCommand(args);

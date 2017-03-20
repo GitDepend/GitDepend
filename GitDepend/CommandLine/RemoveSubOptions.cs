@@ -12,12 +12,7 @@ namespace GitDepend.CommandLine
     /// SubOptions for the Remove Command
     /// </summary>
     /// <seealso cref="GitDepend.CommandLine.CommonSubOptions" />
-    public class RemoveSubOptions : CommonSubOptions
+    public class RemoveSubOptions : NamedDependenciesOptions
     {
-        /// <summary>
-        /// The name of the dependency to remove. Use list command 
-        /// </summary>
-        [Option('n', "name", Required = true, HelpText = "The name of the dependency to remove.")]
-        public string DependencyName { get; set; }
     }
 }

@@ -22,6 +22,7 @@ namespace GitDepend.UnitTests.Commands
         private IFileSystem _fileSystem;
         private IDependencyVisitorAlgorithm _algorithm;
         private IConsole _console;
+        private IGitDependFileFactory _factory;
 
         [SetUp]
         public void Setup()
@@ -31,22 +32,28 @@ namespace GitDepend.UnitTests.Commands
             EnsureDirectory(_fileSystem, Lib2Directory);
             _algorithm = DependencyInjection.Resolve<IDependencyVisitorAlgorithm>();
             _console = DependencyInjection.Resolve<IConsole>();
+            _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
         }
 
 
         [Test]
         public void Execute_ShouldSucceed()
         {
+            string dir;
+            ReturnCode returnCode;
             _algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString)).DoInstead(
-                (IVisitor visitor, string directory) =>
+                (RemoveDependencyVisitor visitor, string directory) =>
                 {
+                    visitor.FoundDependencyDirectory = "C:\\projects\\Lib1";
                     visitor.ReturnCode = ReturnCode.Success;
                 }).MustBeCalled();
-            
+            _factory.Arrange(x => x.LoadFromDirectory(Arg.AnyString, out dir, out returnCode)).Returns(Lib2Config);
+
             RemoveSubOptions options = new RemoveSubOptions()
             {
                 Directory = Lib2Directory,
-                DependencyName = "lib1"
+                Dependencies = new List<string> (){
+                    "lib1"},
             };
 
             var command = new RemoveCommand(options);
@@ -61,19 +68,21 @@ namespace GitDepend.UnitTests.Commands
         public void Execute_ShouldFail_With_MisnamedDependency()
         {
             _algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString)).DoInstead(
-                (IVisitor visitor, string directory) =>
+                (RemoveDependencyVisitor visitor, string directory) =>
                 {
                     visitor.ReturnCode = ReturnCode.NameDidNotMatchRequestedDependency;
                 });
             _console.Arrange(x => x.WriteLine(Arg.AnyString)).MustBeCalled();
 
-            var removeOptions = new RemoveSubOptions();
+            var removeOptions = new RemoveSubOptions()
+            {
+                Dependencies = new List<string>()
+            };
             var command = new RemoveCommand(removeOptions);
 
             var code = command.Execute();
 
             Assert.AreEqual(ReturnCode.NameDidNotMatchRequestedDependency, code);
-            _console.Assert("WriteLine should have been called");
         }
     }
 }

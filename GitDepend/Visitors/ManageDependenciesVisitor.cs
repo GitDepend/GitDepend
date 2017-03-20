@@ -13,7 +13,6 @@ namespace GitDepend.Visitors
     /// </summary>
     public class ManageDependenciesVisitor : NamedDependenciesVisitor
     {
-        private ManageSubOptions _options;
         /// <summary>
         /// This contains the only name of the dependency that needs to be updated.
         /// </summary>
@@ -24,8 +23,7 @@ namespace GitDepend.Visitors
         /// </summary>
         /// <param name="options">The options to perform operations on the depend.</param>
         public ManageDependenciesVisitor(ManageSubOptions options) : base(options.Dependencies)
-        {
-            _options = options;
+        { 
         }
 
         /// <summary>

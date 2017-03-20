@@ -17,7 +17,7 @@ namespace GitDepend.Commands
     /// This removes a dependency
     /// </summary>
     /// <seealso cref="GitDepend.Commands.ICommand" />
-    public class RemoveCommand : ICommand
+    public class RemoveCommand : NamedDependenciesCommand<RemoveSubOptions>
     {
         /// <summary>
         /// The name
@@ -25,38 +25,69 @@ namespace GitDepend.Commands
         public const string Name = "remove";
 
         private readonly RemoveSubOptions _options;
+        private RemoveDependencyVisitor _visitor;
         
         private readonly IDependencyVisitorAlgorithm _algorithm;
         private readonly IConsole _console;
+        private readonly IFileSystem _fileSystem;
+        private IGitDependFileFactory _factory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoveCommand"/> class.
         /// </summary>
         /// <param name="options">The options.</param>
-        public RemoveCommand(RemoveSubOptions options)
+        public RemoveCommand(RemoveSubOptions options) : base(options)
         {
             _options = options;
             _algorithm = DependencyInjection.Resolve<IDependencyVisitorAlgorithm>();
+            _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
             _console = DependencyInjection.Resolve<IConsole>();
+            _fileSystem = DependencyInjection.Resolve<IFileSystem>();
         }
 
         /// <summary>
-        /// Executes the command.
+        /// Executes after all dependencies have been visited.
         /// </summary>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public ReturnCode Execute()
+        /// <param name="options">The options for the command.</param>
+        /// <returns></returns>
+        protected override ReturnCode AfterDependencyTraversal(RemoveSubOptions options)
         {
-            var visitor = new RemoveDependencyVisitor(_options.DependencyName);
-
-            _algorithm.TraverseDependencies(visitor, _options.Directory);
-
-            if (visitor.ReturnCode == ReturnCode.NameDidNotMatchRequestedDependency)
+            string dir;
+            ReturnCode code;
+            if (string.IsNullOrEmpty(_visitor.FoundDependencyDirectory))
             {
-                _console.WriteLine(strings.ResourceManager.GetString("RET_NAME_DID_NOT_MATCH", CultureInfo.CurrentCulture));
-                return visitor.ReturnCode;
+                return ReturnCode.NameDidNotMatchRequestedDependency;
+            }
+            var config = _factory.LoadFromDirectory(options.Directory, out dir, out code);
+            
+            //visit the project and load the config and delete the configuration.
+            int indexToRemove = -1;
+            int index = 0;
+            foreach (var dep in config.Dependencies)
+            {
+                var directoryName = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(options.Directory, dep.Directory));
+                //var dependencyDirectoryName = _fileSystem.Path.GetDirectoryName(_visitor.FoundDependencyDirectory);
+                if (directoryName == _visitor.FoundDependencyDirectory)
+                {
+                    indexToRemove = index;
+                    break;
+                }
             }
 
-            return visitor.ReturnCode;
+            config.Dependencies.RemoveAt(indexToRemove);
+
+            return ReturnCode.Success;
+        }
+
+        /// <summary>
+        /// Creates the visitor that will be used to traverse the dependency graph.
+        /// </summary>
+        /// <param name="options">The options for the command.</param>
+        /// <returns></returns>
+        protected override NamedDependenciesVisitor CreateVisitor(RemoveSubOptions options)
+        {
+            _visitor = new RemoveDependencyVisitor(options?.Dependencies?.FirstOrDefault());
+            return _visitor;
         }
     }
 }

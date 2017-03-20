@@ -44,11 +44,11 @@ namespace GitDepend.UnitTests.Visitors
             returnCode = visitor.VisitProject(Lib2Directory, Lib2Config);
 
             Assert.AreEqual(ReturnCode.Success, returnCode);
-            Assert.AreEqual(0, Lib2Config.Dependencies.Count);
+            Assert.IsTrue(!string.IsNullOrEmpty(visitor.FoundDependencyDirectory));
         }
 
         [Test]
-        public void RemoveDependencyShouldReturnNotFound()
+        public void RemoveDependencyShouldReturnSuccess_EvenWhenNotFound()
         {
             string dir;
             ReturnCode returnCode;
@@ -61,8 +61,7 @@ namespace GitDepend.UnitTests.Visitors
 
             returnCode = visitor.VisitProject(Lib2Directory, Lib2Config);
 
-            Assert.AreEqual(ReturnCode.NameDidNotMatchRequestedDependency, returnCode);
-            Assert.AreEqual(1, Lib2Config.Dependencies.Count);
+            Assert.AreEqual(ReturnCode.Success, returnCode);
         }
     }
 }

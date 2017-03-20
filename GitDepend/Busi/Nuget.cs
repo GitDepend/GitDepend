@@ -72,7 +72,7 @@ namespace GitDepend.Busi
             if (hasWarnings)
             {
                 _console.WriteLine(output);
-                code = ErrorEncountered;
+                //code = ErrorEncountered;
             }
 
             return code != (int)ReturnCode.Success

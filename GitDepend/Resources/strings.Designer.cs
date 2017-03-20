@@ -88,6 +88,15 @@ namespace GitDepend.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Config updated successfully.
+        /// </summary>
+        internal static string CONFIG_UPDATED {
+            get {
+                return ResourceManager.GetString("CONFIG_UPDATED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Creating the {0} branch on {1}.
         /// </summary>
         internal static string CREATING_BRANCH_ON_REPONAME {

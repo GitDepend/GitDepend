@@ -126,6 +126,9 @@
   <data name="CLONING_DEP_INTO_DIRECTORY" xml:space="preserve">
     <value>Cloning {0} into {1}</value>
   </data>
+  <data name="CONFIG_UPDATED" xml:space="preserve">
+    <value>Config updated successfully</value>
+  </data>
   <data name="CREATING_BRANCH_ON_REPONAME">
     <value>Creating the {0} branch on {1}</value>
   </data>

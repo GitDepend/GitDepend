@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GitDepend.Busi;
 using GitDepend.CommandLine;
+using GitDepend.Resources;
 using GitDepend.Visitors;
 
 namespace GitDepend.Commands
@@ -23,6 +24,7 @@ namespace GitDepend.Commands
 
         private readonly IGitDependFileFactory _factory;
         private readonly IFileSystem _fileSystem;
+        private readonly IConsole _console;
         
         /// <summary>
         /// Initializes a new instance of the <see cref="ManageCommand"/> class.
@@ -32,6 +34,7 @@ namespace GitDepend.Commands
         {
             _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
             _fileSystem = DependencyInjection.Resolve<IFileSystem>();
+            _console = DependencyInjection.Resolve<IConsole>();
         }
 
         /// <summary>
@@ -80,6 +83,8 @@ namespace GitDepend.Commands
                 }
             }
 
+            _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(Options.Directory, "GitDepend.json"), config.ToString());
+            _console.WriteLine(strings.CONFIG_UPDATED);
             return !updated ? ReturnCode.NameDidNotMatchRequestedDependency : ReturnCode.Success;
         }
     }

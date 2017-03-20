@@ -44,7 +44,7 @@ namespace GitDepend.UnitTests.Commands
             _algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString)).DoInstead(
                 (RemoveDependencyVisitor visitor, string directory) =>
                 {
-                    visitor.FoundDependencyDirectory = "C:\\projects\\Lib1";
+                    visitor.FoundDependencyDirectories = new List<string>(){ "C:\\projects\\Lib1" };
                     visitor.ReturnCode = ReturnCode.Success;
                 }).MustBeCalled();
             _factory.Arrange(x => x.LoadFromDirectory(Arg.AnyString, out dir, out returnCode)).Returns(Lib2Config);

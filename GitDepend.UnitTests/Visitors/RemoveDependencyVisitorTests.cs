@@ -20,11 +20,13 @@ namespace GitDepend.UnitTests.Visitors
     public class RemoveDependencyVisitorTests : TestFixtureBase
     {
         private IGitDependFileFactory _factory;
+        private IFileSystem _fileSystem;
 
         [SetUp]
         public void TestSetup()
         {
             _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
+            _fileSystem = DependencyInjection.Resolve<IFileSystem>();
         }
 
         [Test]
@@ -32,11 +34,17 @@ namespace GitDepend.UnitTests.Visitors
         {
             string dir;
             ReturnCode returnCode;
-            _factory.Arrange(x => x.LoadFromDirectory(Lib1Directory, out dir, out returnCode)).Returns(Lib1Config);
+            _factory.Arrange(x => x.LoadFromDirectory(Arg.AnyString, out dir, out returnCode)).Returns(Lib1Config);
+            _fileSystem.Arrange(x => x.Path.Combine(Arg.AnyString, Arg.AnyString)).Returns("C:\\projects\\Lib1");
+            _fileSystem.Arrange(x => x.Path.GetFullPath(Arg.AnyString)).Returns("C:\\projects\\Lib1");
 
             var libToRemove = Lib1Config.Name;
-            RemoveDependencyVisitor visitor = new RemoveDependencyVisitor(libToRemove);
-            
+            var libsToRemove = new List<string>()
+            {
+                libToRemove
+            };
+            RemoveDependencyVisitor visitor = new RemoveDependencyVisitor(libsToRemove);
+
             returnCode = visitor.VisitDependency(Lib1Directory, Lib1Dependency);
 
             Assert.AreEqual(ReturnCode.Success, returnCode);
@@ -44,7 +52,7 @@ namespace GitDepend.UnitTests.Visitors
             returnCode = visitor.VisitProject(Lib2Directory, Lib2Config);
 
             Assert.AreEqual(ReturnCode.Success, returnCode);
-            Assert.IsTrue(!string.IsNullOrEmpty(visitor.FoundDependencyDirectory));
+            Assert.AreEqual(1, visitor.FoundDependencyDirectories.Count);
         }
 
         [Test]
@@ -53,8 +61,8 @@ namespace GitDepend.UnitTests.Visitors
             string dir;
             ReturnCode returnCode;
             _factory.Arrange(x => x.LoadFromDirectory(Lib1Directory, out dir, out returnCode)).Returns(Lib1Config);
-            var libToRemove = "lib3";
-            RemoveDependencyVisitor visitor = new RemoveDependencyVisitor(libToRemove);
+            List<string> libsToRemove = new List<string> { "lib3" };
+            RemoveDependencyVisitor visitor = new RemoveDependencyVisitor(libsToRemove);
 
             returnCode = visitor.VisitDependency(Lib1Directory, Lib1Dependency);
             Assert.AreEqual(ReturnCode.Success, returnCode);

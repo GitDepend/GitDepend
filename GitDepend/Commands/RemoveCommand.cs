@@ -25,7 +25,7 @@ namespace GitDepend.Commands
         public const string Name = "remove";
 
         private RemoveDependencyVisitor _visitor;
-        
+
         private readonly IFileSystem _fileSystem;
         private IGitDependFileFactory _factory;
 
@@ -49,21 +49,24 @@ namespace GitDepend.Commands
             string dir;
             ReturnCode code;
             var config = _factory.LoadFromDirectory(options.Directory, out dir, out code);
-            
+
             //visit the project and load the config and delete the configuration.
             int indexToRemove = -1;
             int index = 0;
             foreach (var dep in config.Dependencies)
             {
                 var directoryName = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(options.Directory, dep.Directory));
-                if (directoryName == _visitor.FoundDependencyDirectory)
+                foreach (var dependencyDirectory in _visitor.FoundDependencyDirectories)
                 {
-                    indexToRemove = index;
-                    break;
+                    if (directoryName == dependencyDirectory)
+                    {
+                        indexToRemove = index;
+                        break;
+                    }
                 }
             }
-            if(indexToRemove > -1)
-            { 
+            if (indexToRemove > -1)
+            {
                 config.Dependencies.RemoveAt(indexToRemove);
                 _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(options.Directory, "GitDepend.json"), config.ToString());
                 return ReturnCode.Success;
@@ -78,7 +81,7 @@ namespace GitDepend.Commands
         /// <returns></returns>
         protected override NamedDependenciesVisitor CreateVisitor(RemoveSubOptions options)
         {
-            _visitor = new RemoveDependencyVisitor(options?.Dependencies?.FirstOrDefault());
+            _visitor = new RemoveDependencyVisitor(options?.Dependencies);
             return _visitor;
         }
     }

@@ -16,20 +16,20 @@ namespace GitDepend.Visitors
     public class RemoveDependencyVisitor : NamedDependenciesVisitor
     {
         private readonly IGitDependFileFactory _factory;
-        private readonly string _dependencyNameToRemove;
+        private readonly IList<string> _dependencyNamesToRemove;
         /// <summary>
         /// This contains the dependency directory that was found.
         /// </summary>
-        public string FoundDependencyDirectory;
+        public List<string> FoundDependencyDirectories;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoveDependencyVisitor"/> class.
         /// </summary>
-        public RemoveDependencyVisitor(string dependencyNameToRemove) : base(new List<string>{ dependencyNameToRemove})
+        public RemoveDependencyVisitor(IList<string> dependencyNamesToRemove) : base(dependencyNamesToRemove)
         {
             _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
-            _dependencyNameToRemove = dependencyNameToRemove;
-            FoundDependencyDirectory = string.Empty;
+            _dependencyNamesToRemove = dependencyNamesToRemove;
+            FoundDependencyDirectories = new List<string>();
         }
 
         /// <summary>
@@ -48,9 +48,12 @@ namespace GitDepend.Visitors
             var configFile = _factory.LoadFromDirectory(dependency.Directory, out dir, out returnCode);
             if (returnCode == ReturnCode.Success)
             {
-                if (configFile.Name == _dependencyNameToRemove)
+                foreach (var dependencyName in _dependencyNamesToRemove)
                 {
-                    FoundDependencyDirectory = dir;
+                    if (string.Equals(configFile.Name, dependencyName, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        FoundDependencyDirectories.Add(dir);
+                    }
                 }
             }
 

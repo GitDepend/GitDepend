@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions;
+﻿using System.Collections.Generic;
+using System.IO.Abstractions;
 using GitDepend.Visitors;
 using NUnit.Framework;
 
@@ -24,7 +25,7 @@ namespace GitDepend.UnitTests.Visitors
         {
             EnsureFiles(_fileSystem, Lib1PackagesDirectory, Lib1Packages);
 
-            var visitor = new CheckArtifactsVisitor();
+            var visitor = new CheckArtifactsVisitor(new List<string>());
             var code = visitor.VisitDependency(Lib1Directory, Lib1Dependency);
 
             Assert.AreEqual(ReturnCode.Success, code);
@@ -33,7 +34,7 @@ namespace GitDepend.UnitTests.Visitors
         [Test]
         public void ArtifactsDontExist_FalseUpToDate()
         {
-            var visitor = new CheckArtifactsVisitor();
+            var visitor = new CheckArtifactsVisitor(new List<string>());
             var code = visitor.VisitDependency(Lib1Directory, Lib1Dependency);
 
             Assert.AreEqual(ReturnCode.Success, code);
@@ -46,7 +47,7 @@ namespace GitDepend.UnitTests.Visitors
         
             const string LOWER_VERSION = "0002";
             EnsureFiles(_fileSystem, Lib1PackagesDirectory, Lib1Packages);
-            var visitor = new CheckArtifactsVisitor();
+            var visitor = new CheckArtifactsVisitor(new List<string>());
             visitor.VisitDependency(Lib1Directory, Lib1Dependency);
             
             _fileSystem.File.WriteAllText(Lib2Directory +  "\\packages.config", CreateNugetFile(LOWER_VERSION));
@@ -62,7 +63,7 @@ namespace GitDepend.UnitTests.Visitors
         {
             const string HIGHER_VERSION = "0481";
             EnsureFiles(_fileSystem, Lib1PackagesDirectory, Lib1Packages);
-            var visitor = new CheckArtifactsVisitor();
+            var visitor = new CheckArtifactsVisitor(new List<string>());
             visitor.VisitDependency(Lib1Directory, Lib1Dependency);
 
             _fileSystem.File.WriteAllText(Lib2Directory + "\\packages.config", CreateNugetFile(HIGHER_VERSION));
@@ -77,7 +78,7 @@ namespace GitDepend.UnitTests.Visitors
         public void ArtifactsFolderMissing_DoesntThrowException_AndMarksOutOfDate_NeedsToBuild()
         {
             _fileSystem.Directory.Delete(Lib1PackagesDirectory + @"..\..\..\..\", true);
-            var visitor = new CheckArtifactsVisitor();
+            var visitor = new CheckArtifactsVisitor(new List<string>());
             var code = visitor.VisitDependency(Lib1Directory, Lib1Dependency);
 
             Assert.AreEqual(ReturnCode.Success, code);

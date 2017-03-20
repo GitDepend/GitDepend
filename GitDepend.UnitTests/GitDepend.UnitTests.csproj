@@ -81,6 +81,7 @@
     <Compile Include="Commands\AddCommandTests.cs" />
     <Compile Include="Commands\BranchCommandTests.cs" />
     <Compile Include="Commands\CheckOutCommandTests.cs" />
+    <Compile Include="Commands\CleanCommandTests.cs" />
     <Compile Include="Commands\CloneCommandTests.cs" />
     <Compile Include="Commands\CommandParserTests.cs" />
     <Compile Include="Commands\InitCommandTests.cs" />

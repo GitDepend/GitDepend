@@ -20,14 +20,21 @@ namespace GitDepend.Commands
             string invokedVerb = null;
             object invokedVerbInstance = null;
 
-            if (!global::CommandLine.Parser.Default.ParseArgumentsStrict(args, Options.Default,
+            if (!global::CommandLine.Parser.Default.ParseArguments(args, Options.Default,
                 (verb, verbOptions) =>
                 {
                     invokedVerb = verb;
                     invokedVerbInstance = verbOptions;
                 }))
             {
-                Environment.Exit(global::CommandLine.Parser.DefaultExitCodeFail);
+                if (string.Equals(invokedVerb, "help", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    Environment.Exit((int)ReturnCode.Success);
+                }
+                else
+                {
+                    Environment.Exit((int)ReturnCode.InvalidCommand);
+                }
             }
 
             var options = invokedVerbInstance as CommonSubOptions;
@@ -80,6 +87,9 @@ namespace GitDepend.Commands
                     break;
                 case UpdateCommand.Name:
                     command = new UpdateCommand(options as UpdateSubOptions);
+                    break;
+                case CleanCommand.Name:
+                    command = new CleanCommand(options as CleanSubOptions);
                     break;
             }
 

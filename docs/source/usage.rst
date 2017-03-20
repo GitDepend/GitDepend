@@ -9,6 +9,8 @@ Command Line Options
 
       checkout    Switch branches
 
+      clean       Cleans named or all dependencies
+
       clone       Recursively clones all dependencies
 
       config      Displays the full configuration file
@@ -39,6 +41,7 @@ Command Line Options
    usage/add
    usage/branch
    usage/checkout
+   usage/clean
    usage/clone
    usage/config
    usage/init

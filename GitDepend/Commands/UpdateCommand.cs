@@ -54,26 +54,36 @@ namespace GitDepend.Commands
 
             //checkArtifactsVisitor this will check to see if we are up to date with the artifacts.
             _algorithm.Reset();
-            var checkArtifactsVisitor = new CheckArtifactsVisitor();
-            _algorithm.TraverseDependencies(checkArtifactsVisitor, _options.Directory);
-
-            if (checkArtifactsVisitor.ReturnCode == ReturnCode.Success && checkArtifactsVisitor.UpToDate)
+            
+            List<string> dependeciesToBuild = new List<string>();
+            List<string> projectsToUpdate = new List<string>();
+            if (_options.Force)
             {
-                _console.WriteLine(strings.PACKAGES_UP_TO_DATE);
-                return ReturnCode.Success;
+                dependeciesToBuild.AddRange(_options.Dependencies);
             }
-            if(checkArtifactsVisitor.ReturnCode != ReturnCode.Success)
+            else
             {
-                return checkArtifactsVisitor.ReturnCode;
-            }
+                var checkArtifactsVisitor = new CheckArtifactsVisitor(_options.Dependencies);
+                _algorithm.TraverseDependencies(checkArtifactsVisitor, _options.Directory);
 
-            var needToBuild = new HashSet<string>();
-            needToBuild.AddRange(checkArtifactsVisitor.DependenciesThatNeedBuilding);
-            needToBuild.AddRange(checkArtifactsVisitor.ProjectsThatNeedNugetUpdate);
+                if (checkArtifactsVisitor.ReturnCode == ReturnCode.Success && checkArtifactsVisitor.UpToDate)
+                {
+                    _console.WriteLine(strings.PACKAGES_UP_TO_DATE);
+                    return ReturnCode.Success;
+                }
+
+                if (checkArtifactsVisitor.ReturnCode != ReturnCode.Success)
+                {
+                    return checkArtifactsVisitor.ReturnCode;
+                }
+
+                dependeciesToBuild.AddRange(checkArtifactsVisitor.DependenciesThatNeedBuilding);
+                projectsToUpdate.AddRange(checkArtifactsVisitor.ProjectsThatNeedNugetUpdate);
+            }
 
             _console.WriteLine();
             _algorithm.Reset();
-            var buildAndUpdateVisitor = new BuildAndUpdateDependenciesVisitor(needToBuild.ToList());
+            var buildAndUpdateVisitor = new BuildAndUpdateDependenciesVisitor(dependeciesToBuild, projectsToUpdate);
             _algorithm.TraverseDependencies(buildAndUpdateVisitor, _options.Directory);
 
             if (buildAndUpdateVisitor.ReturnCode == ReturnCode.Success)

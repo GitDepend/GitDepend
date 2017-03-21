@@ -28,12 +28,12 @@ namespace GitDepend.Visitors
         /// <summary>
         /// Contains a list of the name of the dependencies that need building
         /// </summary>
-        public List<string> DependenciesThatNeedBuilding { get; set; }
+        public HashSet<string> DependenciesThatNeedBuilding { get; set; }
 
         /// <summary>
         /// The projects that need nuget update
         /// </summary>
-        public List<string> ProjectsThatNeedNugetUpdate { get; set; }
+        public HashSet<string> ProjectsThatNeedNugetUpdate { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether dependencies and projects are [up to date].
@@ -48,8 +48,8 @@ namespace GitDepend.Visitors
         {
             _fileSystem = DependencyInjection.Resolve<IFileSystem>();
             _dependencyPackageNamesAndVersions = new Dictionary<string, string>();
-            DependenciesThatNeedBuilding = new List<string>();
-            ProjectsThatNeedNugetUpdate = new List<string>();
+            DependenciesThatNeedBuilding = new HashSet<string>();
+            ProjectsThatNeedNugetUpdate = new HashSet<string>();
         }
 
         #region Overrides of NamedDependenciesVisitor
@@ -91,6 +91,14 @@ namespace GitDepend.Visitors
             if (localArtifacts.IsEmpty())
             {
                 DependenciesThatNeedBuilding.Add(dependency.Configuration.Name);
+            }
+            else
+            {
+                if (ProjectsThatNeedNugetUpdate.Contains(dependency.Configuration.Name) ||
+                    dependency.Configuration.Dependencies.Any(dep => ProjectsThatNeedNugetUpdate.Contains(dep.Configuration.Name)))
+                {
+                    DependenciesThatNeedBuilding.Add(dependency.Configuration.Name);
+                }
             }
 
             return ReturnCode.Success;

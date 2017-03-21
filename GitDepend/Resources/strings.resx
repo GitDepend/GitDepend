@@ -126,11 +126,17 @@
   <data name="CLONING_DEP_INTO_DIRECTORY" xml:space="preserve">
     <value>Cloning {0} into {1}</value>
   </data>
+  <data name="CONFIG_UPDATED" xml:space="preserve">
+    <value>Config updated successfully</value>
+  </data>
   <data name="CREATING_BRANCH_ON_REPONAME" xml:space="preserve">
     <value>Creating the {0} branch on {1}</value>
   </data>
   <data name="DEPENDENCY" xml:space="preserve">
     <value>dependency:</value>
+  </data>
+  <data name="DEPENDENCY_ADDED_SUCCESFULLY" xml:space="preserve">
+    <value>Dependency with dir {0} has been added successfully.</value>
   </data>
   <data name="DEPS_CORRECT_BRANCH" xml:space="preserve">
     <value>All dependencies on the correct branch</value>
@@ -197,6 +203,9 @@
   </data>
   <data name="RET_MISSING_DEPENDENCY" xml:space="preserve">
     <value>Missing Dependency</value>
+  </data>
+  <data name="RET_NAME_DID_NOT_MATCH" xml:space="preserve">
+    <value>Name did not match</value>
   </data>
   <data name="RET_NUGET_COMMAND_FAILED" xml:space="preserve">
     <value>Failed to execute a nuget command</value>

@@ -3,6 +3,8 @@ Command Line Options
 
 .. code-block:: bash
 
+      add         Add a dependency to an existing configuration
+
       branch      List, create, or delete branches
 
       checkout    Switch branches
@@ -16,6 +18,10 @@ Command Line Options
       init        Assists you in creating a GitDepend.json
 
       list        Lists all repository dependencies
+
+      manage      Manage dependency url, directory, branch in config.
+
+      remove      Removes a dependency based on its name.
 
       status      Displays git status on dependencies
 
@@ -32,6 +38,7 @@ Command Line Options
    :maxdepth: 1
    :caption: Verbs:
 
+   usage/add
    usage/branch
    usage/checkout
    usage/clean
@@ -39,6 +46,8 @@ Command Line Options
    usage/config
    usage/init
    usage/list
+   usage/manage
+   usage/remove
    usage/status
    usage/sync
    usage/update

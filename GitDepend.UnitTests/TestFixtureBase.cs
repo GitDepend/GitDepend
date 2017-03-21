@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
+using System.Linq;
 using System.Threading.Tasks;
 using GitDepend.Configuration;
 using Microsoft.Practices.Unity;

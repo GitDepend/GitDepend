@@ -88,6 +88,15 @@ namespace GitDepend.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Config updated successfully.
+        /// </summary>
+        internal static string CONFIG_UPDATED {
+            get {
+                return ResourceManager.GetString("CONFIG_UPDATED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Creating the {0} branch on {1}.
         /// </summary>
         internal static string CREATING_BRANCH_ON_REPONAME {
@@ -102,6 +111,15 @@ namespace GitDepend.Resources {
         internal static string DEPENDENCY {
             get {
                 return ResourceManager.GetString("DEPENDENCY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dependency with dir {0} has been added successfully..
+        /// </summary>
+        internal static string DEPENDENCY_ADDED_SUCCESFULLY {
+            get {
+                return ResourceManager.GetString("DEPENDENCY_ADDED_SUCCESFULLY", resourceCulture);
             }
         }
         
@@ -318,6 +336,15 @@ namespace GitDepend.Resources {
         internal static string RET_MISSING_DEPENDENCY {
             get {
                 return ResourceManager.GetString("RET_MISSING_DEPENDENCY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name did not match.
+        /// </summary>
+        internal static string RET_NAME_DID_NOT_MATCH {
+            get {
+                return ResourceManager.GetString("RET_NAME_DID_NOT_MATCH", resourceCulture);
             }
         }
         

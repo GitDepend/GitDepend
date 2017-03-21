@@ -39,7 +39,7 @@ namespace GitDepend.UnitTests.Visitors
             var factory = Container.Resolve<IGitDependFileFactory>();
             var processManager = Container.Resolve<IProcessManager>();
             var fileSystem = RegisterMockFileSystem();
-            var instance = new BuildAndUpdateDependenciesVisitor(new List<string>(), new List<string>());
+            var instance = new BuildAndUpdateDependenciesVisitor(new List<string> { Lib1Config.Name }, new List<string> { Lib1Config.Name, Lib2Config.Name });
 
             string dir;
             ReturnCode loadCode = ReturnCode.Success;
@@ -103,7 +103,7 @@ namespace GitDepend.UnitTests.Visitors
         [Test]
         public void VisitProject_ShouldReturn_DirectoryDoesNotExist_WhenDirectoryIsNull()
         {
-            var instance = new BuildAndUpdateDependenciesVisitor(new List<string>(), new List<string>());
+            var instance = new BuildAndUpdateDependenciesVisitor(new List<string> { Lib1Config.Name }, new List<string> { Lib1Config.Name, Lib2Config.Name });
             var code = instance.VisitProject(null, Lib2Config);
             Assert.AreEqual(ReturnCode.DirectoryDoesNotExist, code, "Invalid Return Code");
         }
@@ -111,7 +111,7 @@ namespace GitDepend.UnitTests.Visitors
         [Test]
         public void VisitProject_ShouldReturn_DirectoryDoesNotExist_WhenDirectoryDoesNotExist()
         {
-            var instance = new BuildAndUpdateDependenciesVisitor(new List<string>(), new List<string>());
+            var instance = new BuildAndUpdateDependenciesVisitor(new List<string> { Lib1Config.Name }, new List<string> { Lib1Config.Name, Lib2Config.Name });
             var code = instance.VisitProject(Lib2Directory, Lib2Config);
             Assert.AreEqual(ReturnCode.DirectoryDoesNotExist, code, "Invalid Return Code");
         }
@@ -130,7 +130,7 @@ namespace GitDepend.UnitTests.Visitors
         {
             var fileSystem = RegisterMockFileSystem();
             var nuget = Container.Resolve<INuget>();
-            var instance = new BuildAndUpdateDependenciesVisitor(new List<string>(), new List<string>());
+            var instance = new BuildAndUpdateDependenciesVisitor(new List<string> { Lib1Config.Name }, new List<string> { Lib1Config.Name, Lib2Config.Name });
 
             EnsureFiles(fileSystem, Lib1PackagesDirectory, Lib1Packages);
             EnsureFiles(fileSystem, Lib1PackagesDirectory, new List<string>
@@ -197,7 +197,7 @@ namespace GitDepend.UnitTests.Visitors
             fileSystem.Directory.Arrange(d => d.CreateDirectory(Arg.AnyString))
                 .Throws<IOException>("Access Denied");
 
-            var instance = new BuildAndUpdateDependenciesVisitor(new List<string>(), new List<string>());
+            var instance = new BuildAndUpdateDependenciesVisitor(new List<string> { Lib1Config.Name }, new List<string> { Lib1Config.Name, Lib2Config.Name });
 
             var code = instance.VisitProject(Lib2Directory, Lib2Config);
             Assert.AreEqual(ReturnCode.CouldNotCreateCacheDirectory, code, "Invalid Return Code");

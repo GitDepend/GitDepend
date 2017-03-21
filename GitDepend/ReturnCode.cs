@@ -76,6 +76,18 @@
         /// </summary>
         [ResxKey("RET_DEPENDENCY_PACKAGES_MISTMATCH")]
         DependencyPackagesMisMatch = 11,
+		
+		/// <summary>
+        /// The name did not match the requested dependency
+        /// </summary>
+        [ResxKey("RET_NAME_DID_NOT_MATCH")]
+        NameDidNotMatchRequestedDependency = 12,
+
+        /// <summary>
+        /// The dependency already exists
+        /// </summary>
+        [ResxKey("RET_DEPENDENCY_ALREADY_EXISTS")]
+        DependencyAlreadyExists = 13,
 
         /// <summary>
         /// Indicates the supplied arguments were invalid.

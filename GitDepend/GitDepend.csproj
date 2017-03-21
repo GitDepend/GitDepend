@@ -106,6 +106,7 @@
     <Compile Include="Busi\ProcessWrapper.cs" />
     <Compile Include="Busi\ReturnCodeExtensions.cs" />
     <Compile Include="Busi\UiStrings.cs" />
+    <Compile Include="CommandLine\AddSubOptions.cs" />
     <Compile Include="CommandLine\BranchSubOptions.cs" />
     <Compile Include="CommandLine\CheckOutSubOptions.cs" />
     <Compile Include="CommandLine\CleanSubOptions.cs" />
@@ -114,10 +115,13 @@
     <Compile Include="CommandLine\ConfigSubOptions.cs" />
     <Compile Include="CommandLine\InitSubOptions.cs" />
     <Compile Include="CommandLine\ListSubOptons.cs" />
+    <Compile Include="CommandLine\ManageSubOptions.cs" />
     <Compile Include="CommandLine\NamedDependenciesOptions.cs" />
+    <Compile Include="CommandLine\RemoveSubOptions.cs" />
     <Compile Include="CommandLine\StatusSubOptions.cs" />
     <Compile Include="CommandLine\SyncSubOptions.cs" />
     <Compile Include="CommandLine\UpdateSubOptions.cs" />
+    <Compile Include="Commands\AddCommand.cs" />
     <Compile Include="Commands\BranchCommand.cs" />
     <Compile Include="Commands\CheckOutCommand.cs" />
     <Compile Include="Commands\CleanCommand.cs" />
@@ -127,7 +131,9 @@
     <Compile Include="Commands\InitCommand.cs" />
     <Compile Include="Commands\ConfigCommand.cs" />
     <Compile Include="Commands\ListCommand.cs" />
+    <Compile Include="Commands\ManageCommand.cs" />
     <Compile Include="Commands\NamedDependenciesCommand.cs" />
+    <Compile Include="Commands\RemoveCommand.cs" />
     <Compile Include="Commands\StatusCommand.cs" />
     <Compile Include="Commands\SyncCommand.cs" />
     <Compile Include="Commands\UpdateCommand.cs" />
@@ -156,6 +162,8 @@
     <Compile Include="Visitors\CheckArtifactsVisitor.cs" />
     <Compile Include="Visitors\CheckOutBranchVisitor.cs" />
     <Compile Include="Visitors\CleanDependencyVisitor.cs" />
+    <Compile Include="Visitors\ManageDependenciesVisitor.cs" />
+    <Compile Include="Visitors\RemoveDependencyVisitor.cs" />
     <Compile Include="Visitors\CreateBranchVisitor.cs" />
     <Compile Include="Visitors\DeleteBranchVisitor.cs" />
     <Compile Include="Visitors\DependencyVisitorAlgorithm.cs" />

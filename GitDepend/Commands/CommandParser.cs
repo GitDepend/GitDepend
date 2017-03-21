@@ -52,6 +52,9 @@ namespace GitDepend.Commands
 
             switch (invokedVerb)
             {
+                case AddCommand.Name:
+                    command = new AddCommand(options as AddSubOptions);
+                    break;
                 case BranchCommand.Name:
                     command = new BranchCommand(options as BranchSubOptions);
                     break;
@@ -69,6 +72,12 @@ namespace GitDepend.Commands
                     break;
                 case ListCommand.Name:
                     command = new ListCommand(options as ListSubOptons);
+                    break;
+                case ManageCommand.Name:
+                    command = new ManageCommand(options as ManageSubOptions);
+                    break;
+                case RemoveCommand.Name:
+                    command = new RemoveCommand(options as RemoveSubOptions);
                     break;
                 case StatusCommand.Name:
                     command = new StatusCommand(options as StatusSubOptions);

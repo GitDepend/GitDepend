@@ -142,6 +142,15 @@ namespace GitDepend.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to locate {0}.
+        /// </summary>
+        internal static string DIRECTORY_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("DIRECTORY_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to     expected {0} but was {1}.
         /// </summary>
         internal static string EXPECTED_BRANCH_BUT_WAS_BRANCH {
@@ -228,6 +237,15 @@ namespace GitDepend.Resources {
         internal static string PROJECT {
             get {
                 return ResourceManager.GetString("PROJECT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified artifacts directory could not be found.
+        /// </summary>
+        internal static string RET_ARTIFACTS_FIR_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("RET_ARTIFACTS_FIR_NOT_FOUND", resourceCulture);
             }
         }
         

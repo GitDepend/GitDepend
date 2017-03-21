@@ -90,6 +90,12 @@
         DependencyAlreadyExists = 13,
 
         /// <summary>
+        /// Specifies that the artifacts directory could not be found
+        /// </summary>
+        [ResxKey("RET_ARTIFACTS_FIR_NOT_FOUND")]
+        FailedToLocateArtifactsDir = 12,
+
+        /// <summary>
         /// Indicates the supplied arguments were invalid.
         /// </summary>
         [ResxKey("RET_INVALID_ARGS")]

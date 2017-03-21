@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CHECKING_OUT_BRANCH_ON_REPONAME">
+  <data name="CHECKING_OUT_BRANCH_ON_REPONAME" xml:space="preserve">
     <value>Checking out the {0} branch on {1}</value>
   </data>
   <data name="CLONED_ALL_DEPS" xml:space="preserve">
@@ -129,7 +129,7 @@
   <data name="CONFIG_UPDATED" xml:space="preserve">
     <value>Config updated successfully</value>
   </data>
-  <data name="CREATING_BRANCH_ON_REPONAME">
+  <data name="CREATING_BRANCH_ON_REPONAME" xml:space="preserve">
     <value>Creating the {0} branch on {1}</value>
   </data>
   <data name="DEPENDENCY" xml:space="preserve">
@@ -248,5 +248,11 @@
   </data>
   <data name="WHAT_SHOULD_I_DO" xml:space="preserve">
     <value>What should I do?</value>
+  </data>
+  <data name="DIRECTORY_NOT_FOUND" xml:space="preserve">
+    <value>Unable to locate {0}</value>
+  </data>
+  <data name="RET_ARTIFACTS_FIR_NOT_FOUND" xml:space="preserve">
+    <value>The specified artifacts directory could not be found</value>
   </data>
 </root>

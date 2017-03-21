@@ -126,6 +126,13 @@ namespace GitDepend.Visitors
             }
 
             var artifactsDir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(directory, dependency.Directory, dependency.Configuration.Packages.Directory));
+
+            if (!_fileSystem.Directory.Exists(artifactsDir))
+            {
+                _console.WriteLine(strings.DIRECTORY_NOT_FOUND, artifactsDir);
+                return ReturnCode.FailedToLocateArtifactsDir;
+            }
+
             foreach (var file in _fileSystem.Directory.GetFiles(artifactsDir, "*.nupkg"))
             {
                 var name = _fileSystem.Path.GetFileName(file);

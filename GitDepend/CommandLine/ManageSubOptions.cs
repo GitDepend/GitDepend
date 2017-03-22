@@ -24,7 +24,7 @@ namespace GitDepend.CommandLine
         /// <summary>
         /// Sets the directory for the given dependency in the GitDepend.Json file.
         /// </summary>
-        [Option('d', "dir", Required = false, HelpText = "Sets the directory for the given dependency.")]
+        [Option('d', "directory", Required = false, HelpText = "Sets the directory for the given dependency.")]
         public string SetDirectory { get; set; }
 
         /// <summary>

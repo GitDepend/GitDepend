@@ -88,6 +88,15 @@ namespace GitDepend.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Config updated successfully.
+        /// </summary>
+        internal static string CONFIG_UPDATED {
+            get {
+                return ResourceManager.GetString("CONFIG_UPDATED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Creating the {0} branch on {1}.
         /// </summary>
         internal static string CREATING_BRANCH_ON_REPONAME {
@@ -106,6 +115,15 @@ namespace GitDepend.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dependency with dir {0} has been added successfully..
+        /// </summary>
+        internal static string DEPENDENCY_ADDED_SUCCESFULLY {
+            get {
+                return ResourceManager.GetString("DEPENDENCY_ADDED_SUCCESFULLY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All dependencies on the correct branch.
         /// </summary>
         internal static string DEPS_CORRECT_BRANCH {
@@ -120,6 +138,15 @@ namespace GitDepend.Resources {
         internal static string DIRECTORY {
             get {
                 return ResourceManager.GetString("DIRECTORY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to locate {0}.
+        /// </summary>
+        internal static string DIRECTORY_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("DIRECTORY_NOT_FOUND", resourceCulture);
             }
         }
         
@@ -214,6 +241,15 @@ namespace GitDepend.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified artifacts directory could not be found.
+        /// </summary>
+        internal static string RET_ARTIFACTS_FIR_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("RET_ARTIFACTS_FIR_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The build script failed.
         /// </summary>
         internal static string RET_BUILD_SCRIPT_FAILED {
@@ -300,6 +336,15 @@ namespace GitDepend.Resources {
         internal static string RET_MISSING_DEPENDENCY {
             get {
                 return ResourceManager.GetString("RET_MISSING_DEPENDENCY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name did not match.
+        /// </summary>
+        internal static string RET_NAME_DID_NOT_MATCH {
+            get {
+                return ResourceManager.GetString("RET_NAME_DID_NOT_MATCH", resourceCulture);
             }
         }
         

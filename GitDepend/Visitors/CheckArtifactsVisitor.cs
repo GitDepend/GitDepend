@@ -19,6 +19,7 @@ namespace GitDepend.Visitors
     /// </summary>
     public class CheckArtifactsVisitor : NamedDependenciesVisitor
     {
+        private readonly bool _force;
         private static readonly Regex NugetPackageRegex = new Regex(@"^(?<id>.*?)\.(?<version>(?:\d\.){2,3}\d(?:-.*?)?)$", RegexOptions.Compiled);
 
         private readonly IFileSystem _fileSystem;
@@ -28,12 +29,12 @@ namespace GitDepend.Visitors
         /// <summary>
         /// Contains a list of the name of the dependencies that need building
         /// </summary>
-        public List<string> DependenciesThatNeedBuilding { get; set; }
+        public HashSet<string> DependenciesThatNeedBuilding { get; set; }
 
         /// <summary>
         /// The projects that need nuget update
         /// </summary>
-        public List<string> ProjectsThatNeedNugetUpdate { get; set; }
+        public HashSet<string> ProjectsThatNeedNugetUpdate { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether dependencies and projects are [up to date].
@@ -44,12 +45,14 @@ namespace GitDepend.Visitors
         /// Creates a new <see cref="DisplayStatusVisitor"/>
         /// </summary>
         /// <param name="whitelist">The projects to visit. If this list is null or empty all projects will be visited.</param>
-        public CheckArtifactsVisitor(IList<string> whitelist) : base(whitelist)
+        /// <param name="force">Should all named dependencies be forced to build?</param>
+        public CheckArtifactsVisitor(IList<string> whitelist, bool force) : base(whitelist)
         {
+            _force = force;
             _fileSystem = DependencyInjection.Resolve<IFileSystem>();
             _dependencyPackageNamesAndVersions = new Dictionary<string, string>();
-            DependenciesThatNeedBuilding = new List<string>();
-            ProjectsThatNeedNugetUpdate = new List<string>();
+            DependenciesThatNeedBuilding = new HashSet<string>();
+            ProjectsThatNeedNugetUpdate = new HashSet<string>();
         }
 
         #region Overrides of NamedDependenciesVisitor
@@ -63,6 +66,12 @@ namespace GitDepend.Visitors
         /// <returns></returns>
         protected override ReturnCode OnVisitDependency(string directory, Dependency dependency)
         {
+            if (_force)
+            {
+                DependenciesThatNeedBuilding.Add(dependency.Configuration.Name);
+                return ReturnCode.Success;
+            }
+
             string path = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(dependency.Directory, dependency.Configuration.Packages.Directory));
 
             //read in the nuget packages created in the artifacts folder
@@ -92,6 +101,14 @@ namespace GitDepend.Visitors
             {
                 DependenciesThatNeedBuilding.Add(dependency.Configuration.Name);
             }
+            else
+            {
+                if (ProjectsThatNeedNugetUpdate.Contains(dependency.Configuration.Name) ||
+                    dependency.Configuration.Dependencies.Any(dep => ProjectsThatNeedNugetUpdate.Contains(dep.Configuration.Name)))
+                {
+                    DependenciesThatNeedBuilding.Add(dependency.Configuration.Name);
+                }
+            }
 
             return ReturnCode.Success;
         }
@@ -104,6 +121,12 @@ namespace GitDepend.Visitors
         /// <returns>The return code.</returns>
         public override ReturnCode VisitProject(string directory, GitDependFile config)
         {
+            if (_force)
+            {
+                ProjectsThatNeedNugetUpdate.Add(config.Name);
+                return ReturnCode.Success;
+            }
+
             var packagesFiles = _fileSystem.Directory.GetFiles(directory, "packages.config", SearchOption.AllDirectories);
 
             //build a dictionary of current packages that need to be checked.
@@ -114,6 +137,7 @@ namespace GitDepend.Visitors
             if (misMatching.Any() || DependenciesThatNeedBuilding.Any(d => config.Dependencies.Any(d2 => d2.Configuration.Name == d)))
             {
                 ProjectsThatNeedNugetUpdate.Add(config.Name);
+                DependenciesThatNeedBuilding.Add(config.Name);
             }
 
             return ReturnCode.Success;

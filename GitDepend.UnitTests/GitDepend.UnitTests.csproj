@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="Busi\GitDependFileFactoryTests.cs" />
     <Compile Include="Busi\GitTests.cs" />
+    <Compile Include="Commands\AddCommandTests.cs" />
     <Compile Include="Commands\BranchCommandTests.cs" />
     <Compile Include="Commands\CheckOutCommandTests.cs" />
     <Compile Include="Commands\CleanCommandTests.cs" />
@@ -85,6 +86,8 @@
     <Compile Include="Commands\CommandParserTests.cs" />
     <Compile Include="Commands\InitCommandTests.cs" />
     <Compile Include="Commands\ListCommandTests.cs" />
+    <Compile Include="Commands\ManageCommandTests.cs" />
+    <Compile Include="Commands\RemoveCommandTests.cs" />
     <Compile Include="Commands\ShowConfigCommandTests.cs" />
     <Compile Include="Commands\StatusCommandTests.cs" />
     <Compile Include="Commands\UpdateCommandTests.cs" />
@@ -108,7 +111,9 @@
     <Compile Include="Visitors\DisplayStatusVisitorTests.cs" />
     <Compile Include="Visitors\ListAllBranchesVisitorTests.cs" />
     <Compile Include="Visitors\ListMergedBranchesVisitorTests.cs" />
+    <Compile Include="Visitors\ManageDependenciesVisitorTests.cs" />
     <Compile Include="Visitors\NullVisitorTests.cs" />
+    <Compile Include="Visitors\RemoveDependencyVisitorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

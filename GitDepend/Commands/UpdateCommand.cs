@@ -57,29 +57,23 @@ namespace GitDepend.Commands
             
             List<string> dependeciesToBuild = new List<string>();
             List<string> projectsToUpdate = new List<string>();
-            if (_options.Force)
+
+            var checkArtifactsVisitor = new CheckArtifactsVisitor(_options.Dependencies, _options.Force);
+            _algorithm.TraverseDependencies(checkArtifactsVisitor, _options.Directory);
+
+            if (checkArtifactsVisitor.ReturnCode == ReturnCode.Success && checkArtifactsVisitor.UpToDate)
             {
-                dependeciesToBuild.AddRange(_options.Dependencies);
+                _console.WriteLine(strings.PACKAGES_UP_TO_DATE);
+                return ReturnCode.Success;
             }
-            else
+
+            if (checkArtifactsVisitor.ReturnCode != ReturnCode.Success)
             {
-                var checkArtifactsVisitor = new CheckArtifactsVisitor(_options.Dependencies);
-                _algorithm.TraverseDependencies(checkArtifactsVisitor, _options.Directory);
-
-                if (checkArtifactsVisitor.ReturnCode == ReturnCode.Success && checkArtifactsVisitor.UpToDate)
-                {
-                    _console.WriteLine(strings.PACKAGES_UP_TO_DATE);
-                    return ReturnCode.Success;
-                }
-
-                if (checkArtifactsVisitor.ReturnCode != ReturnCode.Success)
-                {
-                    return checkArtifactsVisitor.ReturnCode;
-                }
-
-                dependeciesToBuild.AddRange(checkArtifactsVisitor.DependenciesThatNeedBuilding);
-                projectsToUpdate.AddRange(checkArtifactsVisitor.ProjectsThatNeedNugetUpdate);
+                return checkArtifactsVisitor.ReturnCode;
             }
+
+            dependeciesToBuild.AddRange(checkArtifactsVisitor.DependenciesThatNeedBuilding);
+            projectsToUpdate.AddRange(checkArtifactsVisitor.ProjectsThatNeedNugetUpdate);
 
             _console.WriteLine();
             _algorithm.Reset();

@@ -63,17 +63,17 @@ namespace GitDepend.Busi
                 .ToArray();
 
             var code = NuGet.CommandLine.Program.Main(args);
-            var output = sb.ToString();
-            var hasWarnings = output.ToLower().Contains("warning");
+            //var output = sb.ToString();
+            //var hasWarnings = output.ToLower().Contains("warning");
             
             Console.SetOut(oldOut);
             
             _console.WriteLine($"nuget {arguments}");
-            if (hasWarnings)
-            {
-                _console.WriteLine(output);
-                code = ErrorEncountered;
-            }
+            //if (hasWarnings)
+            //{
+            //    _console.WriteLine(output);
+            //    code = ErrorEncountered;
+            //}
 
             return code != (int)ReturnCode.Success
                 ? ReturnCode.FailedToRunNugetCommand

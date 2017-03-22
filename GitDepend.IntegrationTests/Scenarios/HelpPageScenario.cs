@@ -78,7 +78,7 @@ namespace GitDepend.IntegrationTests.Scenarios
             var lib1Exists = Directory.Exists(_lib1Dir);
             var lib2Exists = Directory.Exists(_lib2Dir);
 
-            Assert.AreEqual(ReturnCode.Success, cloneVerbInfo.ReturnCode, "Return Code was Wrong");
+            Assert.AreEqual(ReturnCode.Success, cloneVerbInfo.ReturnCode, $"Return Code was Wrong - Error: {cloneVerbInfo.StandardError}");
             Assert.IsTrue(lib1Exists, "Lib1 Doesn't Exists");
             Assert.IsTrue(lib2Exists, "Lib2 Doesn't Exists");
             

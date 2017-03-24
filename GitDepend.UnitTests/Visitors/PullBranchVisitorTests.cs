@@ -56,10 +56,15 @@ namespace GitDepend.UnitTests.Visitors
         {
             _git.Arrange(x => x.Pull()).Returns(ReturnCode.InvalidCommand);
 
-            var arguments = new List<string>();
             PullBranchVisitor visitor = new PullBranchVisitor(new List<string>());
 
-            var returnCode = visitor.VisitProject(Lib1Directory, new GitDependFile());
+            var returnCode = visitor.VisitDependency(Lib1Directory, new Dependency()
+            {
+                Configuration = new GitDependFile()
+                {
+                    Name = "name"
+                }
+            });
 
             Assert.AreNotEqual(ReturnCode.Success, returnCode);
         }
@@ -71,7 +76,13 @@ namespace GitDepend.UnitTests.Visitors
 
             List<string> arguments = null;
             var visitor = new PullBranchVisitor(new List<string>());
-            var returnCode = visitor.VisitProject(Lib1Directory, new GitDependFile());
+            var returnCode = visitor.VisitDependency(Lib1Directory, new Dependency()
+            {
+                Configuration = new GitDependFile()
+                {
+                    Name = "name"
+                }
+            });
 
             Assert.AreEqual(ReturnCode.Success, returnCode);
         }
@@ -81,13 +92,7 @@ namespace GitDepend.UnitTests.Visitors
         {
             List<string> arguments = null;
             var visitor = new PullBranchVisitor(new List<string>());
-            var returnCode = visitor.VisitDependency(Lib1Directory, new Dependency()
-            {
-                Configuration = new GitDependFile()
-                {
-                    Name = "name"
-                }
-            });
+            var returnCode = visitor.VisitProject(Lib1Directory, new GitDependFile());
 
             Assert.AreEqual(ReturnCode.Success, returnCode);
         }

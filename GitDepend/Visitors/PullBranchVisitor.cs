@@ -33,15 +33,6 @@ namespace GitDepend.Visitors
         /// <returns></returns>
         protected override ReturnCode OnVisitDependency(string directory, Dependency dependency)
         {
-            return ReturnCode.Success;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public override ReturnCode VisitProject(string directory, GitDependFile config)
-        {
             _git.WorkingDirectory = directory;
             var returnCode = _git.Pull();
             if (returnCode == ReturnCode.FailedToRunGitCommand)

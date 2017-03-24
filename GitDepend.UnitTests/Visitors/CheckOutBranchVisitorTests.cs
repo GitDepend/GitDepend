@@ -27,7 +27,7 @@ namespace GitDepend.UnitTests.Visitors
         }
 
         [Test]
-        public void VisitProject_ShouldReturn_Error_WhenCheckout_Fails()
+        public void VisitProject_ShouldReturn_Success_WhenCheckout_Fails()
         {
             const string BRANCH = "hotfix/my_branch";
             const bool CREATE = false;
@@ -42,8 +42,8 @@ namespace GitDepend.UnitTests.Visitors
             var code = instance.VisitProject(Lib2Directory, Lib2Config);
 
             git.Assert();
-            Assert.AreEqual(ReturnCode.FailedToRunGitCommand, code, "Invalid Return Code");
-            Assert.AreEqual(ReturnCode.FailedToRunGitCommand, instance.ReturnCode, "Invalid Return Code");
+            Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
+            Assert.AreEqual(ReturnCode.Success, instance.ReturnCode, "Invalid Return Code");
         }
 
         [Test]

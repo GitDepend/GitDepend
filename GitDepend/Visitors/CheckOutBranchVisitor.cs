@@ -52,7 +52,12 @@ namespace GitDepend.Visitors
         public ReturnCode VisitProject(string directory, GitDependFile config)
         {
             _git.WorkingDirectory = directory;
-            return ReturnCode = _git.Checkout(_branchName, _createBranch);
+            var code = _git.Checkout(_branchName, _createBranch);
+            if (code == ReturnCode.FailedToRunGitCommand)
+            {
+                return ReturnCode = ReturnCode.Success;
+            }
+            return ReturnCode = code;
         }
 
         #endregion

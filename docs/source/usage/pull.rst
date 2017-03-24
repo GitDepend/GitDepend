@@ -18,4 +18,8 @@ dep pull [dependencies] [-p pull arguments]
 
 dep pull lib1 -p origin
 
+dep pull -p origin
+
+dep pull
+
 ..

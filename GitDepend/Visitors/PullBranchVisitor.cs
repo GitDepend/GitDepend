@@ -14,17 +14,14 @@ namespace GitDepend.Visitors
     public class PullBranchVisitor : NamedDependenciesVisitor
     {
         private IGit _git;
-        private IList<string> _arguments;
 
         /// <summary>
         /// This visitor pulls in with the given arguments each directory or the named directories in the whitelist.
         /// </summary>
-        /// <param name="pullArguments">The arguments to pass to the git pull command.</param>
         /// <param name="whitelist">The dependencies to visit</param>
-        public PullBranchVisitor(IList<string> pullArguments, IList<string> whitelist) : base(whitelist)
+        public PullBranchVisitor(IList<string> whitelist) : base(whitelist)
         {
             _git = DependencyInjection.Resolve<IGit>();
-            _arguments = pullArguments;
         }
 
         /// <summary>
@@ -46,7 +43,7 @@ namespace GitDepend.Visitors
         public override ReturnCode VisitProject(string directory, GitDependFile config)
         {
             _git.WorkingDirectory = directory;
-            var returnCode = _git.Pull(_arguments);
+            var returnCode = _git.Pull();
             if (returnCode == ReturnCode.FailedToRunGitCommand)
             {
                 return ReturnCode = ReturnCode.Success;

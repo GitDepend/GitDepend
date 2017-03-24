@@ -33,7 +33,7 @@ namespace GitDepend.Commands
         /// <returns></returns>
         protected override NamedDependenciesVisitor CreateVisitor(PullSubOptions options)
         {
-            return new PullBranchVisitor(options.PullArguments, options.Dependencies);
+            return new PullBranchVisitor(options.Dependencies);
         }
     }
 }

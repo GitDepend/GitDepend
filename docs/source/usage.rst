@@ -21,6 +21,8 @@ Command Line Options
 
       manage      Manage dependency url, directory, branch in config.
 
+      pull        Pull all or named dependencies
+
       remove      Removes a dependency based on its name.
 
       status      Displays git status on dependencies

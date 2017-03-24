@@ -12,7 +12,7 @@ namespace GitDepend.CommandLine
         /// <summary>
         /// The identifier of the dependency to update.
         /// </summary>
-        [Option('n', "name", Required = false, HelpText = "Name of the dependency to manage.")]
+        [Option('n', "name", Required = true, HelpText = "Name of the dependency to manage.")]
         public string Name { get; set; }
         
         /// <summary>

@@ -196,6 +196,7 @@ namespace GitDepend.Busi
             foreach (var arg in arguments)
             {
                 sb.Append(arg);
+                sb.Append(" ");
             }
 
             var code = ExecuteGitCommand(sb.ToString());

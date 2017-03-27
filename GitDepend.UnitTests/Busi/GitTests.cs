@@ -338,5 +338,29 @@ namespace GitDepend.UnitTests.Busi
             Assert.AreEqual("git", command);
             Assert.AreEqual($"branch", arguments);
         }
+
+        [Test]
+        public void PushBranchTest()
+        {
+            string command = null;
+            string arguments = null;
+            var processManager = Container.Resolve<IProcessManager>();
+            processManager.Arrange(p => p.Start(Arg.IsAny<ProcessStartInfo>()))
+                .Returns((ProcessStartInfo info) =>
+                {
+                    command = info.FileName;
+                    arguments = info.Arguments;
+                    return new FakeProcess();
+                });
+            var instance = new Git();
+            var code = instance.Push(new List<string>()
+            {
+                "origin master"
+            });
+
+            Assert.AreEqual(ReturnCode.Success, code);
+            Assert.AreEqual("git", command);
+            Assert.AreEqual("push origin master ", arguments);
+        }
     }
 }

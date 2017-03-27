@@ -36,9 +36,16 @@ namespace GitDepend.Visitors
         /// <returns></returns>
         protected override ReturnCode OnVisitDependency(string directory, Dependency dependency)
         {
-            _git.Push(_pushArguments);
+            _git.WorkingDirectory = dependency.Directory;
 
-            throw new NotImplementedException();
+            var code = _git.Push(_pushArguments);
+
+            if (code == ReturnCode.FailedToRunGitCommand)
+            {
+                return ReturnCode.Success;
+            }
+
+            return code;
         }
     }
 }

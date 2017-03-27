@@ -29,9 +29,9 @@ namespace GitDepend.UnitTests.Visitors
             var whitelist = new List<string>();
             var pushArguments = new List<string>();
 
-            _git.Arrange(x => x.Push(Arg.IsAny<IList<string>>())).Returns(ReturnCode.Success);
+            _git.Arrange(x => x.Push()).Returns(ReturnCode.Success);
 
-            var visitor = new PushBranchVisitor(whitelist, pushArguments);
+            var visitor = new PushBranchVisitor(whitelist);
 
             var code = visitor.VisitDependency("dep", new Dependency()
             {
@@ -50,9 +50,9 @@ namespace GitDepend.UnitTests.Visitors
             var whitelist = new List<string>();
             var pushArguments = new List<string>();
 
-            _git.Arrange(x => x.Push(Arg.IsAny<IList<string>>())).Returns(ReturnCode.FailedToRunGitCommand);
+            _git.Arrange(x => x.Push()).Returns(ReturnCode.FailedToRunGitCommand);
 
-            var visitor = new PushBranchVisitor(whitelist, pushArguments);
+            var visitor = new PushBranchVisitor(whitelist);
 
             var code = visitor.VisitDependency("dep", new Dependency()
             {

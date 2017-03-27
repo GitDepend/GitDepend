@@ -94,6 +94,9 @@ namespace GitDepend.Commands
                 case PullCommand.Name:
                     command = new PullCommand(options as PullSubOptions);
                     break;
+                case PushCommand.Name:
+                    command = new PushCommand(options as PushSubOptions);
+                    break;
             }
 
             return command;

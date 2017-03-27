@@ -50,6 +50,9 @@ namespace GitDepend.CommandLine
 
         [VerbOption(PullCommand.Name, HelpText = "Pulls named or all dependencies")]
         public PullSubOptions PullVerb { get; set; } = new PullSubOptions();
+		
+		[VerbOption(PushCommand.Name, HelpText = "Performs a git push on all of the dependencies.")]
+        public PushSubOptions PushVerb { get; set; } = new PushSubOptions();
 
         [VerbOption(RemoveCommand.Name, HelpText = "Removes a dependency based on its name.")]
         public RemoveSubOptions RemoveVerb { get; set; } = new RemoveSubOptions();

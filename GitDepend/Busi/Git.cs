@@ -186,6 +186,17 @@ namespace GitDepend.Busi
         }
 
         /// <summary>
+        /// Performs the push command
+        /// </summary>
+        /// <returns></returns>
+        public ReturnCode Push()
+        {
+            var code = ExecuteGitCommand("push");
+
+            return code;
+        }
+
+		/// <summary>
         /// Executes the pull request
         /// </summary>
         /// <returns></returns>
@@ -195,7 +206,7 @@ namespace GitDepend.Busi
 
             return code;
         }
-
+		
         private ReturnCode ExecuteGitCommand(string arguments)
         {
             var info = new ProcessStartInfo("git", arguments)

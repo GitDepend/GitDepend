@@ -164,5 +164,16 @@ namespace GitDepend.UnitTests.Commands
 
             Assert.IsTrue(command is PullCommand, InvalidCommand);
         }
+
+        [Test]
+        public void GetCommandShouldReturn_PushCommand_WhenPushVerbIsSpecified()
+        {
+            string[] args = {"push"};
+            var instance = new CommandParser();
+
+            var command = instance.GetCommand(args);
+            
+            Assert.IsTrue(command is PushCommand, "Invalid Command");
+        }
     }
 }

@@ -207,6 +207,17 @@ namespace GitDepend.Busi
             return code;
         }
 
+		/// <summary>
+        /// Executes the pull request
+        /// </summary>
+        /// <returns></returns>
+        public ReturnCode Pull()
+        {            
+            var code = ExecuteGitCommand("pull");
+
+            return code;
+        }
+		
         private ReturnCode ExecuteGitCommand(string arguments)
         {
             var info = new ProcessStartInfo("git", arguments)

@@ -99,5 +99,11 @@ namespace GitDepend.Busi
         /// </summary>
         /// <returns></returns>
         ReturnCode Push(IList<string> arguments);
+		
+		/// <summary>
+        /// Runs the pull command with the arguments provided.
+        /// </summary>
+        /// <returns></returns>
+        ReturnCode Pull();
     }
 }

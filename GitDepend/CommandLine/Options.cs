@@ -48,6 +48,9 @@ namespace GitDepend.CommandLine
         [VerbOption(ManageCommand.Name, HelpText = "Manage dependency url, directory, branch in config.")]
         public ManageSubOptions ManageVerb { get; set; } = new ManageSubOptions();
 
+        [VerbOption(PullCommand.Name, HelpText = "Pulls named or all dependencies")]
+        public PullSubOptions PullVerb { get; set; } = new PullSubOptions();
+
         [VerbOption(RemoveCommand.Name, HelpText = "Removes a dependency based on its name.")]
         public RemoveSubOptions RemoveVerb { get; set; } = new RemoveSubOptions();
 

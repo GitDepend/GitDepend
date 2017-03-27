@@ -1,5 +1,7 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Abstractions;
+using System.Text;
 
 namespace GitDepend.Busi
 {
@@ -180,6 +182,17 @@ namespace GitDepend.Busi
             var code = ExecuteGitCommand($"commit --file=\"{file}\"");
 
             _fileSystem.File.Delete(file);
+            return code;
+        }
+
+        /// <summary>
+        /// Executes the pull request
+        /// </summary>
+        /// <returns></returns>
+        public ReturnCode Pull()
+        {
+            var code = ExecuteGitCommand("pull");
+
             return code;
         }
 

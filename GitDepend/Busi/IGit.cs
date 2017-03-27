@@ -1,4 +1,6 @@
-﻿namespace GitDepend.Busi
+﻿using System.Collections.Generic;
+
+namespace GitDepend.Busi
 {
     /// <summary>
     /// A helper class for dealing with git.exe
@@ -91,5 +93,11 @@
         /// </summary>
         /// <returns></returns>
         ReturnCode Clean(bool dryRun, bool force, bool removeFiles, bool removeDirectories);
+
+        /// <summary>
+        /// Runs the pull command with the arguments provided.
+        /// </summary>
+        /// <returns></returns>
+        ReturnCode Pull();
     }
 }

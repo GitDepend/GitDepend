@@ -26,9 +26,14 @@ namespace GitDepend.Commands
         {
         }
 
+        /// <summary>
+        /// Creates the visitor that will be used to traverse the dependency graph.
+        /// </summary>
+        /// <param name="options">The options for the command.</param>
+        /// <returns></returns>
         protected override NamedDependenciesVisitor CreateVisitor(PushSubOptions options)
         {
-            throw new NotImplementedException();
+            return new PushBranchVisitor(options.Dependencies, options.PushArguments);
         }
     }
 }

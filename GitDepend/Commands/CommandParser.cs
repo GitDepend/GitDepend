@@ -93,6 +93,7 @@ namespace GitDepend.Commands
                     break;
                 case PushCommand.Name:
                     command = new PushCommand(options as PushSubOptions);
+                    break;
             }
 
             return command;

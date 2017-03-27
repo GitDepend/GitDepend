@@ -14,16 +14,13 @@ namespace GitDepend.Visitors
     public class PushBranchVisitor : NamedDependenciesVisitor
     {
         private readonly IGit _git;
-        private IList<string> _pushArguments;
 
         /// <summary>
         /// The constructor to create the visitor.
         /// </summary>
         /// <param name="whitelist">The directories to process</param>
-        /// <param name="pushArguments">Arguments to be passed to the git push command</param>
-        public PushBranchVisitor(IList<string> whitelist, IList<string> pushArguments) : base(whitelist)
+        public PushBranchVisitor(IList<string> whitelist) : base(whitelist)
         {
-            _pushArguments = pushArguments ?? new List<string>();
             _git = DependencyInjection.Resolve<IGit>();
         }
 
@@ -38,7 +35,7 @@ namespace GitDepend.Visitors
         {
             _git.WorkingDirectory = dependency.Directory;
 
-            var code = _git.Push(_pushArguments);
+            var code = _git.Push();
 
             if (code == ReturnCode.FailedToRunGitCommand)
             {

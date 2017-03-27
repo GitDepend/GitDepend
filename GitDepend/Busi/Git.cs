@@ -189,20 +189,9 @@ namespace GitDepend.Busi
         /// Performs the push command
         /// </summary>
         /// <returns></returns>
-        public ReturnCode Push(IList<string> arguments)
+        public ReturnCode Push()
         {
-            var sb = new StringBuilder();
-            sb.Append("push ");
-            if (arguments != null)
-            {
-                foreach (var arg in arguments)
-                {
-                    sb.Append(arg);
-                    sb.Append(" ");
-                }
-            }
-
-            var code = ExecuteGitCommand(sb.ToString());
+            var code = ExecuteGitCommand("push");
 
             return code;
         }
@@ -212,7 +201,7 @@ namespace GitDepend.Busi
         /// </summary>
         /// <returns></returns>
         public ReturnCode Pull()
-        {            
+        {
             var code = ExecuteGitCommand("pull");
 
             return code;

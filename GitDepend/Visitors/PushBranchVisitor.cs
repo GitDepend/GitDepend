@@ -23,7 +23,7 @@ namespace GitDepend.Visitors
         /// <param name="pushArguments">Arguments to be passed to the git push command</param>
         public PushBranchVisitor(IList<string> whitelist, IList<string> pushArguments) : base(whitelist)
         {
-            _pushArguments = pushArguments;
+            _pushArguments = pushArguments ?? new List<string>();
             _git = DependencyInjection.Resolve<IGit>();
         }
 

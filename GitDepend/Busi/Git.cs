@@ -193,10 +193,13 @@ namespace GitDepend.Busi
         {
             var sb = new StringBuilder();
             sb.Append("push ");
-            foreach (var arg in arguments)
+            if (arguments != null)
             {
-                sb.Append(arg);
-                sb.Append(" ");
+                foreach (var arg in arguments)
+                {
+                    sb.Append(arg);
+                    sb.Append(" ");
+                }
             }
 
             var code = ExecuteGitCommand(sb.ToString());

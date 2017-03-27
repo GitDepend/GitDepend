@@ -30,7 +30,7 @@ namespace GitDepend.UnitTests.Visitors
             _git.Arrange(x => x.Pull()).Returns(ReturnCode.Success);
 
             var arguments = new List<string>();
-            PullBranchVisitor visitor = new PullBranchVisitor(new List<string>());
+            PullBranchVisitor visitor = new PullBranchVisitor(arguments);
 
             var returnCode = visitor.VisitProject(Lib1Directory, new GitDependFile());
 
@@ -44,9 +44,15 @@ namespace GitDepend.UnitTests.Visitors
             _git.Arrange(x => x.Pull()).Returns(ReturnCode.FailedToRunGitCommand);
 
             var arguments = new List<string>();
-            PullBranchVisitor visitor = new PullBranchVisitor(new List<string>());
+            PullBranchVisitor visitor = new PullBranchVisitor(arguments);
 
-            var returnCode = visitor.VisitProject(Lib1Directory, new GitDependFile());
+            var returnCode = visitor.VisitDependency(Lib1Directory, new Dependency()
+            {
+                Configuration = new GitDependFile()
+                {
+                    Name = "name"
+                }
+            });
 
             Assert.AreEqual(ReturnCode.Success, returnCode);
         }
@@ -96,7 +102,6 @@ namespace GitDepend.UnitTests.Visitors
 
             Assert.AreEqual(ReturnCode.Success, returnCode);
         }
-
 
     }
 }

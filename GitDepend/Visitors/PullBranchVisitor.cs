@@ -27,13 +27,13 @@ namespace GitDepend.Visitors
         /// <summary>
         /// Provides the custom hook for VisitDependency. This will only be called if the dependency
         /// was specified in the whitelist.
-        /// </summary>
+        /// </summary>  
         /// <param name="directory">The directory of the project.</param>
         /// <param name="dependency">The <see cref="Dependency"/> to visit.</param>
         /// <returns></returns>
         protected override ReturnCode OnVisitDependency(string directory, Dependency dependency)
         {
-            _git.WorkingDirectory = directory;
+            _git.WorkingDirectory = dependency.Directory;
             var returnCode = _git.Pull();
             if (returnCode == ReturnCode.FailedToRunGitCommand)
             {

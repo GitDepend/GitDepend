@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using GitDepend.Busi;
 using GitDepend.CommandLine;
 using GitDepend.Configuration;
+using GitDepend.Resources;
 
 namespace GitDepend.Commands
 {
@@ -62,7 +63,7 @@ namespace GitDepend.Commands
         {
             if (string.IsNullOrEmpty(dependency.Configuration.Name))
             {
-                _console.WriteLine($"{indent}- Dependency in directory: {dependency.Directory} is missing a name, or config file.");
+                _console.WriteLine(string.Format(strings.DEPENDENCY_MISSING_NAME, indent, dependency.Directory));
             }
             else
             {

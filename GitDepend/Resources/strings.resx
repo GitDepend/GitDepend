@@ -141,6 +141,9 @@
   <data name="DEPS_CORRECT_BRANCH" xml:space="preserve">
     <value>All dependencies on the correct branch</value>
   </data>
+  <data name="DEPENDENCY_MISSING_NAME" xml:space="preserve">
+    <value>"{0}- Dependency in directory: {1} is missing a name, or config file."</value>
+  </data>
   <data name="DIRECTORY" xml:space="preserve">
     <value>    dir: </value>
   </data>

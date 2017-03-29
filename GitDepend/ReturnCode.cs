@@ -96,6 +96,12 @@
         FailedToLocateArtifactsDir = 14,
 
         /// <summary>
+        /// Indicates build script in config file could not be found
+        /// </summary>
+        [ResxKey("RET_BUILD_SCRIPT_NOT_FOUND")]
+        BuildScriptNotFound = 16,
+
+        /// <summary>
         /// Indicates the supplied arguments were invalid.
         /// </summary>
         [ResxKey("RET_INVALID_ARGS")]

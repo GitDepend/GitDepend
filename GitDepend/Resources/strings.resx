@@ -205,7 +205,7 @@
     <value>Missing Dependency</value>
   </data>
   <data name="RET_NAME_DID_NOT_MATCH" xml:space="preserve">
-    <value>Name did not match</value>
+    <value>Named dependency did not match</value>
   </data>
   <data name="RET_NUGET_COMMAND_FAILED" xml:space="preserve">
     <value>Failed to execute a nuget command</value>
@@ -252,7 +252,7 @@
   <data name="DIRECTORY_NOT_FOUND" xml:space="preserve">
     <value>Unable to locate {0}</value>
   </data>
-  <data name="RET_ARTIFACTS_FIR_NOT_FOUND" xml:space="preserve">
+  <data name="RET_ARTIFACTS_DIR_NOT_FOUND" xml:space="preserve">
     <value>The specified artifacts directory could not be found</value>
   </data>
 </root>

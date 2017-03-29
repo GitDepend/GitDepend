@@ -92,8 +92,8 @@
         /// <summary>
         /// Specifies that the artifacts directory could not be found
         /// </summary>
-        [ResxKey("RET_ARTIFACTS_FIR_NOT_FOUND")]
-        FailedToLocateArtifactsDir = 12,
+        [ResxKey("RET_ARTIFACTS_DIR_NOT_FOUND")]
+        FailedToLocateArtifactsDir = 14,
 
         /// <summary>
         /// Indicates the supplied arguments were invalid.

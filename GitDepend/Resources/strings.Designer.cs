@@ -277,6 +277,15 @@ namespace GitDepend.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GitDepend.json file not found.
+        /// </summary>
+        internal static string RET_DEPEND_FILE_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("RET_DEPEND_FILE_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Directory does not exist.
         /// </summary>
         internal static string RET_DIRECTORY_DOES_NOT_EXIST {

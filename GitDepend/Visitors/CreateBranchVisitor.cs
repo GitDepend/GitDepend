@@ -47,7 +47,7 @@ namespace GitDepend.Visitors
         }
 
         /// <summary>
-        /// Visists a project.
+        /// Visits a project.
         /// </summary>
         /// <param name="directory">The directory of the project.</param>
         /// <param name="config">The <see cref="GitDependFile"/> with project configuration information.</param>
@@ -62,6 +62,15 @@ namespace GitDepend.Visitors
                 return ReturnCode = ReturnCode.Success;
             }
             return ReturnCode = code;
+        }
+
+        /// <summary>
+        /// Called when the algorithm can't find the configuration file.
+        /// </summary>
+        /// <returns></returns>
+        public ReturnCode MissingConfigurationFile()
+        {
+            throw new System.NotImplementedException();
         }
 
         #endregion

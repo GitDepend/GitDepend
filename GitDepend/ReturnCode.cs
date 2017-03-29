@@ -96,6 +96,12 @@
         FailedToLocateArtifactsDir = 14,
 
         /// <summary>
+        /// Specifies that there is no configuration found for the current folder
+        /// </summary>
+        [ResxKey("RET_DEPEND_FILE_NOT_FOUND")]
+        ConfigurationFileDoesNotExist = 15,
+
+        /// <summary>
         /// Indicates the supplied arguments were invalid.
         /// </summary>
         [ResxKey("RET_INVALID_ARGS")]

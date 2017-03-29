@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO.Abstractions;
 using GitDepend.Busi;
+using GitDepend.Configuration;
 using GitDepend.Resources;
 
 namespace GitDepend.Visitors
@@ -76,6 +77,11 @@ namespace GitDepend.Visitors
                     ReturnCode returnCode;
                     dependency.Configuration = _factory.LoadFromDirectory(dependency.Directory, out dependencyDirectory, out returnCode);
                     // If something went wrong with git we are done.
+                    if (string.IsNullOrEmpty(dependency.Configuration.Name))
+                    {
+                        //either the name is missing or we are missing an entire configuration file for this dependency
+                        code = visitor.MissingConfigurationFile();
+                    }
                     if (code != ReturnCode.Success)
                     {
                         visitor.ReturnCode = code;

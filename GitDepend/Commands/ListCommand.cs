@@ -60,10 +60,17 @@ namespace GitDepend.Commands
 
         private void WriteDependency(Dependency dependency, string indent)
         {
-            _console.WriteLine($"{indent}- {dependency.Configuration.Name}");
-            foreach (var subDependency in dependency.Configuration.Dependencies)
+            if (string.IsNullOrEmpty(dependency.Configuration.Name))
             {
-                WriteDependency(subDependency, indent + "    ");
+                _console.WriteLine($"{indent}- Dependency in directory: {dependency.Directory} is missing a name, or config file.");
+            }
+            else
+            {
+                _console.WriteLine($"{indent}- {dependency.Configuration.Name}");
+                foreach (var subDependency in dependency.Configuration.Dependencies)
+                {
+                    WriteDependency(subDependency, indent + "    ");
+                }
             }
         }
 

@@ -28,7 +28,7 @@ namespace GitDepend.UnitTests.Visitors
         }
 
         [Test]
-        public void VisitProject_ShouldReturn_Error_WhenCreateBranch_Fails()
+        public void VisitProject_ShouldReturn_Success_WhenCreateBranch_Fails()
         {
             const string BRANCH = "feature/my_branch";
 
@@ -41,7 +41,7 @@ namespace GitDepend.UnitTests.Visitors
             var instance = new CreateBranchVisitor(BRANCH);
             var code = instance.VisitProject(Lib2Directory, Lib2Config);
             git.Assert();
-            Assert.AreEqual(ReturnCode.FailedToRunGitCommand, code, "Invalid Return Code");
+            Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
             Assert.AreEqual(Lib2Directory, git.WorkingDirectory, "Invalid working directory");
         }
 

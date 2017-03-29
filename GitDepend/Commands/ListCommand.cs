@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using GitDepend.Busi;
 using GitDepend.CommandLine;
 using GitDepend.Configuration;
+using GitDepend.Resources;
 
 namespace GitDepend.Commands
 {
@@ -60,10 +61,17 @@ namespace GitDepend.Commands
 
         private void WriteDependency(Dependency dependency, string indent)
         {
-            _console.WriteLine($"{indent}- {dependency.Configuration.Name}");
-            foreach (var subDependency in dependency.Configuration.Dependencies)
+            if (string.IsNullOrEmpty(dependency.Configuration.Name))
             {
-                WriteDependency(subDependency, indent + "    ");
+                _console.WriteLine(string.Format(strings.DEPENDENCY_MISSING_NAME, indent, dependency.Directory));
+            }
+            else
+            {
+                _console.WriteLine($"{indent}- {dependency.Configuration.Name}");
+                foreach (var subDependency in dependency.Configuration.Dependencies)
+                {
+                    WriteDependency(subDependency, indent + "    ");
+                }
             }
         }
 

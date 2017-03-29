@@ -72,7 +72,9 @@ namespace GitDepend.Visitors
 
                     code = _git.Clone(dependency.Url, dependency.Directory, dependency.Branch);
                     _console.WriteLine();
-
+                    string dependencyDirectory;
+                    ReturnCode returnCode;
+                    dependency.Configuration = _factory.LoadFromDirectory(dependency.Directory, out dependencyDirectory, out returnCode);
                     // If something went wrong with git we are done.
                     if (code != ReturnCode.Success)
                     {

@@ -20,6 +20,13 @@ Solves the problem of working with multiple git repositories where lower level r
 * [Why do I need GitDepend](http://gitdepend.readthedocs.io/en/latest/why.html)
 * [How does it work?](http://gitdepend.readthedocs.io/en/latest/usage_example.html)
 
+## v0.5.0
+* init verb now asks for the name
+* bug fixes with the update verb
+* Dependencies are no longer built if correct artifacts already exist
+* adds a clean command
+* several bug fixes
+
 ## v0.4.0
 * chocolatey install adds dep as an alias for GitDepend
 * Multiple new commands have been added improve the usability of GitDepend.

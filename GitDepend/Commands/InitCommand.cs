@@ -57,6 +57,7 @@ namespace GitDepend.Commands
             _console.Write($"build script [{config.Build.Script}]: ");
             config.Build.Script = ReadLine(config.Build.Script);
             
+            _console.Write($"args [{config.Build.Arguments}]: ");
             config.Build.Arguments = ReadLine(config.Build.Arguments);
 
             _console.Write($"artifacts dir [{config.Packages.Directory}]: ");

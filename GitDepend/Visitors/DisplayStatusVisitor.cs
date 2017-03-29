@@ -35,6 +35,7 @@ namespace GitDepend.Visitors
         {
             var path = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(directory, dependency.Directory));
             _git.WorkingDirectory = path;
+            _git.Fetch();
             return ReturnCode = _git.Status();
         }
 

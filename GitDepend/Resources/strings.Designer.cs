@@ -252,9 +252,9 @@ namespace GitDepend.Resources {
         /// <summary>
         ///   Looks up a localized string similar to The specified artifacts directory could not be found.
         /// </summary>
-        internal static string RET_ARTIFACTS_FIR_NOT_FOUND {
+        internal static string RET_ARTIFACTS_DIR_NOT_FOUND {
             get {
-                return ResourceManager.GetString("RET_ARTIFACTS_FIR_NOT_FOUND", resourceCulture);
+                return ResourceManager.GetString("RET_ARTIFACTS_DIR_NOT_FOUND", resourceCulture);
             }
         }
         
@@ -349,7 +349,7 @@ namespace GitDepend.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Name did not match.
+        ///   Looks up a localized string similar to Named dependency did not match.
         /// </summary>
         internal static string RET_NAME_DID_NOT_MATCH {
             get {

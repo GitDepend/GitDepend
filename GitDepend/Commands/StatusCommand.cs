@@ -43,8 +43,7 @@ namespace GitDepend.Commands
             return new DisplayStatusVisitor(options.Dependencies);
         }
 
-        #region Overrides of NamedDependenciesCommand<StatusSubOptions>
-
+       
         /// <summary>
         /// Executes after all dependencies have been visited.
         /// </summary>
@@ -62,8 +61,6 @@ namespace GitDepend.Commands
 
             return _git.Status();
         }
-
-        #endregion
 
         #endregion
     }

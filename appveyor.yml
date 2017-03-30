@@ -33,7 +33,7 @@ deploy:
   - provider: Environment
     name: chocolatey.org (pre-release)
     on:
-      branch: 'release/*'
+      branch: 'release/v0.5.0'
   - provider: Environment
     name: nuget.org
     on:

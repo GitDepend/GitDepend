@@ -111,7 +111,7 @@ namespace GitDepend.Visitors
 
             if (_dependeciesToBuild.Any(d => string.Equals(d, dependency.Configuration.Name, StringComparison.InvariantCultureIgnoreCase)))
             {
-                var buildScript = _fileSystem.Path.Combine(dependency.Directory, config.Build.Script);
+                var buildScript =_fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(directory, dependency.Directory, config.Build.Script));
                 if (!_fileSystem.File.Exists(buildScript))
                 {
                     return ReturnCode.BuildScriptNotFound;

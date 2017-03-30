@@ -20,14 +20,21 @@ namespace GitDepend.Commands
             string invokedVerb = null;
             object invokedVerbInstance = null;
 
-            if (!global::CommandLine.Parser.Default.ParseArgumentsStrict(args, Options.Default,
+            if (!global::CommandLine.Parser.Default.ParseArguments(args, Options.Default,
                 (verb, verbOptions) =>
                 {
                     invokedVerb = verb;
                     invokedVerbInstance = verbOptions;
                 }))
             {
-                Environment.Exit(global::CommandLine.Parser.DefaultExitCodeFail);
+                if (string.Equals(invokedVerb, "help", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    Environment.Exit((int)ReturnCode.Success);
+                }
+                else
+                {
+                    Environment.Exit((int)ReturnCode.InvalidCommand);
+                }
             }
 
             var options = invokedVerbInstance as CommonSubOptions;
@@ -45,6 +52,9 @@ namespace GitDepend.Commands
 
             switch (invokedVerb)
             {
+                case AddCommand.Name:
+                    command = new AddCommand(options as AddSubOptions);
+                    break;
                 case BranchCommand.Name:
                     command = new BranchCommand(options as BranchSubOptions);
                     break;
@@ -63,6 +73,12 @@ namespace GitDepend.Commands
                 case ListCommand.Name:
                     command = new ListCommand(options as ListSubOptons);
                     break;
+                case ManageCommand.Name:
+                    command = new ManageCommand(options as ManageSubOptions);
+                    break;
+                case RemoveCommand.Name:
+                    command = new RemoveCommand(options as RemoveSubOptions);
+                    break;
                 case StatusCommand.Name:
                     command = new StatusCommand(options as StatusSubOptions);
                     break;
@@ -71,6 +87,9 @@ namespace GitDepend.Commands
                     break;
                 case UpdateCommand.Name:
                     command = new UpdateCommand(options as UpdateSubOptions);
+                    break;
+                case CleanCommand.Name:
+                    command = new CleanCommand(options as CleanSubOptions);
                     break;
             }
 

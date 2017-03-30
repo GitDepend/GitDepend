@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO.Abstractions;
 using GitDepend.Busi;
 using GitDepend.Configuration;
+using GitDepend.Resources;
 
 namespace GitDepend.Visitors
 {
@@ -43,23 +44,23 @@ namespace GitDepend.Visitors
 
             var code = ReturnCode.Success;
 
-            _console.WriteLine("Verifying the checked out branch");
+            _console.WriteLine(strings.VERIFYING_CHECKED_OUT_BRANCH);
 
             if (currBranch != dependency.Branch)
             {
                 var oldColor = _console.ForegroundColor;
                 _console.ForegroundColor = ConsoleColor.Red;
-                _console.WriteLine("Invalid Branch!");
-                _console.WriteLine($"    expected {dependency.Branch} but was {currBranch}");
+                _console.WriteLine(strings.INVALID_BRANCH);
+                _console.WriteLine(strings.EXPECTED_BRANCH_BUT_WAS_BRANCH, dependency.Branch, currBranch);
                 _console.ForegroundColor = oldColor;
 
                 bool goodChoice = false;
                 do
                 {
-                    _console.WriteLine("What should I do?");
-                    _console.WriteLine($"1. Update config to point to {currBranch}");
-                    _console.WriteLine($"2. Switch branch to {dependency.Branch}");
-                    _console.WriteLine("3. Give up. I'll figure it out myself.");
+                    _console.WriteLine(strings.WHAT_SHOULD_I_DO);
+                    _console.WriteLine(strings.UPDATE_CONFIG + currBranch);
+                    _console.WriteLine(strings.SWITCH_BRANCH_OPTION + dependency.Branch);
+                    _console.WriteLine(strings.GIVE_UP_OPTION);
                     _console.Write("> ");
                     var choice = _console.ReadLine();
 
@@ -78,14 +79,14 @@ namespace GitDepend.Visitors
                             code = ReturnCode.InvalidBranchCheckedOut;
                             break;
                         default:
-                            _console.WriteLine("Huh? Try again.");
+                            _console.WriteLine(strings.TRY_AGAIN);
                             break;
                     }
                 } while (!goodChoice);
             }
             else
             {
-                _console.WriteLine("everything looks good.");
+                _console.WriteLine(strings.LOOKS_GOOD);
             }
             _console.WriteLine();
 

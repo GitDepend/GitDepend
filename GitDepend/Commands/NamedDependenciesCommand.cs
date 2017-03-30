@@ -1,6 +1,7 @@
 using System;
 using GitDepend.Busi;
 using GitDepend.CommandLine;
+using GitDepend.Resources;
 using GitDepend.Visitors;
 
 namespace GitDepend.Commands
@@ -49,8 +50,8 @@ namespace GitDepend.Commands
             {
                 var origColor = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("project:");
-                Console.WriteLine($"    dir: {Options.Directory}");
+                Console.WriteLine(strings.PROJECT);
+                Console.WriteLine(strings.DIRECTORY + Options.Directory);
                 Console.WriteLine();
                 Console.ForegroundColor = origColor;
 

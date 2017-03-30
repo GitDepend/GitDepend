@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,6 +32,16 @@ namespace GitDepend.UnitTests.Commands
             var command = instance.GetCommand(args);
 
             Assert.IsTrue(command is ConfigCommand, "Invalid Command");
+        }
+
+        [Test]
+        public void GetCommand_ShouldReturn_CleanCommand_WhenCleanVerbIsSpecified()
+        {
+            string[] args = {"clean"};
+            var instance = new CommandParser();
+            var command = instance.GetCommand(args);
+
+            Assert.IsTrue(command is CleanCommand, "Invalid Command");
         }
 
         [Test]
@@ -108,6 +119,38 @@ namespace GitDepend.UnitTests.Commands
             var command = instance.GetCommand(args);
 
             Assert.IsTrue(command is SyncCommand, "Invalid Command");
+        }
+
+        [Test]
+        public void GetCommand_ShouldReturn_AddCommand_WhenAddVerbIsSpecified()
+        {
+            string[] args = {"add", "--url", "myurl",  "--directory", "mydir", "--branch", "mybranch"};
+            var instance = new CommandParser();
+            var command = instance.GetCommand(args);
+
+            Assert.IsTrue(command is AddCommand, "InvalidCommand");
+        }
+
+        [Test]
+        public void GetCommand_ShouldReturn_RemoveCommand_WhenRemoveVerbIsSpecified()
+        {
+            string[] args = { "remove" };
+            var instance = new CommandParser();
+
+            var command = instance.GetCommand(args);
+            
+            Assert.IsTrue(command is RemoveCommand, "Invalid Command");
+        }
+
+        [Test]
+        public void GetCommand_ShouldReturn_ManageCommand_WhenManageVerbIsSpecified()
+        {
+            string[] args = { "manage", "-n", "newdir"};
+            var instance = new CommandParser();
+
+            var command = instance.GetCommand(args);
+
+            Assert.IsTrue(command is ManageCommand, "Invalid Command");
         }
     }
 }

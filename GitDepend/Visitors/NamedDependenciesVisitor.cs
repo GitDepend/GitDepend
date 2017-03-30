@@ -4,6 +4,7 @@ using System.IO.Abstractions;
 using System.Linq;
 using GitDepend.Busi;
 using GitDepend.Configuration;
+using GitDepend.Resources;
 
 namespace GitDepend.Visitors
 {
@@ -73,9 +74,9 @@ namespace GitDepend.Visitors
 
             var origColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("dependency:");
-            Console.WriteLine($"    name: {dependency.Configuration.Name}");
-            Console.WriteLine($"    dir: {dir}");
+            Console.WriteLine(strings.DEPENDENCY);
+            Console.WriteLine(strings.NAME + dependency.Configuration.Name);
+            Console.WriteLine(strings.DIRECTORY + dir);
             Console.WriteLine();
             Console.ForegroundColor = origColor;
 
@@ -83,7 +84,7 @@ namespace GitDepend.Visitors
         }
 
         /// <summary>
-        /// Visists a project.
+        /// Visits a project.
         /// </summary>
         /// <param name="directory">The directory of the project.</param>
         /// <param name="config">The <see cref="GitDependFile"/> with project configuration information.</param>

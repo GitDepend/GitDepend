@@ -75,6 +75,7 @@ namespace GitDepend.UnitTests.Commands
             };
 
             bool checkoutCalled = false;
+            bool checkArtifacts = false;
             var algorithm = Container.Resolve<IDependencyVisitorAlgorithm>();
             algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
                 .DoInstead((IVisitor visitor, string directory) =>
@@ -83,6 +84,14 @@ namespace GitDepend.UnitTests.Commands
                     {
                         checkoutCalled = true;
                         visitor.ReturnCode = ReturnCode.Success;
+                        return;
+                    }
+
+                    if (visitor is CheckArtifactsVisitor)
+                    {
+                        checkArtifacts = true;
+                        visitor.ReturnCode = ReturnCode.Success;
+                        ((CheckArtifactsVisitor)visitor).ProjectsThatNeedNugetUpdate.Add("Lib1");
                         return;
                     }
 
@@ -116,8 +125,10 @@ namespace GitDepend.UnitTests.Commands
             var code = instance.Execute();
 
             Assert.IsTrue(checkoutCalled, "Dependencies should have been checked out first.");
+            Assert.IsTrue(checkArtifacts, "Artifacts should have been checked");
             Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
-            Assert.AreEqual(expected, output.ToString());
+            var actual = output.ToString();
+            Assert.AreEqual(expected, actual);
         }
     }
 }

@@ -184,7 +184,7 @@ namespace GitDepend.UnitTests.Visitors
                 });
 
             instance.TraverseDependencies(visitor, PROJECT_DIRECTORY);
-            Assert.AreEqual(ReturnCode.FailedToRunBuildScript, visitor.ReturnCode, "Invalid ReturnCode");
+            Assert.AreEqual(ReturnCode.ConfigurationFileDoesNotExist, visitor.ReturnCode, "Invalid ReturnCode");
         }
 
         [Test]
@@ -207,7 +207,10 @@ namespace GitDepend.UnitTests.Visitors
                     visitedDependencies.Add(dependency.Directory);
                     return ReturnCode.Success;
                 });
-
+            string outDirectory;
+            ReturnCode returnCode;
+            factory.Arrange(x => x.LoadFromDirectory(Lib1Directory, out outDirectory, out returnCode))
+                .Returns(Lib1Config);
             visitor.Arrange(v => v.VisitProject(Arg.AnyString, Arg.IsAny<GitDependFile>()))
                 .Returns((string directory, GitDependFile config) =>
                 {
@@ -218,15 +221,9 @@ namespace GitDepend.UnitTests.Visitors
                 });
 
             string lib2Dir = PROJECT_DIRECTORY;
-            var dir = Lib2Config.Dependencies.First(d => d.Configuration.Name == "Lib1").Directory;
-            string lib1Dir = fileSystem.Path.GetFullPath(fileSystem.Path.Combine(lib2Dir, dir));
 
             fileSystem.Directory.CreateDirectory(PROJECT_DIRECTORY);
             fileSystem.Directory.CreateDirectory(fileSystem.Path.Combine(PROJECT_DIRECTORY, ".git"));
-
-            ReturnCode lib1Code;
-            factory.Arrange(f => f.LoadFromDirectory(lib1Dir, out lib1Dir, out lib1Code))
-                .Returns(Lib1Config);
 
             ReturnCode lib2Code;
             factory.Arrange(f => f.LoadFromDirectory(lib2Dir, out lib2Dir, out lib2Code))

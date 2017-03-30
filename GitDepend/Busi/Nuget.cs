@@ -14,6 +14,7 @@ namespace GitDepend.Busi
     public class Nuget : INuget
     {
         private readonly IConsole _console;
+        private const int ErrorEncountered = 1;
 
         /// <summary>
         /// The working directory for nuget.exe
@@ -47,7 +48,7 @@ namespace GitDepend.Busi
         /// <returns>The nuget return code.</returns>
         public ReturnCode Update(string soluton, string id, string version, string sourceDirectory)
         {
-            return ExecuteNuGetCommand($"update {soluton} -Id {id} -Version {version} -Source \"{sourceDirectory}\" -Pre");
+            return ExecuteNuGetCommand($"update {soluton} -Id {id} -Version {version} -Source \"{sourceDirectory}\" -Pre -verbosity quiet");
         }
 
         private ReturnCode ExecuteNuGetCommand(string arguments)
@@ -62,10 +63,17 @@ namespace GitDepend.Busi
                 .ToArray();
 
             var code = NuGet.CommandLine.Program.Main(args);
-
+            //var output = sb.ToString();
+            //var hasWarnings = output.ToLower().Contains("warning");
+            
             Console.SetOut(oldOut);
             
             _console.WriteLine($"nuget {arguments}");
+            //if (hasWarnings)
+            //{
+            //    _console.WriteLine(output);
+            //    code = ErrorEncountered;
+            //}
 
             return code != (int)ReturnCode.Success
                 ? ReturnCode.FailedToRunNugetCommand

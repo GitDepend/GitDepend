@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using GitDepend.Busi;
 using GitDepend.Configuration;
+using GitDepend.Resources;
 
 namespace GitDepend.Visitors
 {
@@ -17,7 +18,8 @@ namespace GitDepend.Visitors
     /// </summary>
     public class BuildAndUpdateDependenciesVisitor : IVisitor
     {
-        private readonly IList<string> _whitelist;
+        private readonly List<string> _dependeciesToBuild;
+        private readonly List<string> _projectsToUpdate;
         private static readonly Regex Pattern = new Regex(@"^(?<id>.*?)\.(?<version>(?:\d\.){2,3}\d(?:-.*?)?)$", RegexOptions.Compiled);
         private readonly IGitDependFileFactory _factory;
         private readonly IGit _git;
@@ -34,10 +36,12 @@ namespace GitDepend.Visitors
         /// <summary>
         /// Creates a new <see cref="BuildAndUpdateDependenciesVisitor"/>
         /// </summary>
-        /// <param name="whitelist">The dependencies to update.</param>
-        public BuildAndUpdateDependenciesVisitor(IList<string> whitelist)
+        /// <param name="dependeciesToBuild">The dependencies to build.</param>
+        /// <param name="projectsToUpdate">The projects to update.</param>
+        public BuildAndUpdateDependenciesVisitor(List<string> dependeciesToBuild, List<string> projectsToUpdate)
         {
-            _whitelist = whitelist;
+            _dependeciesToBuild = dependeciesToBuild;
+            _projectsToUpdate = projectsToUpdate;
             _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
             _git = DependencyInjection.Resolve<IGit>();
             _nuget = DependencyInjection.Resolve<INuget>();
@@ -87,15 +91,6 @@ namespace GitDepend.Visitors
         /// <returns>The return code.</returns>
         public ReturnCode VisitDependency(string directory, Dependency dependency)
         {
-            // If there are specific dependencies specified
-            // and this one isn't in the list
-            // skip it.
-            if (_whitelist.Any() &&
-                _whitelist.All(d => !string.Equals(d, dependency.Configuration.Name, StringComparison.InvariantCultureIgnoreCase)))
-            {
-                return ReturnCode.Success;
-            }
-
             string dir;
             ReturnCode code;
             var config = _factory.LoadFromDirectory(dependency.Directory, out dir, out code);
@@ -112,22 +107,37 @@ namespace GitDepend.Visitors
                 return ReturnCode = ReturnCode.CouldNotCreateCacheDirectory;
             }
 
-            var buildScript = _fileSystem.Path.Combine(dependency.Directory, config.Build.Script);
-            var info = new ProcessStartInfo(buildScript, config.Build.Arguments)
-            {
-                WorkingDirectory = dependency.Directory,
-                UseShellExecute = false
-            };
+            int exitCode = 0;
 
-            int exitCode;
-            using (var proc = _processManager.Start(info))
+            if (_dependeciesToBuild.Any(d => string.Equals(d, dependency.Configuration.Name, StringComparison.InvariantCultureIgnoreCase)))
             {
-                proc.WaitForExit();
-                exitCode = proc.ExitCode;
+                var buildScript =_fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(directory, dependency.Directory, config.Build.Script));
+                if (!_fileSystem.File.Exists(buildScript))
+                {
+                    return ReturnCode.BuildScriptNotFound;
+                }
+
+                var info = new ProcessStartInfo(buildScript, config.Build.Arguments)
+                {
+                    WorkingDirectory = dependency.Directory,
+                    UseShellExecute = false
+                };
+
+                using (var proc = _processManager.Start(info))
+                {
+                    proc.WaitForExit();
+                    exitCode = proc.ExitCode;
+                }
             }
 
-
             var artifactsDir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(directory, dependency.Directory, dependency.Configuration.Packages.Directory));
+
+            if (!_fileSystem.Directory.Exists(artifactsDir))
+            {
+                _console.WriteLine(strings.DIRECTORY_NOT_FOUND, artifactsDir);
+                return ReturnCode.FailedToLocateArtifactsDir;
+            }
+
             foreach (var file in _fileSystem.Directory.GetFiles(artifactsDir, "*.nupkg"))
             {
                 var name = _fileSystem.Path.GetFileName(file);
@@ -158,8 +168,8 @@ namespace GitDepend.Visitors
             // If there are specific dependencies specified
             // and this one isn't in the list
             // skip it.
-            if (_whitelist.Any() &&
-                _whitelist.All(d => !string.Equals(d, config.Name, StringComparison.InvariantCultureIgnoreCase)))
+            if (!_projectsToUpdate.Any() ||
+                _projectsToUpdate.All(d => !string.Equals(d, config.Name, StringComparison.InvariantCultureIgnoreCase)))
             {
                 return ReturnCode.Success;
             }
@@ -177,7 +187,11 @@ namespace GitDepend.Visitors
 
             foreach (var solution in solutions)
             {
-                _nuget.Restore(solution);
+                var returnCode = _nuget.Restore(solution);
+                if (returnCode != ReturnCode.Success)
+                {
+                    return returnCode;
+                }
             }
 
             foreach (var solution in solutions)
@@ -187,15 +201,6 @@ namespace GitDepend.Visitors
 
                 foreach (var dependency in config.Dependencies)
                 {
-                    // If there are specific dependencies specified
-                    // and this one isn't in the list
-                    // skip it.
-                    if (_whitelist.Any() &&
-                        _whitelist.All(d => !string.Equals(d, dependency.Configuration.Name, StringComparison.InvariantCultureIgnoreCase)))
-                    {
-                        continue;
-                    }
-
                     var dependencyDir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(directory, dependency.Directory));
                     var dir = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(dependencyDir, dependency.Configuration.Packages.Directory));
 
@@ -230,7 +235,11 @@ namespace GitDepend.Visitors
                             return ReturnCode = ReturnCode.CouldNotCreateCacheDirectory;
                         }
 
-                        _nuget.Update(solution, id, version, cacheDir);
+                        var returnCode = _nuget.Update(solution, id, version, cacheDir);
+                        if (returnCode != ReturnCode.Success)
+                        {
+                            return returnCode;
+                        }
 
                         var package = $"{id}.{version}";
                         if (!UpdatedPackages.Contains(package))
@@ -242,7 +251,7 @@ namespace GitDepend.Visitors
             }
 
             _console.WriteLine("================================================================================");
-            _console.WriteLine($"Making update commit on {directory}");
+            _console.WriteLine(strings.MAKING_UPDATE_COMMIT_ON  + directory);
             _git.WorkingDirectory = directory;
             _git.Add("*.csproj", @"*\packages.config");
             _console.WriteLine("================================================================================");

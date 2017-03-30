@@ -17,7 +17,7 @@ namespace GitDepend.Configuration
         /// Any script arguments.
         /// </summary>
         [JsonProperty("arguments")]
-        public string Arguments { get; set; }
+        public string Arguments { get; set; } = string.Empty;
 
         #region Overrides of Object
 

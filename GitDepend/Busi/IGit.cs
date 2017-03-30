@@ -49,6 +49,12 @@
         ReturnCode Commit(string message);
 
         /// <summary>
+        /// Fetches the latest repository state.
+        /// </summary>
+        /// <returns>The git return code.</returns>
+        ReturnCode Fetch();
+
+        /// <summary>
         /// Shows the status of the repository.
         /// </summary>
         /// <returns>The git return code.</returns>
@@ -79,5 +85,11 @@
         /// </summary>
         /// <returns></returns>
         string GetCurrentBranch();
+
+        /// <summary>
+        /// Cleans the directory.
+        /// </summary>
+        /// <returns></returns>
+        ReturnCode Clean(bool dryRun, bool force, bool removeFiles, bool removeDirectories);
     }
 }

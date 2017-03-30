@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO.Abstractions;
 using GitDepend.Busi;
+using GitDepend.Configuration;
+using GitDepend.Resources;
 
 namespace GitDepend.Visitors
 {
@@ -67,12 +69,24 @@ namespace GitDepend.Visitors
                 // If the dependency does not exist on disk we need to clone it.
                 if (!_fileSystem.Directory.Exists(dependency.Directory))
                 {
-                    _console.WriteLine($"Cloning {dependency.Url} into {dependency.Directory}");
+                    _console.WriteLine(strings.CLONING_DEP_INTO_DIRECTORY, dependency.Url, dependency.Directory);
 
                     code = _git.Clone(dependency.Url, dependency.Directory, dependency.Branch);
+                    if (code != ReturnCode.Success)
+                    {
+                        visitor.ReturnCode = code;
+                        return;
+                    }
                     _console.WriteLine();
-
+                    string dependencyDirectory;
+                    ReturnCode returnCode;
+                    dependency.Configuration = _factory.LoadFromDirectory(dependency.Directory, out dependencyDirectory, out returnCode);
                     // If something went wrong with git we are done.
+                    if (string.IsNullOrEmpty(dependency.Configuration.Name))
+                    {
+                        //either the name is missing or we are missing an entire configuration file for this dependency
+                        code = ReturnCode.ConfigurationFileDoesNotExist;
+                    }
                     if (code != ReturnCode.Success)
                     {
                         visitor.ReturnCode = code;

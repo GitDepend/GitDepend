@@ -53,7 +53,7 @@ namespace GitDepend.Visitors
         }
 
         /// <summary>
-        /// Visists a project.
+        /// Visits a project.
         /// </summary>
         /// <param name="directory">The directory of the project.</param>
         /// <param name="config">The <see cref="GitDependFile"/> with project configuration information.</param>
@@ -65,7 +65,12 @@ namespace GitDepend.Visitors
                 : $"Deleting the {BranchName} branch from {config.Name}");
 
             _git.WorkingDirectory = directory;
-            return ReturnCode = _git.DeleteBranch(BranchName, Force);
+            var code = _git.DeleteBranch(BranchName, Force);
+            if (code == ReturnCode.FailedToRunGitCommand)
+            {
+                return ReturnCode = ReturnCode.Success;
+            }
+            return ReturnCode = code;
         }
 
         #endregion

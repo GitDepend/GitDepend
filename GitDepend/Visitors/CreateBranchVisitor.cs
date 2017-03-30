@@ -1,5 +1,6 @@
 ﻿using GitDepend.Busi;
 using GitDepend.Configuration;
+using GitDepend.Resources;
 
 namespace GitDepend.Visitors
 {
@@ -46,16 +47,21 @@ namespace GitDepend.Visitors
         }
 
         /// <summary>
-        /// Visists a project.
+        /// Visits a project.
         /// </summary>
         /// <param name="directory">The directory of the project.</param>
         /// <param name="config">The <see cref="GitDependFile"/> with project configuration information.</param>
         /// <returns>The return code.</returns>
         public ReturnCode VisitProject(string directory, GitDependFile config)
         {
-            _console.WriteLine($"Creating the {BranchName} branch on {config.Name}");
+            _console.WriteLine(strings.CREATING_BRANCH_ON_REPONAME, BranchName, config.Name);
             _git.WorkingDirectory = directory;
-            return ReturnCode = _git.CreateBranch(BranchName);
+            var code = _git.CreateBranch(BranchName);
+            if (code == ReturnCode.FailedToRunGitCommand)
+            {
+                return ReturnCode = ReturnCode.Success;
+            }
+            return ReturnCode = code;
         }
 
         #endregion

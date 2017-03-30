@@ -63,7 +63,49 @@
         /// Specifies that an invalid branch is checked out on a dependency.
         /// </summary>
         [ResxKey("RET_INVALID_BRANCH_CHECKED_OUT")]
-        InvalidBranchCheckedOut,
+        InvalidBranchCheckedOut = 9,
+
+        /// <summary>
+        /// Specifies the dependency are packages not built 
+        /// </summary>
+        [ResxKey("RET_DEPENDENCY_PACKAGES_NOT_BUILT")]
+        DependencyPackagesNotBuilt = 10,
+
+        /// <summary>
+        /// Specifies the dependency packages are mismatching
+        /// </summary>
+        [ResxKey("RET_DEPENDENCY_PACKAGES_MISTMATCH")]
+        DependencyPackagesMisMatch = 11,
+		
+		/// <summary>
+        /// The name did not match the requested dependency
+        /// </summary>
+        [ResxKey("RET_NAME_DID_NOT_MATCH")]
+        NameDidNotMatchRequestedDependency = 12,
+
+        /// <summary>
+        /// The dependency already exists
+        /// </summary>
+        [ResxKey("RET_DEPENDENCY_ALREADY_EXISTS")]
+        DependencyAlreadyExists = 13,
+
+        /// <summary>
+        /// Specifies that the artifacts directory could not be found
+        /// </summary>
+        [ResxKey("RET_ARTIFACTS_DIR_NOT_FOUND")]
+        FailedToLocateArtifactsDir = 14,
+
+        /// <summary>
+        /// Specifies that there is no configuration found for the current folder
+        /// </summary>
+        [ResxKey("RET_DEPEND_FILE_NOT_FOUND")]
+        ConfigurationFileDoesNotExist = 15,
+		
+		/// <summary>
+        /// Indicates build script in config file could not be found
+        /// </summary>
+        [ResxKey("RET_BUILD_SCRIPT_NOT_FOUND")]
+        BuildScriptNotFound = 16,
 
         /// <summary>
         /// Indicates the supplied arguments were invalid.

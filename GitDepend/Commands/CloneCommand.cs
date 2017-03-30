@@ -2,6 +2,7 @@
 using System.IO.Abstractions;
 using GitDepend.Busi;
 using GitDepend.CommandLine;
+using GitDepend.Resources;
 using GitDepend.Visitors;
 
 namespace GitDepend.Commands
@@ -44,7 +45,7 @@ namespace GitDepend.Commands
 
             if (visitor.ReturnCode == ReturnCode.Success)
             {
-                _console.WriteLine("Successfully cloned all dependencies");
+                _console.WriteLine(strings.CLONED_ALL_DEPS);
             }
 
             visitor = new CheckOutDependencyBranchVisitor();
@@ -53,7 +54,7 @@ namespace GitDepend.Commands
 
             if (visitor.ReturnCode == ReturnCode.Success)
             {
-                _console.WriteLine("All dependencies on the correct branch");
+                _console.WriteLine(strings.DEPS_CORRECT_BRANCH);
             }
 
             return visitor.ReturnCode;

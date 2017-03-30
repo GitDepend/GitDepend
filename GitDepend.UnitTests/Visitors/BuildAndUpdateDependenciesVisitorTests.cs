@@ -46,6 +46,13 @@ namespace GitDepend.UnitTests.Visitors
             factory.Arrange(f => f.LoadFromDirectory(Arg.AnyString, out dir, out loadCode))
                 .Returns(Lib1Config);
 
+            EnsureDirectory(fileSystem, Lib1Directory);
+            EnsureDirectory(fileSystem, Lib2Directory);
+            EnsureFiles(fileSystem, Lib1Directory, new List<string>
+            {
+                "make.bat"
+            });
+
             bool scriptExecuted = false;
             processManager.Arrange(m => m.Start(Arg.IsAny<ProcessStartInfo>()))
                 .Returns((ProcessStartInfo info) =>
@@ -59,7 +66,7 @@ namespace GitDepend.UnitTests.Visitors
                         HasExited = true
                     };
                 });
-
+            
 
             var code = instance.VisitDependency(Lib2Directory, Lib1Dependency);
 

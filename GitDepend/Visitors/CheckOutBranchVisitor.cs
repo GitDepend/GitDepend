@@ -66,7 +66,7 @@ namespace GitDepend.Visitors
         /// <returns></returns>
         public ReturnCode MissingConfigurationFile()
         {
-            throw new System.NotImplementedException();
+            return ReturnCode.ConfigurationFileDoesNotExist;
         }
 
         #endregion

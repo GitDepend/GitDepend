@@ -12,6 +12,8 @@ namespace GitDepend.UnitTests.Commands
     [TestFixture]
     public class CommandParserTests : TestFixtureBase
     {
+        private const string InvalidCommand = "Invalid Command";
+
         [Test]
         public void GetCommand_ShouldReturn_InitCommand_WhenInitVerbIsSpecified()
         {
@@ -20,7 +22,7 @@ namespace GitDepend.UnitTests.Commands
 
             var command = instance.GetCommand(args);
 
-            Assert.IsTrue(command is InitCommand, "Invalid Command");
+            Assert.IsTrue(command is InitCommand, InvalidCommand);
         }
 
         [Test]
@@ -31,7 +33,7 @@ namespace GitDepend.UnitTests.Commands
 
             var command = instance.GetCommand(args);
 
-            Assert.IsTrue(command is ConfigCommand, "Invalid Command");
+            Assert.IsTrue(command is ConfigCommand, InvalidCommand);
         }
 
         [Test]
@@ -41,7 +43,7 @@ namespace GitDepend.UnitTests.Commands
             var instance = new CommandParser();
             var command = instance.GetCommand(args);
 
-            Assert.IsTrue(command is CleanCommand, "Invalid Command");
+            Assert.IsTrue(command is CleanCommand, InvalidCommand);
         }
 
         [Test]
@@ -52,7 +54,7 @@ namespace GitDepend.UnitTests.Commands
 
             var command = instance.GetCommand(args);
 
-            Assert.IsTrue(command is CloneCommand, "Invalid Command");
+            Assert.IsTrue(command is CloneCommand, InvalidCommand);
         }
 
         [Test]
@@ -63,7 +65,7 @@ namespace GitDepend.UnitTests.Commands
 
             var command = instance.GetCommand(args);
 
-            Assert.IsTrue(command is UpdateCommand, "Invalid Command");
+            Assert.IsTrue(command is UpdateCommand, InvalidCommand);
         }
 
         [Test]
@@ -74,7 +76,7 @@ namespace GitDepend.UnitTests.Commands
 
             var command = instance.GetCommand(args);
 
-            Assert.IsTrue(command is StatusCommand, "Invalid Command");
+            Assert.IsTrue(command is StatusCommand, InvalidCommand);
         }
 
         [Test]
@@ -85,7 +87,7 @@ namespace GitDepend.UnitTests.Commands
 
             var command = instance.GetCommand(args);
 
-            Assert.IsTrue(command is ListCommand, "Invalid Command");
+            Assert.IsTrue(command is ListCommand, InvalidCommand);
         }
 
         [Test]
@@ -96,7 +98,7 @@ namespace GitDepend.UnitTests.Commands
 
             var command = instance.GetCommand(args);
 
-            Assert.IsTrue(command is BranchCommand, "Invalid Command");
+            Assert.IsTrue(command is BranchCommand, InvalidCommand);
         }
 
         [Test]
@@ -107,7 +109,7 @@ namespace GitDepend.UnitTests.Commands
 
             var command = instance.GetCommand(args);
 
-            Assert.IsTrue(command is CheckOutCommand, "Invalid Command");
+            Assert.IsTrue(command is CheckOutCommand, InvalidCommand);
         }
 
         [Test]
@@ -118,7 +120,7 @@ namespace GitDepend.UnitTests.Commands
 
             var command = instance.GetCommand(args);
 
-            Assert.IsTrue(command is SyncCommand, "Invalid Command");
+            Assert.IsTrue(command is SyncCommand, InvalidCommand);
         }
 
         [Test]
@@ -128,7 +130,7 @@ namespace GitDepend.UnitTests.Commands
             var instance = new CommandParser();
             var command = instance.GetCommand(args);
 
-            Assert.IsTrue(command is AddCommand, "InvalidCommand");
+            Assert.IsTrue(command is AddCommand, InvalidCommand);
         }
 
         [Test]
@@ -139,7 +141,7 @@ namespace GitDepend.UnitTests.Commands
 
             var command = instance.GetCommand(args);
             
-            Assert.IsTrue(command is RemoveCommand, "Invalid Command");
+            Assert.IsTrue(command is RemoveCommand, InvalidCommand);
         }
 
         [Test]
@@ -150,7 +152,28 @@ namespace GitDepend.UnitTests.Commands
 
             var command = instance.GetCommand(args);
 
-            Assert.IsTrue(command is ManageCommand, "Invalid Command");
+            Assert.IsTrue(command is ManageCommand, InvalidCommand);
+        }
+
+        [Test]
+        public void GetCommand_ShouldReturn_PullCommand_WhenPullVerbIsSpecified()
+        {
+            string[] args = {"pull"};
+            var instance = new CommandParser();
+            var command = instance.GetCommand(args);
+
+            Assert.IsTrue(command is PullCommand, InvalidCommand);
+        }
+
+        [Test]
+        public void GetCommandShouldReturn_PushCommand_WhenPushVerbIsSpecified()
+        {
+            string[] args = {"push"};
+            var instance = new CommandParser();
+
+            var command = instance.GetCommand(args);
+            
+            Assert.IsTrue(command is PushCommand, "Invalid Command");
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Abstractions;
+using System.Text;
 
 namespace GitDepend.Busi
 {
@@ -183,6 +185,28 @@ namespace GitDepend.Busi
             return code;
         }
 
+        /// <summary>
+        /// Performs the push command
+        /// </summary>
+        /// <returns></returns>
+        public ReturnCode Push()
+        {
+            var code = ExecuteGitCommand("push");
+
+            return code;
+        }
+
+		/// <summary>
+        /// Executes the pull request
+        /// </summary>
+        /// <returns></returns>
+        public ReturnCode Pull()
+        {
+            var code = ExecuteGitCommand("pull");
+
+            return code;
+        }
+		
         private ReturnCode ExecuteGitCommand(string arguments)
         {
             var info = new ProcessStartInfo("git", arguments)

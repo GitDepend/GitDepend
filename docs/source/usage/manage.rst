@@ -5,7 +5,7 @@ Manage dependencies in your current directory
 
 .. code-block:: bash
 
-    -n, --name      Name of the dependency to update
+    -n, --name      Required. Name of the dependency to update
 
     -u, --url       Updates/sets the dependency url
 

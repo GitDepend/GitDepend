@@ -82,9 +82,12 @@ namespace GitDepend.Commands
                     }
                 }
             }
-
-            _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(Options.Directory, "GitDepend.json"), config.ToString());
-            _console.WriteLine(strings.CONFIG_UPDATED);
+            if (updated)
+            {
+                _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(Options.Directory, "GitDepend.json"),
+                    config.ToString());
+                _console.WriteLine(strings.CONFIG_UPDATED);
+            }
             return !updated ? ReturnCode.NameDidNotMatchRequestedDependency : ReturnCode.Success;
         }
     }

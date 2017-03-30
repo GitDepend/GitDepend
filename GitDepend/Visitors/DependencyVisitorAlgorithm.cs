@@ -72,6 +72,11 @@ namespace GitDepend.Visitors
                     _console.WriteLine(strings.CLONING_DEP_INTO_DIRECTORY, dependency.Url, dependency.Directory);
 
                     code = _git.Clone(dependency.Url, dependency.Directory, dependency.Branch);
+                    if (code != ReturnCode.Success)
+                    {
+                        visitor.ReturnCode = code;
+                        return;
+                    }
                     _console.WriteLine();
                     string dependencyDirectory;
                     ReturnCode returnCode;

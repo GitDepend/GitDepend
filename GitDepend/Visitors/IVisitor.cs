@@ -28,11 +28,5 @@ namespace GitDepend.Visitors
         /// <param name="config">The <see cref="GitDependFile"/> with project configuration information.</param>
         /// <returns>The return code.</returns>
         ReturnCode VisitProject(string directory, GitDependFile config);
-
-        /// <summary>
-        /// Called when the algorithm can't find the configuration file.
-        /// </summary>
-        /// <returns></returns>
-        ReturnCode MissingConfigurationFile();
     }
 }

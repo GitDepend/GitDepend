@@ -85,7 +85,7 @@ namespace GitDepend.Visitors
                     if (string.IsNullOrEmpty(dependency.Configuration.Name))
                     {
                         //either the name is missing or we are missing an entire configuration file for this dependency
-                        code = visitor.MissingConfigurationFile();
+                        code = ReturnCode.ConfigurationFileDoesNotExist;
                     }
                     if (code != ReturnCode.Success)
                     {

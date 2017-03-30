@@ -94,15 +94,6 @@ namespace GitDepend.Visitors
             return ReturnCode = ReturnCode.Success;
         }
 
-        /// <summary>
-        /// Called when the algorithm can't find the configuration file.
-        /// </summary>
-        /// <returns></returns>
-        public virtual ReturnCode MissingConfigurationFile()
-        {
-            return ReturnCode.ConfigurationFileDoesNotExist;
-        }
-
         #endregion
     }
 }

@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Lib1
+{
+	public class StringUtils
+	{
+		public static string Trim(string str)
+		{
+			return str.Trim();
+		}
+
+		public static string TrimEnd(string str)
+		{
+			return str.TrimEnd();
+		}
+
+		public static string TrimStart(string str)
+		{
+			return str.TrimStart();
+		}
+	}
+}

@@ -137,5 +137,26 @@ namespace GitDepend.IntegrationTests
                 // ignored
             }
         }
+
+        /// <summary>
+        /// Writes the text from ReplaceFile into SourceFile
+        /// </summary>
+        /// <param name="workdirPath"></param>
+        /// <param name="sourcefile"></param>
+        /// <param name="replaceFile"></param>
+        /// <returns>Update File was successful</returns>
+        protected bool UpdateFile(string workdirPath, string sourcefile, string replaceFile)
+        {
+            if (!Directory.Exists(workdirPath))
+                return false;
+
+            if (!File.Exists(Path.Combine(workdirPath, sourcefile)))
+                return false;
+
+            var path = Path.Combine(workdirPath, sourcefile);
+            File.WriteAllText(path, File.ReadAllText(replaceFile));
+
+            return true;
+        }
     }
 }

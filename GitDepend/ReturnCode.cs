@@ -100,6 +100,12 @@
         /// </summary>
         [ResxKey("RET_DEPEND_FILE_NOT_FOUND")]
         ConfigurationFileDoesNotExist = 15,
+		
+		/// <summary>
+        /// Indicates build script in config file could not be found
+        /// </summary>
+        [ResxKey("RET_BUILD_SCRIPT_NOT_FOUND")]
+        BuildScriptNotFound = 16,
 
         /// <summary>
         /// Indicates the supplied arguments were invalid.

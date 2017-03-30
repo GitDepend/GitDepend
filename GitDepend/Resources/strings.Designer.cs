@@ -268,6 +268,15 @@ namespace GitDepend.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The build script specified could not be found.
+        /// </summary>
+        internal static string RET_BUILD_SCRIPT_NOT_FOUND {
+            get {
+                return ResourceManager.GetString("RET_BUILD_SCRIPT_NOT_FOUND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to create the nuget cache directory.
         /// </summary>
         internal static string RET_CREATE_CACHE_DIR_FAILED {

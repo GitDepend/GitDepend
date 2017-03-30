@@ -180,6 +180,9 @@
   <data name="RET_BUILD_SCRIPT_FAILED" xml:space="preserve">
     <value>The build script failed</value>
   </data>
+  <data name="RET_BUILD_SCRIPT_NOT_FOUND" xml:space="preserve">
+    <value>The build script specified could not be found</value>
+  </data>
   <data name="RET_CREATE_CACHE_DIR_FAILED" xml:space="preserve">
     <value>Failed to create the nuget cache directory</value>
   </data>

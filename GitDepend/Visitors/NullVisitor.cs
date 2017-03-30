@@ -26,7 +26,7 @@ namespace GitDepend.Visitors
         }
 
         /// <summary>
-        /// Visists a project.
+        /// Visits a project.
         /// </summary>
         /// <param name="directory">The directory of the project.</param>
         /// <param name="config">The <see cref="GitDependFile"/> with project configuration information.</param>

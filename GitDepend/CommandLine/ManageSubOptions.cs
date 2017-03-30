@@ -12,7 +12,7 @@ namespace GitDepend.CommandLine
         /// <summary>
         /// The identifier of the dependency to update.
         /// </summary>
-        [Option('n', "name", Required = false, HelpText = "Name of the dependency to manage.")]
+        [Option('n', "name", Required = true, HelpText = "Name of the dependency to manage.")]
         public string Name { get; set; }
         
         /// <summary>
@@ -24,7 +24,7 @@ namespace GitDepend.CommandLine
         /// <summary>
         /// Sets the directory for the given dependency in the GitDepend.Json file.
         /// </summary>
-        [Option('d', "dir", Required = false, HelpText = "Sets the directory for the given dependency.")]
+        [Option('d', "setdir", Required = false, HelpText = "Sets the directory for the given dependency.")]
         public string SetDirectory { get; set; }
 
         /// <summary>

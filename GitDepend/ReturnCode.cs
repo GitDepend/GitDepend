@@ -92,8 +92,20 @@
         /// <summary>
         /// Specifies that the artifacts directory could not be found
         /// </summary>
-        [ResxKey("RET_ARTIFACTS_FIR_NOT_FOUND")]
-        FailedToLocateArtifactsDir = 12,
+        [ResxKey("RET_ARTIFACTS_DIR_NOT_FOUND")]
+        FailedToLocateArtifactsDir = 14,
+
+        /// <summary>
+        /// Specifies that there is no configuration found for the current folder
+        /// </summary>
+        [ResxKey("RET_DEPEND_FILE_NOT_FOUND")]
+        ConfigurationFileDoesNotExist = 15,
+		
+		/// <summary>
+        /// Indicates build script in config file could not be found
+        /// </summary>
+        [ResxKey("RET_BUILD_SCRIPT_NOT_FOUND")]
+        BuildScriptNotFound = 16,
 
         /// <summary>
         /// Indicates the supplied arguments were invalid.

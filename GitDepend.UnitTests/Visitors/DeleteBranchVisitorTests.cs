@@ -46,7 +46,7 @@ namespace GitDepend.UnitTests.Visitors
             var code = instance.VisitProject(Lib2Directory, Lib2Config);
             git.Assert();
 
-            Assert.AreEqual(ReturnCode.FailedToRunGitCommand, code, "Invalid Return Code");
+            Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
             Assert.AreEqual(Lib2Directory, git.WorkingDirectory, "Invalid working directory");
             Assert.AreEqual(BRANCH, instance.BranchName, "Invalid branch name");
             Assert.AreEqual(FORCE, instance.Force, "Invalid force flag");

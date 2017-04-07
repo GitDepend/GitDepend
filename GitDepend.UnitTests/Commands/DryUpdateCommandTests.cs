@@ -65,7 +65,7 @@ namespace GitDepend.UnitTests.Commands
 			                  + "Dependencies to build:\r\n"
 			                  + "\tAll packages are up to date\r\n"
 							  + "Projects that would need to update:\r\n"
-			                  + "\tAll packages are up to date\r\n";
+			                  + "\tAll projects are up to date\r\n";
 
 			Assert.AreEqual(expected, output.ToString(), "Output different than expected.");
 		}

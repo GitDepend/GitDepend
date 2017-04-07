@@ -85,6 +85,7 @@
     <Compile Include="Commands\CleanCommandTests.cs" />
     <Compile Include="Commands\CloneCommandTests.cs" />
     <Compile Include="Commands\CommandParserTests.cs" />
+    <Compile Include="Commands\DryUpdateCommandTests.cs" />
     <Compile Include="Commands\InitCommandTests.cs" />
     <Compile Include="Commands\ListCommandTests.cs" />
     <Compile Include="Commands\ManageCommandTests.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Visitors\PullBranchVisitorTests.cs" />
     <Compile Include="Visitors\PushBranchVisitorTests.cs" />
     <Compile Include="Visitors\RemoveDependencyVisitorTests.cs" />
+    <Compile Include="Visitors\VerifyCorrectBranchDryVisitorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

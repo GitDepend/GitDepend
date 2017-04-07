@@ -129,6 +129,7 @@
     <Compile Include="Commands\CleanCommand.cs" />
     <Compile Include="Commands\CloneCommand.cs" />
     <Compile Include="Commands\CommandParser.cs" />
+    <Compile Include="Commands\DryUpdateCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\InitCommand.cs" />
     <Compile Include="Commands\ConfigCommand.cs" />
@@ -182,6 +183,7 @@
     <Compile Include="Visitors\ListMergedBranchesVisitor.cs" />
     <Compile Include="Visitors\NamedDependenciesVisitor.cs" />
     <Compile Include="Visitors\NullVisitor.cs" />
+    <Compile Include="Visitors\VerifyCorrectBranchDryVisitor.cs" />
     <Compile Include="Visitors\VerifyCorrectBranchVisitor.cs" />
   </ItemGroup>
   <ItemGroup>

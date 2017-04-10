@@ -11,7 +11,7 @@ namespace GitDepend.CommandLine
         /// <summary>
         /// Specifies which dependencies will be affected.
         /// </summary>
-        [ValueList(typeof(List<string>))]
+        [Option("deps", HelpText = "The named dependencies to perform the command on.")]
         public IList<string> Dependencies { get; set; }
     }
 }

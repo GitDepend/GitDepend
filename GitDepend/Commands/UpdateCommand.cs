@@ -43,7 +43,15 @@ namespace GitDepend.Commands
         /// <returns>The return code.</returns>
         public ReturnCode Execute()
         {
-            var verifyVisitor = new VerifyCorrectBranchVisitor(_options.Dependencies);
+			NamedDependenciesVisitor verifyVisitor;
+	        if (!_options.Dry)
+	        {
+				verifyVisitor = new VerifyCorrectBranchVisitor(_options.Dependencies);
+			}
+	        else
+	        {
+				verifyVisitor =  new VerifyCorrectBranchDryVisitor(_options.Dependencies);
+	        }
             _algorithm.TraverseDependencies(verifyVisitor, _options.Directory);
 
             if (verifyVisitor.ReturnCode != ReturnCode.Success)
@@ -63,8 +71,11 @@ namespace GitDepend.Commands
 
             if (checkArtifactsVisitor.ReturnCode == ReturnCode.Success && checkArtifactsVisitor.UpToDate)
             {
-                _console.WriteLine(strings.PACKAGES_UP_TO_DATE);
-                return ReturnCode.Success;
+	            if (!_options.Dry)
+	            {
+		            _console.WriteLine(strings.PACKAGES_UP_TO_DATE);
+		            return ReturnCode.Success;
+	            }
             }
 
             if (checkArtifactsVisitor.ReturnCode != ReturnCode.Success)
@@ -76,28 +87,81 @@ namespace GitDepend.Commands
             projectsToUpdate.AddRange(checkArtifactsVisitor.ProjectsThatNeedNugetUpdate);
 
             _console.WriteLine();
-            _algorithm.Reset();
-            var buildAndUpdateVisitor = new BuildAndUpdateDependenciesVisitor(dependeciesToBuild, projectsToUpdate);
-            _algorithm.TraverseDependencies(buildAndUpdateVisitor, _options.Directory);
 
-            if (buildAndUpdateVisitor.ReturnCode == ReturnCode.Success)
-            {
-                if (buildAndUpdateVisitor.UpdatedPackages.Any())
-                {
-                    _console.WriteLine(strings.UPDATED_PACKAGES);
-                    foreach (var package in buildAndUpdateVisitor.UpdatedPackages)
-                    {
-                        _console.WriteLine($"    {package}");
-                    }
-                    _console.WriteLine(strings.UPDATE_COMPLETE);
-                }
-                else
-                {
-                    _console.WriteLine(strings.NOTHING_UPDATED);
-                }
-            }
+	        if (!_options.Dry)
+	        {
+		        _algorithm.Reset();
+		        var buildAndUpdateVisitor = new BuildAndUpdateDependenciesVisitor(dependeciesToBuild, projectsToUpdate);
+		        _algorithm.TraverseDependencies(buildAndUpdateVisitor, _options.Directory);
 
-            return buildAndUpdateVisitor.ReturnCode;
+		        if (buildAndUpdateVisitor.ReturnCode == ReturnCode.Success)
+		        {
+			        if (buildAndUpdateVisitor.UpdatedPackages.Any())
+			        {
+				        _console.WriteLine(strings.UPDATED_PACKAGES);
+				        foreach (var package in buildAndUpdateVisitor.UpdatedPackages)
+				        {
+					        _console.WriteLine($"    {package}");
+				        }
+				        _console.WriteLine(strings.UPDATE_COMPLETE);
+			        }
+			        else
+			        {
+				        _console.WriteLine(strings.NOTHING_UPDATED);
+			        }
+		        }
+
+		        return buildAndUpdateVisitor.ReturnCode;
+	        }
+	        else
+	        {
+		        VerifyCorrectBranchDryVisitor dryVisitor = verifyVisitor as VerifyCorrectBranchDryVisitor;
+		        if (dryVisitor == null)
+		        {
+			        return ReturnCode.InvalidArguments;
+		        }
+
+				_console.WriteLine(strings.BRANCH_CHANGES);
+				if (dryVisitor.Changes.Count > 0)
+				{
+					foreach (string entry in dryVisitor.Changes)
+					{
+						_console.WriteLine($"\t{entry}");
+					}
+				}
+				else
+				{
+					_console.WriteLine($"\t{strings.DEPS_CORRECT_BRANCH}");
+				}
+
+				_console.WriteLine(strings.DEPENDENCIES_TO_BUILD);
+				if (dependeciesToBuild.Count > 0)
+				{
+					foreach (string entry in dependeciesToBuild)
+					{
+						_console.WriteLine($"\t{entry}");
+					}
+				}
+				else
+				{
+					_console.WriteLine($"\t{strings.PACKAGES_UP_TO_DATE}");
+				}
+
+				_console.WriteLine(strings.PROJECTS_TO_UPDATE);
+				if (projectsToUpdate.Count > 0)
+				{
+					foreach (string entry in projectsToUpdate)
+					{
+						_console.WriteLine($"\t{entry}");
+					}
+				}
+				else
+				{
+					_console.WriteLine($"\t{strings.PROJECTS_UP_TO_DATE}");
+				}
+
+		        return dryVisitor.ReturnCode;
+	        }
         }
 
         #endregion

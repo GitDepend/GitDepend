@@ -67,7 +67,7 @@ namespace GitDepend.Commands
                 case ConfigCommand.Name:
                     command = new ConfigCommand(options as ConfigSubOptions);
                     break;
-				case InitCommand.Name:
+                case InitCommand.Name:
                     command = new InitCommand(options as InitSubOptions);
                     break;
                 case ListCommand.Name:

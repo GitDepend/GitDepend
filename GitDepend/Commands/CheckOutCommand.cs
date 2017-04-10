@@ -50,7 +50,7 @@ namespace GitDepend.Commands
 
             _algorithm.Reset();
 
-            visitor = new VerifyCorrectBranchVisitor(new List<string>());
+            visitor = new VerifyCorrectBranchVisitor(new List<string>(), false);
             _algorithm.TraverseDependencies(visitor, _options.Directory);
 
             return visitor.ReturnCode;

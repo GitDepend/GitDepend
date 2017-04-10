@@ -182,7 +182,6 @@
     <Compile Include="Visitors\ListMergedBranchesVisitor.cs" />
     <Compile Include="Visitors\NamedDependenciesVisitor.cs" />
     <Compile Include="Visitors\NullVisitor.cs" />
-    <Compile Include="Visitors\VerifyCorrectBranchDryVisitor.cs" />
     <Compile Include="Visitors\VerifyCorrectBranchVisitor.cs" />
   </ItemGroup>
   <ItemGroup>

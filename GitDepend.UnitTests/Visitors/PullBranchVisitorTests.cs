@@ -27,10 +27,11 @@ namespace GitDepend.UnitTests.Visitors
         [Test]
         public void PullBranchVisitor_Succeeds_WhenPullSucceeds()
         {
-            _git.Arrange(x => x.Pull()).Returns(ReturnCode.Success);
+            _git.Arrange(x => x.Pull(new List<string>())).Returns(ReturnCode.Success);
 
             var arguments = new List<string>();
-            PullBranchVisitor visitor = new PullBranchVisitor(arguments);
+            var dependencies = new List<string>();
+            PullBranchVisitor visitor = new PullBranchVisitor(arguments, dependencies);
 
             var returnCode = visitor.VisitProject(Lib1Directory, new GitDependFile());
 
@@ -41,10 +42,11 @@ namespace GitDepend.UnitTests.Visitors
         [Test]
         public void PullBranchVisitor_Succeeds_WhenPullFails()
         {
-            _git.Arrange(x => x.Pull()).Returns(ReturnCode.FailedToRunGitCommand);
+            _git.Arrange(x => x.Pull(new List<string>())).Returns(ReturnCode.FailedToRunGitCommand);
 
             var arguments = new List<string>();
-            PullBranchVisitor visitor = new PullBranchVisitor(arguments);
+            var dependencies = new List<string>();
+            PullBranchVisitor visitor = new PullBranchVisitor(arguments, dependencies);
 
             var returnCode = visitor.VisitDependency(Lib1Directory, new Dependency()
             {
@@ -60,9 +62,9 @@ namespace GitDepend.UnitTests.Visitors
         [Test]
         public void PullBranchVisitor_Fails_OtherThanFailedToRunGitCommand()
         {
-            _git.Arrange(x => x.Pull()).Returns(ReturnCode.InvalidCommand);
+            _git.Arrange(x => x.Pull(new List<string>())).Returns(ReturnCode.InvalidCommand);
 
-            PullBranchVisitor visitor = new PullBranchVisitor(new List<string>());
+            PullBranchVisitor visitor = new PullBranchVisitor(new List<string>(), new List<string>());
 
             var returnCode = visitor.VisitDependency(Lib1Directory, new Dependency()
             {
@@ -78,10 +80,10 @@ namespace GitDepend.UnitTests.Visitors
         [Test]
         public void PullBranchVisitor_NullArguments_ShouldStillSucceed()
         {
-            _git.Arrange(x => x.Pull()).Returns(ReturnCode.Success);
+            _git.Arrange(x => x.Pull(new List<string>())).Returns(ReturnCode.Success);
 
             List<string> arguments = null;
-            var visitor = new PullBranchVisitor(new List<string>());
+            var visitor = new PullBranchVisitor(new List<string>(), new List<string>());
             var returnCode = visitor.VisitDependency(Lib1Directory, new Dependency()
             {
                 Configuration = new GitDependFile()
@@ -97,7 +99,7 @@ namespace GitDepend.UnitTests.Visitors
         public void PullBranchVisitor_VisitDependency_ShouldReturnSuccess()
         {
             List<string> arguments = null;
-            var visitor = new PullBranchVisitor(new List<string>());
+            var visitor = new PullBranchVisitor(new List<string>(), new List<string>());
             var returnCode = visitor.VisitProject(Lib1Directory, new GitDependFile());
 
             Assert.AreEqual(ReturnCode.Success, returnCode);

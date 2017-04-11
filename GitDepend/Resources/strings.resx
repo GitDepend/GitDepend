@@ -264,4 +264,25 @@
   <data name="RET_ARTIFACTS_DIR_NOT_FOUND" xml:space="preserve">
     <value>The specified artifacts directory could not be found</value>
   </data>
+  <data name="BRANCH_CHANGES" xml:space="preserve">
+    <value>Branch Changes:</value>
+  </data>
+  <data name="DEPENDENCIES_TO_BUILD" xml:space="preserve">
+    <value>Dependencies to build:</value>
+  </data>
+  <data name="FIX_BRANCH_MISMATCH" xml:space="preserve">
+    <value>Need to fix dependancy branch mismatch in {0} for {1}</value>
+  </data>
+  <data name="PROJECTS_TO_UPDATE" xml:space="preserve">
+    <value>Projects that would need to update:</value>
+  </data>
+  <data name="WOULD_CHANGE_BRANCH" xml:space="preserve">
+    <value>Would change the branch in {0} from branch {1} to branch {2}</value>
+  </data>
+  <data name="WOULD_CHANGE_CONFIG" xml:space="preserve">
+    <value>Would change the config file in {0} for dependency {1} from branch {2} to branch {3}</value>
+  </data>
+  <data name="PROJECTS_UP_TO_DATE" xml:space="preserve">
+    <value>All projects are up to date</value>
+  </data>
 </root>

@@ -52,13 +52,16 @@ namespace GitDepend.UnitTests.Commands
             factory.Arrange(f => f.LoadFromDirectory(Arg.AnyString, out dir, out loadCode))
                 .Returns(Lib2Config);
 
-            var options = new ListSubOptons();
+            var options = new ListSubOptons()
+            {
+                Verbose = true
+            };
             var instance = new ListCommand(options);
 
             var code = instance.Execute();
 
-            const string EXPECTED = "- Lib2\r\n" +
-                                    "    - Lib1\r\n";
+            const string EXPECTED = "- Lib2 ()\r\n  \r\n" +
+                                    "    - Lib1 (expected develop but was)\r\n      \r\n";
             var actual = output.ToString();
 
             Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");

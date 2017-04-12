@@ -87,6 +87,7 @@
     <Compile Include="Commands\CommandParserTests.cs" />
     <Compile Include="Commands\InitCommandTests.cs" />
     <Compile Include="Commands\ListCommandTests.cs" />
+    <Compile Include="Commands\LogCommandTests.cs" />
     <Compile Include="Commands\ManageCommandTests.cs" />
     <Compile Include="Commands\PullCommandTests.cs" />
     <Compile Include="Commands\PushCommandTests.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="Visitors\DisplayStatusVisitorTests.cs" />
     <Compile Include="Visitors\ListAllBranchesVisitorTests.cs" />
     <Compile Include="Visitors\ListMergedBranchesVisitorTests.cs" />
+    <Compile Include="Visitors\LogVisitorTests.cs" />
     <Compile Include="Visitors\ManageDependenciesVisitorTests.cs" />
     <Compile Include="Visitors\NullVisitorTests.cs" />
     <Compile Include="Visitors\PullBranchVisitorTests.cs" />

@@ -208,7 +208,18 @@ namespace GitDepend.Busi
 
             return code;
         }
-        
+
+        /// <summary>
+        /// Executes the log command.
+        /// </summary>
+        /// <returns></returns>
+        public ReturnCode Log(string arguments)
+        {
+            var code = ExecuteGitCommand($"log {arguments}");
+
+            return code;
+        }
+
         private ReturnCode ExecuteGitCommand(string arguments)
         {
             var info = new ProcessStartInfo("git", arguments)

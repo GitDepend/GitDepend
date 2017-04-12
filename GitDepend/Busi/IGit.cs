@@ -105,5 +105,11 @@ namespace GitDepend.Busi
         /// </summary>
         /// <returns></returns>
         ReturnCode Pull(string gitPullArguments);
+
+        /// <summary>
+        /// Runs the log command with the arguments provided.
+        /// </summary>
+        /// <returns></returns>
+        ReturnCode Log(string gitLogArguments);
     }
 }

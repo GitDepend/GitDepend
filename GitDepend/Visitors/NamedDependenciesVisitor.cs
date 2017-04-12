@@ -16,10 +16,10 @@ namespace GitDepend.Visitors
     {
         private readonly IList<string> _whitelist;
 
-        /// <summary>
-        /// The <see cref="IConsole"/> to use in this visitor.
-        /// </summary>
-        protected readonly IConsole Console;
+		/// <summary>
+		/// The <see cref="IConsole"/> to use in this visitor.
+		/// </summary>
+		protected readonly IConsole Console;
 
         /// <summary>
         /// The <see cref="IFileSystem"/> object.
@@ -54,13 +54,18 @@ namespace GitDepend.Visitors
         /// </summary>
         public ReturnCode ReturnCode { get; set; }
 
-        /// <summary>
-        /// Visits a project dependency.
-        /// </summary>
-        /// <param name="directory">The directory of the project.</param>
-        /// <param name="dependency">The <see cref="Dependency"/> to visit.</param>
-        /// <returns>The return code.</returns>
-        public ReturnCode VisitDependency(string directory, Dependency dependency)
+		/// <summary>
+		/// Name of the repo above the current dependancy
+		/// </summary>
+		public string ParentRepoName { get; set; }
+
+		/// <summary>
+		/// Visits a project dependency.
+		/// </summary>
+		/// <param name="directory">The directory of the project.</param>
+		/// <param name="dependency">The <see cref="Dependency"/> to visit.</param>
+		/// <returns>The return code.</returns>
+		public ReturnCode VisitDependency(string directory, Dependency dependency)
         {
             var shouldExecute = _whitelist.Count == 0 ||
                                 _whitelist.Any(d => string.Equals(d, dependency.Configuration.Name, StringComparison.CurrentCultureIgnoreCase));

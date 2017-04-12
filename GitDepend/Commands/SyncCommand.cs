@@ -46,7 +46,7 @@ namespace GitDepend.Commands
         /// <returns></returns>
         protected override NamedDependenciesVisitor CreateVisitor(SyncSubOptions options)
         {
-            return new VerifyCorrectBranchVisitor(options.Dependencies);
+            return new VerifyCorrectBranchVisitor(options.Dependencies, false);
         }
 
         #region Overrides of NamedDependenciesCommand<SyncSubOptions>

@@ -39,7 +39,7 @@ namespace GitDepend.CommandLine
         [VerbOption(ConfigCommand.Name, HelpText = "Displays the full configuration file")]
         public ConfigSubOptions ConfigVerb { get; set; } = new ConfigSubOptions();
 
-        [VerbOption(InitCommand.Name, HelpText = "Assists you in creating a GitDepend.json")]
+		[VerbOption(InitCommand.Name, HelpText = "Assists you in creating a GitDepend.json")]
         public InitSubOptions InitVerb { get; set; } = new InitSubOptions();
 
         [VerbOption(ListCommand.Name, HelpText = "Lists all repository dependencies")]

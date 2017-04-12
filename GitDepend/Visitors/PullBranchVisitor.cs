@@ -14,14 +14,14 @@ namespace GitDepend.Visitors
     public class PullBranchVisitor : NamedDependenciesVisitor
     {
         private IGit _git;
-        private IList<string> _gitArguments;
+        private string _gitArguments;
 
         /// <summary>
         /// This visitor pulls in with the given arguments each directory or the named directories in the whitelist.
         /// </summary>
         /// <param name="gitArguments">The list of arguments to provide to git pull</param>
         /// <param name="whitelist">The dependencies to visit</param>
-        public PullBranchVisitor(IList<string> gitArguments, IList<string> whitelist) : base(whitelist)
+        public PullBranchVisitor(string gitArguments, IList<string> whitelist) : base(whitelist)
         {
             _git = DependencyInjection.Resolve<IGit>();
             _gitArguments = gitArguments;

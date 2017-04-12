@@ -15,7 +15,7 @@ namespace GitDepend.CommandLine
           /// <summary>
           /// The arguments to be provided to the git pull command
           /// </summary>
-          /// [Option("args", HelpText = "The arguments to be provided to the git command")]
-          public IList<string> GitArguments { get; set; }
+          [Option("args", Required = false, HelpText = "The arguments to be passed to the pull command for each dependancy.")]
+          public string GitArguments { get; set; }
     }
 }

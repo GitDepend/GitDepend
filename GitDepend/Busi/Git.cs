@@ -201,17 +201,10 @@ namespace GitDepend.Busi
         /// </summary>
         /// <param name="arguments"></param>
         /// <returns></returns>
-        public ReturnCode Pull(IList<string> arguments)
+        public ReturnCode Pull(string arguments)
         {
-            var sb = new StringBuilder();
-            if (arguments != null)
-            {
-                foreach (var argument in arguments)
-                {
-                    sb.Append(argument + " ");
-                }
-            }
-            var code = ExecuteGitCommand($"pull {sb}");
+           
+            var code = ExecuteGitCommand($"pull {arguments}");
 
             return code;
         }

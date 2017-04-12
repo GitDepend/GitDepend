@@ -52,7 +52,10 @@ namespace GitDepend.UnitTests.Commands
             factory.Arrange(f => f.LoadFromDirectory(Arg.AnyString, out dir, out loadCode))
                 .Returns(Lib2Config);
 
-            var options = new ListSubOptons();
+            var options = new ListSubOptons()
+            {
+                Verbose = true
+            };
             var instance = new ListCommand(options);
 
             var code = instance.Execute();

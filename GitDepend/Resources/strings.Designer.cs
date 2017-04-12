@@ -61,6 +61,15 @@ namespace GitDepend.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Branch Changes:.
+        /// </summary>
+        internal static string BRANCH_CHANGES {
+            get {
+                return ResourceManager.GetString("BRANCH_CHANGES", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Checking out the {0} branch on {1}.
         /// </summary>
         internal static string CHECKING_OUT_BRANCH_ON_REPONAME {
@@ -102,6 +111,15 @@ namespace GitDepend.Resources {
         internal static string CREATING_BRANCH_ON_REPONAME {
             get {
                 return ResourceManager.GetString("CREATING_BRANCH_ON_REPONAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dependencies to build:.
+        /// </summary>
+        internal static string DEPENDENCIES_TO_BUILD {
+            get {
+                return ResourceManager.GetString("DEPENDENCIES_TO_BUILD", resourceCulture);
             }
         }
         
@@ -165,6 +183,15 @@ namespace GitDepend.Resources {
         internal static string EXPECTED_BRANCH_BUT_WAS_BRANCH {
             get {
                 return ResourceManager.GetString("EXPECTED_BRANCH_BUT_WAS_BRANCH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Need to fix dependancy branch mismatch in {0} for {1}.
+        /// </summary>
+        internal static string FIX_BRANCH_MISMATCH {
+            get {
+                return ResourceManager.GetString("FIX_BRANCH_MISMATCH", resourceCulture);
             }
         }
         
@@ -246,6 +273,24 @@ namespace GitDepend.Resources {
         internal static string PROJECT {
             get {
                 return ResourceManager.GetString("PROJECT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Projects that would need to update:.
+        /// </summary>
+        internal static string PROJECTS_TO_UPDATE {
+            get {
+                return ResourceManager.GetString("PROJECTS_TO_UPDATE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All projects are up to date.
+        /// </summary>
+        internal static string PROJECTS_UP_TO_DATE {
+            get {
+                return ResourceManager.GetString("PROJECTS_UP_TO_DATE", resourceCulture);
             }
         }
         
@@ -498,6 +543,24 @@ namespace GitDepend.Resources {
         internal static string WHAT_SHOULD_I_DO {
             get {
                 return ResourceManager.GetString("WHAT_SHOULD_I_DO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Would change the branch in {0} from branch {1} to branch {2}.
+        /// </summary>
+        internal static string WOULD_CHANGE_BRANCH {
+            get {
+                return ResourceManager.GetString("WOULD_CHANGE_BRANCH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Would change the config file in {0} for dependency {1} from branch {2} to branch {3}.
+        /// </summary>
+        internal static string WOULD_CHANGE_CONFIG {
+            get {
+                return ResourceManager.GetString("WOULD_CHANGE_CONFIG", resourceCulture);
             }
         }
     }

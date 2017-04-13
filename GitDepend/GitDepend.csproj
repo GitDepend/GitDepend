@@ -108,6 +108,7 @@
     <Compile Include="Busi\UiStrings.cs" />
     <Compile Include="CommandLine\AddSubOptions.cs" />
     <Compile Include="CommandLine\BranchSubOptions.cs" />
+    <Compile Include="CommandLine\BuildSubOptions.cs" />
     <Compile Include="CommandLine\CheckOutSubOptions.cs" />
     <Compile Include="CommandLine\CleanSubOptions.cs" />
     <Compile Include="CommandLine\CloneSubOptions.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="CommandLine\UpdateSubOptions.cs" />
     <Compile Include="Commands\AddCommand.cs" />
     <Compile Include="Commands\BranchCommand.cs" />
+    <Compile Include="Commands\BuildCommand.cs" />
     <Compile Include="Commands\CheckOutCommand.cs" />
     <Compile Include="Commands\CleanCommand.cs" />
     <Compile Include="Commands\CloneCommand.cs" />
@@ -163,6 +165,7 @@
       <DependentUpon>strings.resx</DependentUpon>
     </Compile>
     <Compile Include="UnityConfig.cs" />
+    <Compile Include="Visitors\BuildVisitor.cs" />
     <Compile Include="Visitors\CheckArtifactsVisitor.cs" />
     <Compile Include="Visitors\CheckOutBranchVisitor.cs" />
     <Compile Include="Visitors\CleanDependencyVisitor.cs" />

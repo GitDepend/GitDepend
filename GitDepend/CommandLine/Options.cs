@@ -27,6 +27,9 @@ namespace GitDepend.CommandLine
         [VerbOption(BranchCommand.Name, HelpText = "List, create, or delete branches")]
         public BranchSubOptions BranchVerb { get; set; } = new BranchSubOptions();
 
+		[VerbOption(BuildCommand.Name, HelpText = "Build current project, named dependency, or full dependency stack")]
+		public BuildSubOptions BuildVerb { get; set; } = new BuildSubOptions();
+
         [VerbOption(CheckOutCommand.Name, HelpText = "Switch branches")]
         public CheckOutSubOptions CheckOutVerb { get; set; } = new CheckOutSubOptions();
 

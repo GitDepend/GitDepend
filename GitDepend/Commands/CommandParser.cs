@@ -58,6 +58,9 @@ namespace GitDepend.Commands
                 case BranchCommand.Name:
                     command = new BranchCommand(options as BranchSubOptions);
                     break;
+				case BuildCommand.Name:
+					command = new BuildCommand(options as BuildSubOptions);
+		            break;
                 case CheckOutCommand.Name:
                     command = new CheckOutCommand(options as CheckOutSubOptions);
                     break;

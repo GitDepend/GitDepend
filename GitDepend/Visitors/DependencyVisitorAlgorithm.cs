@@ -108,13 +108,13 @@ namespace GitDepend.Visitors
                 {
                     _visitedDependencies.Add(dependency.Directory);
 
-	                if (visitor is NamedDependenciesVisitor)
-	                {
-		                ((NamedDependenciesVisitor)visitor).ParentRepoName = config.Name;
-	                }
+                    if (visitor is NamedDependenciesVisitor)
+                    {
+                        ((NamedDependenciesVisitor)visitor).ParentRepoName = config.Name;
+                    }
 
-	                // Visit the dependency.
-					code = visitor.VisitDependency(dir, dependency);
+                    // Visit the dependency.
+                    code = visitor.VisitDependency(dir, dependency);
 
                     // If something went wrong visiting the dependency we are done.
                     if (code != ReturnCode.Success)

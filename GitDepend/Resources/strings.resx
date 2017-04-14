@@ -285,4 +285,7 @@
   <data name="PROJECTS_UP_TO_DATE" xml:space="preserve">
     <value>All projects are up to date</value>
   </data>
+  <data name="DELETE_CACHE_DIR_FAILED" xml:space="preserve">
+    <value>Failed to delete the nuget cache directory</value>
+  </data>
 </root>

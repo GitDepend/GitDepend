@@ -27,6 +27,7 @@ namespace GitDepend.Visitors
         private readonly IProcessManager _processManager;
         private readonly IFileSystem _fileSystem;
         private readonly IConsole _console;
+        private string _cacheName;
 
         /// <summary>
         /// The list of packages that were updated.
@@ -51,29 +52,58 @@ namespace GitDepend.Visitors
         }
 
         /// <summary>
-        /// The directory where nuget packages are cached.
+        /// Creates the directory where nuget packages are cached.
         /// </summary>
-        public string GetCacheDirectory()
+        public ReturnCode CreateCacheDirectory()
         {
             var dir = _fileSystem.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GitDepend");
 
-            var cacheDir = _fileSystem.Path.Combine(dir, "cache");
-            if (_fileSystem.Directory.Exists(cacheDir))
-            {
-                return cacheDir;
-            }
+            var cacheDir = Guid.NewGuid().ToString();
+
+            _cacheName = _fileSystem.Path.Combine(dir, cacheDir);
 
             try
             {
-                _fileSystem.Directory.CreateDirectory(cacheDir);
+                _fileSystem.Directory.CreateDirectory(_cacheName);
             }
             catch (Exception ex)
             {
                 _console.Error.WriteLine(ex.Message);
-                return null;
+                return ReturnCode.CouldNotCreateCacheDirectory;
             }
 
-            return cacheDir;
+            return ReturnCode.Success;
+        }
+
+        /// <summary>
+        /// The directory where nuget packages are cached.
+        /// </summary>
+        public string GetCacheDirectory()
+        {
+            return _cacheName ?? string.Empty;
+        }
+
+        /// <summary>
+        /// Deletes the directory where nuget packages are cached.
+        /// </summary>
+        public bool DeleteCacheDirectory()
+        {
+            if (string.IsNullOrEmpty(_cacheName))
+            {
+                return false;
+            }
+
+            try
+            {
+                _fileSystem.Directory.Delete(_cacheName, true);
+            }
+            catch (Exception ex)
+            {
+                _console.Error.WriteLine(ex.Message);
+                return false;
+            }
+
+            return true;
         }
 
         #region Implementation of IVisitor

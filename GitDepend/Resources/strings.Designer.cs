@@ -115,6 +115,15 @@ namespace GitDepend.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to delete the nuget cache directory.
+        /// </summary>
+        internal static string DELETE_CACHE_DIR_FAILED {
+            get {
+                return ResourceManager.GetString("DELETE_CACHE_DIR_FAILED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dependencies to build:.
         /// </summary>
         internal static string DEPENDENCIES_TO_BUILD {

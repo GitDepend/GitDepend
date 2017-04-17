@@ -12,7 +12,7 @@ Solves the problem of working with multiple git repositories where lower level r
 |                  **Docs**  |     [![Docs][docs-badge]][docs]     |    [![Docs][docs-pre-badge]][docs-pre]    |
 |        **GitHub Release**  |                 -                   | [![GitHub release][gh-rel-badge]][gh-rel] |
 |    **GitDepend.Portable**  | [![Chocolatey][choco-badge]][choco] |   [![Chocolatey][choco-pre-badge]][choco] |
-| **GitVersion.CommandLine** |     [![NuGet][gdc-badge]][gdc]      |       [![NuGet][gdc-pre-badge]][gdc]      |
+| **GitDepend.CommandLine**  |     [![NuGet][gdc-badge]][gdc]      |       [![NuGet][gdc-pre-badge]][gdc]      |
 
 
 ## Quick Links

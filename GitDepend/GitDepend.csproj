@@ -115,6 +115,7 @@
     <Compile Include="CommandLine\ConfigSubOptions.cs" />
     <Compile Include="CommandLine\InitSubOptions.cs" />
     <Compile Include="CommandLine\ListSubOptons.cs" />
+    <Compile Include="CommandLine\LogSubOptions.cs" />
     <Compile Include="CommandLine\ManageSubOptions.cs" />
     <Compile Include="CommandLine\NamedDependenciesOptions.cs" />
     <Compile Include="CommandLine\PullSubOptions.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Commands\InitCommand.cs" />
     <Compile Include="Commands\ConfigCommand.cs" />
     <Compile Include="Commands\ListCommand.cs" />
+    <Compile Include="Commands\LogCommand.cs" />
     <Compile Include="Commands\ManageCommand.cs" />
     <Compile Include="Commands\NamedDependenciesCommand.cs" />
     <Compile Include="Commands\PullCommand.cs" />
@@ -166,6 +168,7 @@
     <Compile Include="Visitors\CheckArtifactsVisitor.cs" />
     <Compile Include="Visitors\CheckOutBranchVisitor.cs" />
     <Compile Include="Visitors\CleanDependencyVisitor.cs" />
+    <Compile Include="Visitors\LogVisitor.cs" />
     <Compile Include="Visitors\ManageDependenciesVisitor.cs" />
     <Compile Include="Visitors\PullBranchVisitor.cs" />
     <Compile Include="Visitors\PushBranchVisitor.cs" />

@@ -170,6 +170,7 @@
     <Compile Include="Visitors\CleanDependencyVisitor.cs" />
     <Compile Include="Visitors\LogVisitor.cs" />
     <Compile Include="Visitors\ManageDependenciesVisitor.cs" />
+    <Compile Include="Visitors\NamedProjectsVisitor.cs" />
     <Compile Include="Visitors\PullBranchVisitor.cs" />
     <Compile Include="Visitors\PushBranchVisitor.cs" />
     <Compile Include="Visitors\RemoveDependencyVisitor.cs" />

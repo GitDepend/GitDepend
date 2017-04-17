@@ -37,18 +37,7 @@ namespace GitDepend.Commands
             var visitor = new LogVisitor(_options.GitArguments, _options.Dependencies);
             _algorithm.TraverseDependencies(visitor, _options.Directory);
 
-            var code = visitor.ReturnCode;
-            if (code == ReturnCode.Success)
-            {
-                var origColor = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine(strings.PROJECT);
-                Console.WriteLine(strings.DIRECTORY + _options.Directory);
-                Console.WriteLine();
-                Console.ForegroundColor = origColor;
-            }
-
-            return code;
+			return visitor.ReturnCode;
         }
     }
 }

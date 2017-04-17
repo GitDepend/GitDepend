@@ -10,7 +10,7 @@ namespace GitDepend.CommandLine
         /// <summary>
         /// The arguments to be provided to the git log command
         /// </summary>
-        [Option("args", Required = false, HelpText = "The arguments to be passed to the log command for each dependancy.")]
+        [Option("args", Required = false, HelpText = "The arguments to be passed to the log command for each project.")]
         public string GitArguments { get; set; }
     }
 }

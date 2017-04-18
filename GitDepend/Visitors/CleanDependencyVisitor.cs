@@ -16,22 +16,22 @@ namespace GitDepend.Visitors
     public class CleanDependencyVisitor : NamedDependenciesVisitor
     {
         private readonly IGit _git;
-	    private string _gitArguments;
+        private string _gitArguments;
 
         /// <summary>
         /// The name matched
         /// </summary>
         public bool NameMatched = false;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CleanDependencyVisitor" /> class.
-		/// </summary>
-		/// <param name="gitArguments">Arguments to pass through to git clean.</param>
-		/// <param name="whitelist">The dependency name to clean.</param>
-		public CleanDependencyVisitor(string gitArguments, IList<string> whitelist) : base(whitelist)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CleanDependencyVisitor" /> class.
+        /// </summary>
+        /// <param name="gitArguments">Arguments to pass through to git clean.</param>
+        /// <param name="whitelist">The dependency name to clean.</param>
+        public CleanDependencyVisitor(string gitArguments, IList<string> whitelist) : base(whitelist)
         {
             _git = DependencyInjection.Resolve<IGit>();
-	        _gitArguments = gitArguments;
+            _gitArguments = gitArguments;
 
         }
 

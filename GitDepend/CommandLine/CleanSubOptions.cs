@@ -13,10 +13,10 @@ namespace GitDepend.CommandLine
     /// <seealso cref="GitDepend.CommandLine.CommonSubOptions" />
     public class CleanSubOptions : NamedDependenciesOptions
     {
-		/// <summary>
-		/// The arguments to be provided to the git pull command
-		/// </summary>
-		[Option("args", Required = false, HelpText = "The arguments to be passed to the pull command for each dependancy.")]
-		public string GitArguments { get; set; }
-	}
+        /// <summary>
+        /// The arguments to be provided to the git pull command
+        /// </summary>
+        [Option("args", Required = false, HelpText = "The arguments to be passed to the pull command for each dependancy.")]
+        public string GitArguments { get; set; }
+    }
 }

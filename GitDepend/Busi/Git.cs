@@ -138,12 +138,12 @@ namespace GitDepend.Busi
             }
         }
 
-		/// <summary>
-		/// Cleans the directory.
-		/// </summary>
-		/// <param name="arguments"></param>
-		/// <returns></returns>
-		public ReturnCode Clean(string arguments)
+        /// <summary>
+        /// Cleans the directory.
+        /// </summary>
+        /// <param name="arguments"></param>
+        /// <returns></returns>
+        public ReturnCode Clean(string arguments)
         {
             return ExecuteGitCommand($"clean {arguments}");
         }

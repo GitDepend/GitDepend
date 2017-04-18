@@ -17,7 +17,7 @@ namespace GitDepend.Commands
     {
         private readonly IGit _git;
         private readonly IGitDependFileFactory _factory;
-	    private string _gitArguments;
+        private string _gitArguments;
 
         /// <summary>
         /// The name
@@ -31,7 +31,7 @@ namespace GitDepend.Commands
         {
             _git = DependencyInjection.Resolve<IGit>();
             _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
-	        _gitArguments = options.GitArguments;
+            _gitArguments = options.GitArguments;
         }
 
         /// <summary>

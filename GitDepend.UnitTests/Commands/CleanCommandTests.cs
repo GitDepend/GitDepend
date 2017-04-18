@@ -37,7 +37,7 @@ namespace GitDepend.UnitTests.Commands
             _goodCleanSubOptions = new CleanSubOptions()
             {
                 Directory = "dir",
-				GitArguments = "-nfdx"
+                GitArguments = "-nfdx"
             };
             string dir;
             ReturnCode code;
@@ -124,7 +124,7 @@ namespace GitDepend.UnitTests.Commands
                 Name = "name"
             });
             CleanSubOptions newOptions = _goodCleanSubOptions;
-	        newOptions.GitArguments = "";
+            newOptions.GitArguments = "";
             newOptions.Dependencies = new List<string>()
             {
                 "name"

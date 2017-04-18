@@ -17,6 +17,7 @@ namespace GitDepend.Commands
     {
         private readonly IGit _git;
         private readonly IGitDependFileFactory _factory;
+	    private string _gitArguments;
 
         /// <summary>
         /// The name
@@ -30,6 +31,7 @@ namespace GitDepend.Commands
         {
             _git = DependencyInjection.Resolve<IGit>();
             _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
+	        _gitArguments = options.GitArguments;
         }
 
         /// <summary>
@@ -39,7 +41,7 @@ namespace GitDepend.Commands
         /// <returns></returns>
         protected override NamedDependenciesVisitor CreateVisitor(CleanSubOptions options)
         {
-            return new CleanDependencyVisitor(Options.DryRun, Options.Force, Options.RemoveUntrackedFiles, Options.RemoveUntrackedDirectories, Options.Dependencies);
+            return new CleanDependencyVisitor(Options.GitArguments, Options.Dependencies);
         }
 
 
@@ -67,7 +69,7 @@ namespace GitDepend.Commands
 
         private ReturnCode GitClean(CleanSubOptions options)
         {
-            return _git.Clean(options.DryRun, options.Force, options.RemoveUntrackedFiles, options.RemoveUntrackedDirectories);
+            return _git.Clean(_gitArguments);
         }
     }
 }

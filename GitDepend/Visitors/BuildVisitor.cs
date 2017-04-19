@@ -58,6 +58,11 @@ namespace GitDepend.Visitors
 		/// <returns>The return code.</returns>
 		public ReturnCode VisitProject(string directory, GitDependFile config)
 		{
+			if (config == null)
+			{
+				return ReturnCode = ReturnCode.Success;
+			}
+
 			var fullPath = _fileSystem.Path.GetFullPath(directory);
 
 			var shouldExecute = string.IsNullOrEmpty(_projectToBuild) ||
@@ -67,6 +72,11 @@ namespace GitDepend.Visitors
 			if (!shouldExecute)
 			{
 				return ReturnCode.Success;
+			}
+
+			if (string.IsNullOrEmpty(directory) || !_fileSystem.Directory.Exists(directory))
+			{
+				return ReturnCode = ReturnCode.DirectoryDoesNotExist;
 			}
 
 			int exitCode;

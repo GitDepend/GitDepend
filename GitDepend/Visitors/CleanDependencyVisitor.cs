@@ -16,10 +16,7 @@ namespace GitDepend.Visitors
     public class CleanDependencyVisitor : NamedDependenciesVisitor
     {
         private readonly IGit _git;
-        private bool _cleanDirectory;
-        private bool _cleanFiles;
-        private bool _force;
-        private bool _dryRun;
+        private string _gitArguments;
 
         /// <summary>
         /// The name matched
@@ -29,18 +26,13 @@ namespace GitDepend.Visitors
         /// <summary>
         /// Initializes a new instance of the <see cref="CleanDependencyVisitor" /> class.
         /// </summary>
-        /// <param name="dryRun">if set to <c>true</c> [dry run].</param>
-        /// <param name="force">if set to <c>true</c> [force].</param>
-        /// <param name="cleanFiles">if set to <c>true</c> [clean files].</param>
-        /// <param name="cleanDirectory">if set to <c>true</c> [clean directory].</param>
+        /// <param name="gitArguments">Arguments to pass through to git clean.</param>
         /// <param name="whitelist">The dependency name to clean.</param>
-        public CleanDependencyVisitor(bool dryRun, bool force, bool cleanFiles, bool cleanDirectory, IList<string> whitelist) : base(whitelist)
+        public CleanDependencyVisitor(string gitArguments, IList<string> whitelist) : base(whitelist)
         {
             _git = DependencyInjection.Resolve<IGit>();
-            _dryRun = dryRun;
-            _force = force;
-            _cleanFiles = cleanFiles;
-            _cleanDirectory = cleanDirectory;
+            _gitArguments = gitArguments;
+
         }
 
         /// <summary>
@@ -68,7 +60,7 @@ namespace GitDepend.Visitors
         {
             _git.WorkingDirectory = dependency.Directory;
 
-            return _git.Clean(_dryRun, _force, _cleanFiles, _cleanDirectory);
+            return _git.Clean(_gitArguments);
         }
     }
 }

@@ -82,7 +82,7 @@ namespace GitDepend.Commands
 
             if (!_options.Dry)
             {
-                return buildAndUpdateDependencies(dependeciesToBuild, projectsToUpdate);
+                return BuildAndUpdateDependencies(dependeciesToBuild, projectsToUpdate);
             }
             else
             {
@@ -91,11 +91,19 @@ namespace GitDepend.Commands
             }
         }
 
-        private ReturnCode buildAndUpdateDependencies(List<string> dependeciesToBuild, List<string> projectsToUpdate)
+        private ReturnCode BuildAndUpdateDependencies(List<string> dependeciesToBuild, List<string> projectsToUpdate)
         {
             _algorithm.Reset();
             var buildAndUpdateVisitor = new BuildAndUpdateDependenciesVisitor(dependeciesToBuild, projectsToUpdate);
+            if (buildAndUpdateVisitor.CreateCacheDirectory() != ReturnCode.Success)
+            {
+                return ReturnCode.CouldNotCreateCacheDirectory;
+            }
             _algorithm.TraverseDependencies(buildAndUpdateVisitor, _options.Directory);
+            if (!buildAndUpdateVisitor.DeleteCacheDirectory())
+            {
+                _console.WriteLine(strings.DELETE_CACHE_DIR_FAILED);
+            }
 
             if (buildAndUpdateVisitor.ReturnCode == ReturnCode.Success)
             {

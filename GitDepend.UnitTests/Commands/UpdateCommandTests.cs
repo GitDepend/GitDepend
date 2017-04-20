@@ -114,7 +114,8 @@ namespace GitDepend.UnitTests.Commands
                     output.AppendLine(text);
                 });
 
-            var expected = "Updated packages: " + Environment.NewLine +
+            var expected = "Failed to delete the nuget cache directory" + Environment.NewLine +
+                            "Updated packages: " + Environment.NewLine +
                            "    " + string.Join(Environment.NewLine + "    ", packages) + Environment.NewLine +
                            "Update complete!" + Environment.NewLine;
 

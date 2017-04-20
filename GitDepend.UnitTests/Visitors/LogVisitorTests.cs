@@ -14,7 +14,7 @@ using Telerik.JustMock.Helpers;
 namespace GitDepend.UnitTests.Visitors
 {
     [TestFixture]
-    public class PullBranchVisitorTests : TestFixtureBase
+    public class LogVisitorTests : TestFixtureBase
     {
         private IGit _git;
 
@@ -25,12 +25,12 @@ namespace GitDepend.UnitTests.Visitors
         }
 
         [Test]
-        public void PullBranchVisitor_Succeeds_WhenPullSucceeds()
+        public void LogVisitor_Succeeds_WhenPullSucceeds()
         {
-            _git.Arrange(x => x.Pull("")).Returns(ReturnCode.Success);
+            _git.Arrange(x => x.Log("")).Returns(ReturnCode.Success);
 
             var dependencies = new List<string>();
-            PullBranchVisitor visitor = new PullBranchVisitor("", dependencies);
+            LogVisitor visitor = new LogVisitor("", dependencies);
 
             var returnCode = visitor.VisitProject(Lib1Directory, new GitDependFile());
 
@@ -39,12 +39,12 @@ namespace GitDepend.UnitTests.Visitors
         }
 
         [Test]
-        public void PullBranchVisitor_Succeeds_WhenPullFails()
+        public void LogVisitor_Succeeds_WhenPullFails()
         {
-            _git.Arrange(x => x.Pull("")).Returns(ReturnCode.FailedToRunGitCommand);
-			
+            _git.Arrange(x => x.Log("")).Returns(ReturnCode.FailedToRunGitCommand);
+
             var dependencies = new List<string>();
-            PullBranchVisitor visitor = new PullBranchVisitor("", dependencies);
+            LogVisitor visitor = new LogVisitor("", dependencies);
 
             var returnCode = visitor.VisitDependency(Lib1Directory, new Dependency()
             {
@@ -58,11 +58,11 @@ namespace GitDepend.UnitTests.Visitors
         }
 
         [Test]
-        public void PullBranchVisitor_Fails_OtherThanFailedToRunGitCommand()
+        public void LogVisitor_Fails_OtherThanFailedToRunGitCommand()
         {
-            _git.Arrange(x => x.Pull("")).Returns(ReturnCode.InvalidCommand);
+            _git.Arrange(x => x.Log("")).Returns(ReturnCode.InvalidCommand);
 
-            PullBranchVisitor visitor = new PullBranchVisitor("", new List<string>());
+            LogVisitor visitor = new LogVisitor("", new List<string>());
 
             var returnCode = visitor.VisitDependency(Lib1Directory, new Dependency()
             {
@@ -76,12 +76,12 @@ namespace GitDepend.UnitTests.Visitors
         }
 
         [Test]
-        public void PullBranchVisitor_NullArguments_ShouldStillSucceed()
+        public void LogVisitor_NullArguments_ShouldStillSucceed()
         {
-            _git.Arrange(x => x.Pull("")).Returns(ReturnCode.Success);
+            _git.Arrange(x => x.Log("")).Returns(ReturnCode.Success);
 
             List<string> arguments = null;
-            var visitor = new PullBranchVisitor("", new List<string>());
+            var visitor = new LogVisitor("", new List<string>());
             var returnCode = visitor.VisitDependency(Lib1Directory, new Dependency()
             {
                 Configuration = new GitDependFile()
@@ -94,10 +94,10 @@ namespace GitDepend.UnitTests.Visitors
         }
 
         [Test]
-        public void PullBranchVisitor_VisitDependency_ShouldReturnSuccess()
+        public void LogVisitor_VisitDependency_ShouldReturnSuccess()
         {
             List<string> arguments = null;
-            var visitor = new PullBranchVisitor("", new List<string>());
+            var visitor = new LogVisitor("", new List<string>());
             var returnCode = visitor.VisitProject(Lib1Directory, new GitDependFile());
 
             Assert.AreEqual(ReturnCode.Success, returnCode);

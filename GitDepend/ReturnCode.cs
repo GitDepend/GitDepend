@@ -76,8 +76,8 @@
         /// </summary>
         [ResxKey("RET_DEPENDENCY_PACKAGES_MISTMATCH")]
         DependencyPackagesMisMatch = 11,
-		
-		/// <summary>
+        
+        /// <summary>
         /// The name did not match the requested dependency
         /// </summary>
         [ResxKey("RET_NAME_DID_NOT_MATCH")]
@@ -100,8 +100,8 @@
         /// </summary>
         [ResxKey("RET_DEPEND_FILE_NOT_FOUND")]
         ConfigurationFileDoesNotExist = 15,
-		
-		/// <summary>
+        
+        /// <summary>
         /// Indicates build script in config file could not be found
         /// </summary>
         [ResxKey("RET_BUILD_SCRIPT_NOT_FOUND")]

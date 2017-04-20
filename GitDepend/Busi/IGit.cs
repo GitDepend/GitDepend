@@ -99,11 +99,17 @@ namespace GitDepend.Busi
         /// </summary>
         /// <returns></returns>
         ReturnCode Push();
-		
-		/// <summary>
+        
+        /// <summary>
         /// Runs the pull command with the arguments provided.
         /// </summary>
         /// <returns></returns>
-        ReturnCode Pull();
+        ReturnCode Pull(string gitPullArguments);
+
+        /// <summary>
+        /// Runs the log command with the arguments provided.
+        /// </summary>
+        /// <returns></returns>
+        ReturnCode Log(string gitLogArguments);
     }
 }

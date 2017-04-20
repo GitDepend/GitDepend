@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,8 @@ namespace GitDepend.Commands
         private readonly ListSubOptons _options;
         private readonly IGitDependFileFactory _factory;
         private readonly IConsole _console;
+        private readonly IGit _git;
+        private readonly IFileSystem _fileSystem;
 
         /// <summary>
         /// Creates a new <see cref="ListCommand"/>
@@ -33,6 +36,8 @@ namespace GitDepend.Commands
             _options = options;
             _factory = DependencyInjection.Resolve<IGitDependFileFactory>();
             _console = DependencyInjection.Resolve<IConsole>();
+            _git = DependencyInjection.Resolve<IGit>();
+            _fileSystem = DependencyInjection.Resolve<IFileSystem>();
         }
 
         #region Implementation of ICommand
@@ -43,13 +48,21 @@ namespace GitDepend.Commands
         /// <returns>The return code.</returns>
         public ReturnCode Execute()
         {
+            _git.WorkingDirectory = _options.Directory;
+
             string dir;
             ReturnCode code;
             var config = _factory.LoadFromDirectory(_options.Directory, out dir, out code);
+            var currBranch = _git.GetCurrentBranch();
 
             if (code == ReturnCode.Success && config != null)
             {
-                _console.WriteLine($"- {config.Name}");
+                _console.WriteLine($"- {config.Name} ({currBranch})");
+                if (_options.Verbose)
+                {
+                    _console.WriteLine($"  {_options.Directory}");
+                    _console.WriteLine();
+                }
                 foreach (var dependency in config.Dependencies)
                 {
                     WriteDependency(dependency, "    ");
@@ -67,7 +80,16 @@ namespace GitDepend.Commands
             }
             else
             {
-                _console.WriteLine($"{indent}- {dependency.Configuration.Name}");
+                _git.WorkingDirectory = _fileSystem.Path.GetFullPath(dependency.Directory);
+                var currBranch = _git.GetCurrentBranch();
+                _console.WriteLine($"{indent}- {dependency.Configuration.Name}" + (currBranch == dependency.Branch ? $" ({currBranch})"
+                                       : $" ({string.Format(strings.EXPECTED_BRANCH_BUT_WAS_BRANCH, dependency.Branch, currBranch).Trim()})"));
+
+                if (_options.Verbose)
+                {
+                    _console.WriteLine($"{indent}  {_git.WorkingDirectory}");
+                    _console.WriteLine();
+                }
                 foreach (var subDependency in dependency.Configuration.Dependencies)
                 {
                     WriteDependency(subDependency, indent + "    ");

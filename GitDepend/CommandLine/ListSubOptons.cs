@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CommandLine;
 
 namespace GitDepend.CommandLine
 {
@@ -11,5 +7,11 @@ namespace GitDepend.CommandLine
     /// </summary>
     public class ListSubOptons : CommonSubOptions
     {
+        /// <summary>
+        /// Signals to output more information than the default setting
+        /// what is needed.
+        /// </summary>
+        [Option('v', "verbose", DefaultValue = false, HelpText = "Outputs more information than the default.")]
+        public bool Verbose { get; set; }
     }
 }

@@ -46,12 +46,9 @@ namespace GitDepend.UnitTests.Visitors
             var dependencies = new List<string>();
             LogVisitor visitor = new LogVisitor("", dependencies);
 
-            var returnCode = visitor.VisitDependency(Lib1Directory, new Dependency()
+            var returnCode = visitor.VisitProject(Lib1Directory, new GitDependFile()
             {
-                Configuration = new GitDependFile()
-                {
-                    Name = "name"
-                }
+                Name = "name"
             });
 
             Assert.AreEqual(ReturnCode.Success, returnCode);
@@ -64,12 +61,9 @@ namespace GitDepend.UnitTests.Visitors
 
             LogVisitor visitor = new LogVisitor("", new List<string>());
 
-            var returnCode = visitor.VisitDependency(Lib1Directory, new Dependency()
+            var returnCode = visitor.VisitProject(Lib1Directory, new GitDependFile()
             {
-                Configuration = new GitDependFile()
-                {
-                    Name = "name"
-                }
+                Name = "name"
             });
 
             Assert.AreNotEqual(ReturnCode.Success, returnCode);

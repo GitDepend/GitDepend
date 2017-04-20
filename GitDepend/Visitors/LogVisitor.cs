@@ -11,7 +11,7 @@ namespace GitDepend.Visitors
     /// <summary>
     /// This visitor goes through each dependency (or named dependencies) and calls git log with the given arguments.
     /// </summary>
-    public class LogVisitor : NamedDependenciesVisitor
+    public class LogVisitor : NamedProjectsVisitor
     {
         private IGit _git;
         private string _gitArguments;
@@ -28,15 +28,14 @@ namespace GitDepend.Visitors
         }
 
         /// <summary>
-        /// Provides the custom hook for VisitDependency. This will only be called if the dependency
-        /// was specified in the whitelist.
-        /// </summary>  
-        /// <param name="directory">The directory of the project.</param>
-        /// <param name="dependency">The <see cref="Dependency"/> to visit.</param>
+        /// Gets the git log for the project.
+        /// </summary>
+        /// <param name="directory"></param>
+        /// <param name="config"></param>
         /// <returns></returns>
-        protected override ReturnCode OnVisitDependency(string directory, Dependency dependency)
+        protected override ReturnCode OnVisitProject(string directory, GitDependFile config)
         {
-            _git.WorkingDirectory = dependency.Directory;
+            _git.WorkingDirectory = directory;
             var returnCode = _git.Log(_gitArguments);
             if (returnCode == ReturnCode.FailedToRunGitCommand)
             {

@@ -16,16 +16,35 @@ namespace GitDepend.Visitors
         private readonly IGit _git;
         private readonly IFileSystem _fileSystem;
         private readonly IConsole _console;
+        private bool _dry;
+        private List<string> _changes = new List<string>();
+
+        /// <summary>
+        /// List of branch changes required by an update
+        /// </summary>
+        public List<string> Changes
+        {
+            get
+            {
+                if (_changes == null)
+                {
+                    _changes = new List<string>();
+                }
+                return _changes;
+            }
+        }
 
         /// <summary>
         /// Creates a new <see cref="VerifyCorrectBranchVisitor"/>
         /// </summary>
         /// <param name="whitelist"></param>
-        public VerifyCorrectBranchVisitor(IList<string> whitelist) : base(whitelist)
+        /// <param name="dry"></param>
+        public VerifyCorrectBranchVisitor(IList<string> whitelist, bool dry) : base(whitelist)
         {
             _git = DependencyInjection.Resolve<IGit>();
             _fileSystem = DependencyInjection.Resolve<IFileSystem>();
             _console = DependencyInjection.Resolve<IConsole>();
+            _dry = dry;
         }
 
         #region Overrides of NamedDependenciesVisitor
@@ -68,15 +87,27 @@ namespace GitDepend.Visitors
                     {
                         case "1":
                             goodChoice = true;
-                            code = dependency.SyncConfigWithCurrentBranch(directory);
+                            if (!_dry)
+                            {
+                                code = dependency.SyncConfigWithCurrentBranch(directory);
+                            }
+                            _changes.Add(string.Format(strings.WOULD_CHANGE_CONFIG, ParentRepoName, dependency.Configuration.Name, dependency.Branch, currBranch));
                             break;
                         case "2":
                             goodChoice = true;
-                            code = SwitchBranch(directory, dependency);
+                            _changes.Add(string.Format(strings.WOULD_CHANGE_BRANCH, dependency.Configuration.Name, currBranch, dependency.Branch));
+                            if (!_dry)
+                            {
+                                code = SwitchBranch(directory, dependency);
+                            }
                             break;
                         case "3":
                             goodChoice = true;
-                            code = ReturnCode.InvalidBranchCheckedOut;
+                            _changes.Add(string.Format(strings.FIX_BRANCH_MISMATCH, ParentRepoName, dependency.Configuration.Name));
+                            if (!_dry)
+                            {
+                                code = ReturnCode.InvalidBranchCheckedOut;
+                            }
                             break;
                         default:
                             _console.WriteLine(strings.TRY_AGAIN);

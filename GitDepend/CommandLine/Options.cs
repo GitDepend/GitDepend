@@ -48,13 +48,16 @@ namespace GitDepend.CommandLine
         [VerbOption(ListCommand.Name, HelpText = "Lists all repository dependencies")]
         public ListSubOptons ListVerb { get; set; } = new ListSubOptons();
 
+        [VerbOption(LogCommand.Name, HelpText = "Calls git log on all named dependencies.")]
+        public LogSubOptions LogVerb { get; set; } = new LogSubOptions();
+
         [VerbOption(ManageCommand.Name, HelpText = "Manage dependency url, directory, branch in config.")]
         public ManageSubOptions ManageVerb { get; set; } = new ManageSubOptions();
 
         [VerbOption(PullCommand.Name, HelpText = "Pulls named or all dependencies")]
         public PullSubOptions PullVerb { get; set; } = new PullSubOptions();
-		
-		[VerbOption(PushCommand.Name, HelpText = "Performs a git push on all of the dependencies.")]
+        
+        [VerbOption(PushCommand.Name, HelpText = "Performs a git push on all of the dependencies.")]
         public PushSubOptions PushVerb { get; set; } = new PushSubOptions();
 
         [VerbOption(RemoveCommand.Name, HelpText = "Removes a dependency based on its name.")]

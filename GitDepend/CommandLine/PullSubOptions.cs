@@ -12,5 +12,10 @@ namespace GitDepend.CommandLine
     /// </summary>
     public class PullSubOptions : NamedDependenciesOptions
     {
+          /// <summary>
+          /// The arguments to be provided to the git pull command
+          /// </summary>
+          [Option("args", Required = false, HelpText = "The arguments to be passed to the pull command for each dependancy.")]
+          public string GitArguments { get; set; }
     }
 }

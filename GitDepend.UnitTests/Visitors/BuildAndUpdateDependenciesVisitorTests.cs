@@ -41,6 +41,7 @@ namespace GitDepend.UnitTests.Visitors
             var fileSystem = RegisterMockFileSystem();
             var instance = new BuildAndUpdateDependenciesVisitor(new List<string> { Lib1Config.Name }, new List<string> { Lib1Config.Name, Lib2Config.Name });
 
+            instance.CreateCacheDirectory();
             string dir;
             ReturnCode loadCode = ReturnCode.Success;
             factory.Arrange(f => f.LoadFromDirectory(Arg.AnyString, out dir, out loadCode))
@@ -72,18 +73,25 @@ namespace GitDepend.UnitTests.Visitors
 
             var cachedPackages = fileSystem.Directory.GetFiles(instance.GetCacheDirectory(), "*.nupkg");
 
-            Assert.AreEqual(Lib1Packages.Count, cachedPackages.Length, "Invalid number of cached nuget packages");
-
-            foreach (var package in cachedPackages)
+            try
             {
-                var name = fileSystem.Path.GetFileName(package);
-                // Make sure that name shows up in the original list.
-                Assert.IsTrue(Lib1Packages.Any(p => fileSystem.Path.GetFileName(p) == name));
-            }
+                Assert.AreEqual(Lib1Packages.Count, cachedPackages.Length, "Invalid number of cached nuget packages");
 
-            Assert.IsTrue(scriptExecuted, "Build Script was not executed");
-            Assert.AreEqual(ReturnCode.Success, code, "Invalid ReturnCode");
-            Assert.AreEqual(ReturnCode.Success, instance.ReturnCode, "Invalid ReturnCode");
+                foreach (var package in cachedPackages)
+                {
+                    var name = fileSystem.Path.GetFileName(package);
+                    // Make sure that name shows up in the original list.
+                    Assert.IsTrue(Lib1Packages.Any(p => fileSystem.Path.GetFileName(p) == name));
+                }
+
+                Assert.IsTrue(scriptExecuted, "Build Script was not executed");
+                Assert.AreEqual(ReturnCode.Success, code, "Invalid ReturnCode");
+                Assert.AreEqual(ReturnCode.Success, instance.ReturnCode, "Invalid ReturnCode");
+            }
+            finally
+            {
+                instance.DeleteCacheDirectory();
+            }
         }
 
         [Test]
@@ -138,53 +146,61 @@ namespace GitDepend.UnitTests.Visitors
             var fileSystem = RegisterMockFileSystem();
             var nuget = Container.Resolve<INuget>();
             var instance = new BuildAndUpdateDependenciesVisitor(new List<string> { Lib1Config.Name }, new List<string> { Lib1Config.Name, Lib2Config.Name });
-
-            EnsureFiles(fileSystem, Lib1PackagesDirectory, Lib1Packages);
-            EnsureFiles(fileSystem, Lib1PackagesDirectory, new List<string>
+            instance.CreateCacheDirectory();
+            try
             {
-                ".nupkg",
-                "bad.input.nupkg"
-            });
-
-            EnsureFiles(fileSystem, Lib2Directory, Lib2Solutions);
-            Dictionary<string, List<string>> updatedPackages = new Dictionary<string, List<string>>();
-
-            nuget.Arrange(n => n.Update(Arg.AnyString, Arg.AnyString, Arg.AnyString, Arg.AnyString))
-                .Returns((string solution, string id, string version, string sourceDirectory) =>
+                EnsureFiles(fileSystem, Lib1PackagesDirectory, Lib1Packages);
+                EnsureFiles(fileSystem, Lib1PackagesDirectory, new List<string>
                 {
-                    Assert.AreEqual(Lib2Directory, nuget.WorkingDirectory, "Invalid working directory for Nuget.exe");
-
-                    var key = $"{id}.{version}";
-                    if (updatedPackages.ContainsKey(key))
-                    {
-                        var list = updatedPackages[key];
-
-                        Assert.IsFalse(list.Contains(solution));
-                        list.Add(solution);
-                    }
-                    else
-                    {
-                        updatedPackages.Add(key, new List<string> { solution });
-                    }
-                    return ReturnCode.Success;
+                    ".nupkg",
+                    "bad.input.nupkg"
                 });
 
-            fileSystem.Directory.CreateDirectory(Lib2Directory);
+                EnsureFiles(fileSystem, Lib2Directory, Lib2Solutions);
+                Dictionary<string, List<string>> updatedPackages = new Dictionary<string, List<string>>();
 
-            var code = instance.VisitProject(Lib2Directory, Lib2Config);
-            Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
-            Assert.AreEqual(ReturnCode.Success, instance.ReturnCode, "Invalid Return Code");
+                nuget.Arrange(n => n.Update(Arg.AnyString, Arg.AnyString, Arg.AnyString, Arg.AnyString))
+                    .Returns((string solution, string id, string version, string sourceDirectory) =>
+                    {
+                        Assert.AreEqual(Lib2Directory, nuget.WorkingDirectory, "Invalid working directory for Nuget.exe");
 
-            Assert.AreEqual(Lib1Packages.Count, updatedPackages.Keys.Count, "Invalid number of updated packages");
+                        var key = $"{id}.{version}";
+                        if (updatedPackages.ContainsKey(key))
+                        {
+                            var list = updatedPackages[key];
 
-            foreach (var kvp in updatedPackages)
-            {
-                Assert.IsTrue(Lib1Packages.Any(p => fileSystem.Path.GetFileNameWithoutExtension(p) == kvp.Key));
+                            Assert.IsFalse(list.Contains(solution));
+                            list.Add(solution);
+                        }
+                        else
+                        {
+                            updatedPackages.Add(key, new List<string> {solution});
+                        }
+                        return ReturnCode.Success;
+                    });
 
-                foreach (var solution in kvp.Value)
+                fileSystem.Directory.CreateDirectory(Lib2Directory);
+
+                var code = instance.VisitProject(Lib2Directory, Lib2Config);
+                Assert.AreEqual(ReturnCode.Success, code, "Invalid Return Code");
+                Assert.AreEqual(ReturnCode.Success, instance.ReturnCode, "Invalid Return Code");
+
+                Assert.AreEqual(Lib1Packages.Count, updatedPackages.Keys.Count, "Invalid number of updated packages");
+
+                foreach (var kvp in updatedPackages)
                 {
-                    Assert.IsTrue(Lib2Solutions.Any(s => s == fileSystem.Path.GetFileName(solution)), $"{solution} was not found in Lib2Solutions");
+                    Assert.IsTrue(Lib1Packages.Any(p => fileSystem.Path.GetFileNameWithoutExtension(p) == kvp.Key));
+
+                    foreach (var solution in kvp.Value)
+                    {
+                        Assert.IsTrue(Lib2Solutions.Any(s => s == fileSystem.Path.GetFileName(solution)),
+                            $"{solution} was not found in Lib2Solutions");
+                    }
                 }
+            }
+            finally
+            {
+                instance.DeleteCacheDirectory();
             }
         }
 

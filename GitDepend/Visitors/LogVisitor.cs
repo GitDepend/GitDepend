@@ -9,19 +9,19 @@ using GitDepend.Configuration;
 namespace GitDepend.Visitors
 {
     /// <summary>
-    /// This visitor goes through each dependency (or named dependencies and pulls with the given arguments.
+    /// This visitor goes through each dependency (or named dependencies) and calls git log with the given arguments.
     /// </summary>
-    public class PullBranchVisitor : NamedDependenciesVisitor
+    public class LogVisitor : NamedDependenciesVisitor
     {
         private IGit _git;
         private string _gitArguments;
 
         /// <summary>
-        /// This visitor pulls in with the given arguments each directory or the named directories in the whitelist.
+        /// This visitor calls log with the given arguments each directory or the named directories in the whitelist.
         /// </summary>
         /// <param name="gitArguments">The list of arguments to provide to git pull</param>
         /// <param name="whitelist">The dependencies to visit</param>
-        public PullBranchVisitor(string gitArguments, IList<string> whitelist) : base(whitelist)
+        public LogVisitor(string gitArguments, IList<string> whitelist) : base(whitelist)
         {
             _git = DependencyInjection.Resolve<IGit>();
             _gitArguments = gitArguments;
@@ -37,7 +37,7 @@ namespace GitDepend.Visitors
         protected override ReturnCode OnVisitDependency(string directory, Dependency dependency)
         {
             _git.WorkingDirectory = dependency.Directory;
-            var returnCode = _git.Pull(_gitArguments);
+            var returnCode = _git.Log(_gitArguments);
             if (returnCode == ReturnCode.FailedToRunGitCommand)
             {
                 return ReturnCode = ReturnCode.Success;

@@ -21,7 +21,7 @@ namespace GitDepend.UnitTests.Commands
         public void Execute_ReturnsError_WhenVerifyCorrectBranchVisitor_Fails()
         {
             var algorithm = Container.Resolve<IDependencyVisitorAlgorithm>();
-            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
+            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
                     Assert.IsNotNull(visitor as VerifyCorrectBranchVisitor, "The first visitor should be of type VerifyCorrectBranchVisitor");
@@ -42,7 +42,7 @@ namespace GitDepend.UnitTests.Commands
         {
             bool checkoutCalled = false;
             var algorithm = Container.Resolve<IDependencyVisitorAlgorithm>();
-            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
+            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
                     if (visitor is VerifyCorrectBranchVisitor)
@@ -77,7 +77,7 @@ namespace GitDepend.UnitTests.Commands
             bool checkoutCalled = false;
             bool checkArtifacts = false;
             var algorithm = Container.Resolve<IDependencyVisitorAlgorithm>();
-            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
+            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
                     if (visitor is VerifyCorrectBranchVisitor)
@@ -136,7 +136,7 @@ namespace GitDepend.UnitTests.Commands
         public void Execute_ReturnsError_WhenVerifyCorrectBranchDryVisitor_Fails()
         {
             var algorithm = Container.Resolve<IDependencyVisitorAlgorithm>();
-            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
+            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
                     Assert.IsNotNull(visitor as VerifyCorrectBranchVisitor, "The first visitor should be of type VerifyCorrectBranchDryVisitor");
@@ -160,7 +160,7 @@ namespace GitDepend.UnitTests.Commands
         {
             var algorithm = Container.Resolve<IDependencyVisitorAlgorithm>();
             var console = Container.Resolve<IConsole>();
-            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
+            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
 
@@ -196,7 +196,7 @@ namespace GitDepend.UnitTests.Commands
         {
             var algorithm = Container.Resolve<IDependencyVisitorAlgorithm>();
             var console = Container.Resolve<IConsole>();
-            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
+            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
                     if (visitor is VerifyCorrectBranchVisitor)

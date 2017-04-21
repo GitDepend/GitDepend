@@ -41,7 +41,7 @@ namespace GitDepend.UnitTests.Commands
         {
             string dir;
             ReturnCode returnCode;
-            _algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString)).DoInstead(
+            _algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false)).DoInstead(
                 (RemoveDependencyVisitor visitor, string directory) =>
                 {
                     visitor.FoundDependencyDirectories = new List<string>(){ "C:\\projects\\Lib1" };
@@ -67,7 +67,7 @@ namespace GitDepend.UnitTests.Commands
         [Test]
         public void Execute_ShouldFail_With_MisnamedDependency()
         {
-            _algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString)).DoInstead(
+            _algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false)).DoInstead(
                 (RemoveDependencyVisitor visitor, string directory) =>
                 {
                     visitor.ReturnCode = ReturnCode.NameDidNotMatchRequestedDependency;

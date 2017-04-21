@@ -196,6 +196,15 @@ namespace GitDepend.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Includes updated..
+        /// </summary>
+        internal static string FILES_UPDATED {
+            get {
+                return ResourceManager.GetString("FILES_UPDATED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Need to fix dependancy branch mismatch in {0} for {1}.
         /// </summary>
         internal static string FIX_BRANCH_MISMATCH {

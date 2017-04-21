@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using GitDepend.CommandLine;
 using GitDepend.Commands;
 using GitDepend.Visitors;
@@ -13,7 +9,7 @@ using Telerik.JustMock.Helpers;
 namespace GitDepend.UnitTests.Commands
 {
     [TestFixture]
-    public class PushCommandTests : TestFixtureBase
+    public class IncludeCommandTests : TestFixtureBase
     {
         private IDependencyVisitorAlgorithm _algorithm;
 
@@ -24,33 +20,33 @@ namespace GitDepend.UnitTests.Commands
         }
 
         [Test]
-        public void PushCommandSucceeds()
+        public void IncludeCommandSucceeds()
         {
-            _algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false)).DoInstead(
-                (PushBranchVisitor visitor, string directory) =>
+            _algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, true)).DoInstead(
+                (IncludeVisitor visitor, string directory) =>
                 {
                     visitor.ReturnCode = ReturnCode.Success;
                 });
-            var options = new PushSubOptions();
-            var command = new PushCommand(options);
+
+            var options = new IncludeSubOptions();
+            var command = new IncludeCommand(options);
 
             var code = command.Execute();
 
             Assert.AreEqual(ReturnCode.Success, code);
-
         }
 
         [Test]
-        public void PushCommandFails_WhenOtherReturnCodeReturned()
+        public void IncludeCommandFails_WhenOtherReturnCodeReturned()
         {
-            _algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false)).DoInstead(
-                (PushBranchVisitor visitor, string directory) =>
+            _algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, true)).DoInstead(
+                (IncludeVisitor visitor, string directory) =>
                 {
                     visitor.ReturnCode = ReturnCode.InvalidCommand;
                 });
 
-            var options = new PushSubOptions();
-            var command = new PushCommand(options);
+            var options = new IncludeSubOptions();
+            var command = new IncludeCommand(options);
 
             var code = command.Execute();
 

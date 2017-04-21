@@ -68,7 +68,7 @@ namespace GitDepend.UnitTests.Commands
         {
             //setup IGit
             var algorithm = DependencyInjection.Resolve<IDependencyVisitorAlgorithm>();
-            algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString)).DoInstead((IVisitor visitor, string directory) =>
+            algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false)).DoInstead((IVisitor visitor, string directory) =>
             {
                 visitor.ReturnCode = ReturnCode.Success;
             }).MustBeCalled();
@@ -87,7 +87,7 @@ namespace GitDepend.UnitTests.Commands
             var git = DependencyInjection.Resolve<IGit>();
             git.Arrange(x => x.Clean("")).Returns(ReturnCode.FailedToRunGitCommand).MustBeCalled();
             var algorithm = DependencyInjection.Resolve<IDependencyVisitorAlgorithm>();
-            algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString)).DoInstead(
+            algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false)).DoInstead(
                 (IVisitor visitor, string directory) =>
                 {
                     visitor.ReturnCode = visitor.VisitProject(directory, Lib1Config);
@@ -112,7 +112,7 @@ namespace GitDepend.UnitTests.Commands
                 .MustBeCalled();
 
             var algorithm = DependencyInjection.Resolve<IDependencyVisitorAlgorithm>();
-            algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString)).DoInstead(
+            algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false)).DoInstead(
                 (IVisitor visitor, string directory) =>
                 {
                     visitor.ReturnCode = visitor.VisitProject(directory, Lib1Config);

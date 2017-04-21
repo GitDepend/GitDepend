@@ -85,6 +85,7 @@
     <Compile Include="Commands\CleanCommandTests.cs" />
     <Compile Include="Commands\CloneCommandTests.cs" />
     <Compile Include="Commands\CommandParserTests.cs" />
+    <Compile Include="Commands\IncludeCommandTests.cs" />
     <Compile Include="Commands\InitCommandTests.cs" />
     <Compile Include="Commands\ListCommandTests.cs" />
     <Compile Include="Commands\LogCommandTests.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestFixtureBase.cs" />
     <Compile Include="Visitors\DisplayStatusVisitorTests.cs" />
+    <Compile Include="Visitors\IncludeVisitorTests.cs" />
     <Compile Include="Visitors\ListAllBranchesVisitorTests.cs" />
     <Compile Include="Visitors\ListMergedBranchesVisitorTests.cs" />
     <Compile Include="Visitors\LogVisitorTests.cs" />

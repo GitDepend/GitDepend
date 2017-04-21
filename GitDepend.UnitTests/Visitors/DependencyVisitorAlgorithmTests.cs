@@ -184,7 +184,7 @@ namespace GitDepend.UnitTests.Visitors
                 });
 
             instance.TraverseDependencies(visitor, PROJECT_DIRECTORY);
-            Assert.AreEqual(ReturnCode.ConfigurationFileDoesNotExist, visitor.ReturnCode, "Invalid ReturnCode");
+            Assert.AreEqual(ReturnCode.FailedToRunBuildScript, visitor.ReturnCode, "Invalid ReturnCode");
         }
 
         [Test]

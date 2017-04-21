@@ -33,7 +33,7 @@ namespace GitDepend.UnitTests.Commands
 
             var algorithm = Container.Resolve<IDependencyVisitorAlgorithm>();
 
-            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
+            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
                     visitor.ReturnCode = ReturnCode.FailedToRunGitCommand;
@@ -58,7 +58,7 @@ namespace GitDepend.UnitTests.Commands
 
             var algorithm = Container.Resolve<IDependencyVisitorAlgorithm>();
 
-            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
+            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
                     visitor.ReturnCode = ReturnCode.Success;

@@ -8,6 +8,7 @@ using GitDepend.Busi;
 using GitDepend.CommandLine;
 using GitDepend.Configuration;
 using GitDepend.Resources;
+using GitDepend.Visitors;
 
 namespace GitDepend.Commands
 {
@@ -26,6 +27,7 @@ namespace GitDepend.Commands
         private readonly IConsole _console;
         private readonly IGit _git;
         private readonly IFileSystem _fileSystem;
+        private IDependencyVisitorAlgorithm _algorithm;
 
         /// <summary>
         /// Creates a new <see cref="ListCommand"/>
@@ -38,6 +40,7 @@ namespace GitDepend.Commands
             _console = DependencyInjection.Resolve<IConsole>();
             _git = DependencyInjection.Resolve<IGit>();
             _fileSystem = DependencyInjection.Resolve<IFileSystem>();
+            _algorithm = DependencyInjection.Resolve<IDependencyVisitorAlgorithm>();
         }
 
         #region Implementation of ICommand
@@ -49,6 +52,14 @@ namespace GitDepend.Commands
         public ReturnCode Execute()
         {
             _git.WorkingDirectory = _options.Directory;
+            if (!_options.All)
+            {
+                ReturnCode previsit = _algorithm.PreVisitDependencies(_options.Directory);
+                if (previsit != ReturnCode.Success)
+                {
+                    return previsit;
+                }
+            }
 
             string dir;
             ReturnCode code;
@@ -80,19 +91,24 @@ namespace GitDepend.Commands
             }
             else
             {
-                _git.WorkingDirectory = _fileSystem.Path.GetFullPath(dependency.Directory);
-                var currBranch = _git.GetCurrentBranch();
-                _console.WriteLine($"{indent}- {dependency.Configuration.Name}" + (currBranch == dependency.Branch ? $" ({currBranch})"
-                                       : $" ({string.Format(strings.EXPECTED_BRANCH_BUT_WAS_BRANCH, dependency.Branch, currBranch).Trim()})"));
+                if (_algorithm.FilterProjects.Count == 0 || _algorithm.FilterProjects.Contains(dependency.Configuration.Name))
+                {
+                    _git.WorkingDirectory = _fileSystem.Path.GetFullPath(dependency.Directory);
+                    var currBranch = _git.GetCurrentBranch();
+                    _console.WriteLine($"{indent}- {dependency.Configuration.Name}" +
+                                       (currBranch == dependency.Branch
+                                           ? $" ({currBranch})"
+                                           : $" ({string.Format(strings.EXPECTED_BRANCH_BUT_WAS_BRANCH, dependency.Branch, currBranch).Trim()})"));
 
-                if (_options.Verbose)
-                {
-                    _console.WriteLine($"{indent}  {_git.WorkingDirectory}");
-                    _console.WriteLine();
-                }
-                foreach (var subDependency in dependency.Configuration.Dependencies)
-                {
-                    WriteDependency(subDependency, indent + "    ");
+                    if (_options.Verbose)
+                    {
+                        _console.WriteLine($"{indent}  {_git.WorkingDirectory}");
+                        _console.WriteLine();
+                    }
+                    foreach (var subDependency in dependency.Configuration.Dependencies)
+                    {
+                        WriteDependency(subDependency, indent + "    ");
+                    }
                 }
             }
         }

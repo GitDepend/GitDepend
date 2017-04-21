@@ -18,11 +18,9 @@ namespace GitDepend.Commands
 		/// </summary>
 		public const string Name = "build";
 
+		private readonly IGitDependFileFactory _factory;
 		private readonly BuildSubOptions _options;
-		private readonly IGit _git;
 		private readonly IDependencyVisitorAlgorithm _algorithm;
-		private readonly IConsole _console;
-		private readonly IFileSystem _fileSystem;
 
 		/// <summary>
 		/// Creates a enw <see cref="BuildCommand"/>
@@ -31,10 +29,8 @@ namespace GitDepend.Commands
 		public BuildCommand(BuildSubOptions options)
 		{
 			_options = options;
-			_git = DependencyInjection.Resolve<IGit>();
+			_factory = DependencyInjection.Resolve<IGitDependFileFactory>();
 			_algorithm = DependencyInjection.Resolve<IDependencyVisitorAlgorithm>();
-			_console = DependencyInjection.Resolve<IConsole>();
-			_fileSystem = DependencyInjection.Resolve<IFileSystem>();
 		}
 
 		/// <summary>
@@ -64,7 +60,12 @@ namespace GitDepend.Commands
 			else
 			{
 				// build only current project
-				visitor = new BuildVisitor(_fileSystem.Path.GetFullPath(_options.Directory));
+
+				string dir;
+				ReturnCode code;
+				var config = _factory.LoadFromDirectory(_options.Directory, out dir, out code);
+
+				visitor = new BuildVisitor(config.Name);
 			}
 
 			_algorithm.TraverseDependencies(visitor, _options.Directory);

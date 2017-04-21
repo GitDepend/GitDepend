@@ -62,12 +62,9 @@ namespace GitDepend.Visitors
 			{
 				return ReturnCode = ReturnCode.Success;
 			}
-
-			var fullPath = _fileSystem.Path.GetFullPath(directory);
-
+			
 			var shouldExecute = string.IsNullOrEmpty(_projectToBuild) ||
-								string.Equals(_projectToBuild, config.Name, StringComparison.CurrentCultureIgnoreCase) ||
-								string.Equals(_projectToBuild, fullPath, StringComparison.CurrentCultureIgnoreCase);
+			                    string.Equals(_projectToBuild, config.Name, StringComparison.CurrentCultureIgnoreCase);
 
 			if (!shouldExecute)
 			{

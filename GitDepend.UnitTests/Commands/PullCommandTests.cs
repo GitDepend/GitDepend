@@ -26,7 +26,7 @@ namespace GitDepend.UnitTests.Commands
         [Test]
         public void PullCommandSucceeds()
         {
-            _algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString)).DoInstead(
+            _algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false)).DoInstead(
                 (PullBranchVisitor visitor, string directory) =>
                 {
                     visitor.ReturnCode = ReturnCode.Success;
@@ -43,7 +43,7 @@ namespace GitDepend.UnitTests.Commands
         [Test]
         public void PullCommandFails_WhenOtherReturnCodeReturned()
         {
-            _algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString)).DoInstead(
+            _algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false)).DoInstead(
                 (PullBranchVisitor visitor, string directory) =>
                 {
                     visitor.ReturnCode = ReturnCode.InvalidCommand;

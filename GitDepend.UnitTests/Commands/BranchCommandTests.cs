@@ -21,7 +21,7 @@ namespace GitDepend.UnitTests.Commands
         {
             var algorithm = Container.Resolve<IDependencyVisitorAlgorithm>();
 
-            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
+            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
                     visitor.ReturnCode = ReturnCode.FailedToRunGitCommand;
@@ -81,7 +81,7 @@ namespace GitDepend.UnitTests.Commands
         {
             var algorithm = Container.Resolve<IDependencyVisitorAlgorithm>();
 
-            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
+            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
                     var deleteVisitor = visitor as DeleteBranchVisitor;
@@ -112,7 +112,7 @@ namespace GitDepend.UnitTests.Commands
                 BranchName = "feature/test_branch"
             };
 
-            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
+            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
                     var deleteVisitor = visitor as DeleteBranchVisitor;
@@ -148,7 +148,7 @@ namespace GitDepend.UnitTests.Commands
         {
             var algorithm = Container.Resolve<IDependencyVisitorAlgorithm>();
 
-            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
+            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
                     var mergedBranchesVisitor = visitor as ListMergedBranchesVisitor;
@@ -171,7 +171,7 @@ namespace GitDepend.UnitTests.Commands
         {
             var algorithm = Container.Resolve<IDependencyVisitorAlgorithm>();
 
-            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
+            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
                     var mergedBranchesVisitor = visitor as ListMergedBranchesVisitor;
@@ -196,7 +196,7 @@ namespace GitDepend.UnitTests.Commands
 
             var algorithm = Container.Resolve<IDependencyVisitorAlgorithm>();
 
-            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
+            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
                     var createBranchVisitor = visitor as CreateBranchVisitor;
@@ -222,7 +222,7 @@ namespace GitDepend.UnitTests.Commands
 
             var algorithm = Container.Resolve<IDependencyVisitorAlgorithm>();
 
-            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
+            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
                     var createBranchVisitor = visitor as CreateBranchVisitor;
@@ -246,7 +246,7 @@ namespace GitDepend.UnitTests.Commands
         {
             var algorithm = Container.Resolve<IDependencyVisitorAlgorithm>();
 
-            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
+            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
                     var listAllBranchesVisitor = visitor as ListAllBranchesVisitor;
@@ -266,7 +266,7 @@ namespace GitDepend.UnitTests.Commands
         {
             var algorithm = Container.Resolve<IDependencyVisitorAlgorithm>();
 
-            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString))
+            algorithm.Arrange(a => a.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false))
                 .DoInstead((IVisitor visitor, string directory) =>
                 {
                     var listAllBranchesVisitor = visitor as ListAllBranchesVisitor;

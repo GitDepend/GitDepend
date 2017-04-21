@@ -35,7 +35,7 @@ namespace GitDepend.UnitTests.Commands
             ReturnCode returnCode;
             _fileSystem.Arrange(x => x.Path.Combine(Arg.AnyString, Arg.AnyString)).Returns("C:\\projects\\Lib1").MustBeCalled();
             _fileSystem.Arrange(x => x.Path.GetFullPath("C:\\projects\\Lib1")).Returns("C:\\projects\\Lib1").MustBeCalled();
-            _algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString)).DoInstead(
+            _algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false)).DoInstead(
                 (ManageDependenciesVisitor visitor, string directory) =>
                 {
                     visitor.NameMatchingDirectory = Lib1Directory;

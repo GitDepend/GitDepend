@@ -16,6 +16,8 @@ namespace GitDepend.Visitors
         private readonly IGit _git;
         private readonly IFileSystem _fileSystem;
         private readonly IConsole _console;
+        private List<string> _filterProjects = new List<string>();
+        private readonly HashSet<string> _preVisitedDependencies = new HashSet<string>();
         private readonly HashSet<string> _visitedDependencies = new HashSet<string>();
         private readonly HashSet<string> _visitedProjects = new HashSet<string>();
 
@@ -31,11 +33,81 @@ namespace GitDepend.Visitors
         }
 
         /// <summary>
+        /// List of projects to filter on
+        /// </summary>
+        public List<string> FilterProjects
+        {
+            get
+            {
+                if (_filterProjects == null)
+                {
+                    _filterProjects = new List<string>();
+                }
+                return _filterProjects;
+            }
+        }
+
+        /// <summary>
+        /// Builds a list of projects that should be included in a filtered run
+        /// </summary>
+        /// <param name="directory">Starting directory of the dependency tree</param>
+        /// <returns></returns>
+        public ReturnCode PreVisitDependencies(string directory)
+        {
+            bool includeCurrent = false;
+            return PreVisitDependencies(directory, out includeCurrent);
+        }
+
+        private ReturnCode PreVisitDependencies(string directory, out bool includeCurrent)
+        {
+            // visit current is set when any dependency is visited or if we need to visit the current project
+            bool includeDep = false;
+            includeCurrent = false;
+            string dir;
+            ReturnCode code;
+            var config = _factory.LoadFromDirectory(directory, out dir, out code);
+
+            if (code != ReturnCode.Success)
+            {
+                return code;
+            }
+
+            foreach (var dependency in config.Dependencies)
+            {
+                includeDep = false;
+                dependency.Directory = _fileSystem.Path.GetFullPath(_fileSystem.Path.Combine(dir, dependency.Directory));
+
+                // If the dependency does not exist on disk, then it definitely has no key file.
+                if (!_fileSystem.Directory.Exists(dependency.Directory))
+                {
+                    return ReturnCode.Success;
+                }
+
+                // Visit all dependencies of this dependency.
+                PreVisitDependencies(dependency.Directory, out includeDep);
+                includeCurrent |= includeDep;     
+            }
+            // Check for the key file.
+            if (includeCurrent || _factory.CheckForDependencyInclude(directory))
+            {
+                includeCurrent = true;
+                if (!_filterProjects.Contains(config.Name))
+                {
+                    _filterProjects.Add(config.Name);
+                }
+            }
+
+            return ReturnCode.Success;
+        }
+
+
+        /// <summary>
         /// Traverses all dependencies beginning in the given directory.
         /// </summary>
         /// <param name="visitor">The <see cref="IVisitor"/> that should be called at each dependency and project visit.</param>
         /// <param name="directory">The directory containing a GitDepend.json file.</param>
-        public void TraverseDependencies(IVisitor visitor, string directory)
+        /// <param name="ignoreFilterFiles">Whether or not the .DepInclude files should be ignored.</param>
+        public void TraverseDependencies(IVisitor visitor, string directory, bool ignoreFilterFiles = false)
         {
             // Make sure we are working with something here.
             if (visitor == null || string.IsNullOrEmpty(directory))
@@ -54,6 +126,17 @@ namespace GitDepend.Visitors
 
             string dir;
             ReturnCode code;
+
+            if (!ignoreFilterFiles)
+            {
+                code = PreVisitDependencies(directory);
+                if (code != ReturnCode.Success)
+                {
+                    visitor.ReturnCode = code;
+                    return;
+                }
+            }
+
             var config = _factory.LoadFromDirectory(directory, out dir, out code);
 
             if (code != ReturnCode.Success)
@@ -95,7 +178,7 @@ namespace GitDepend.Visitors
                 }
 
                 // Visit all dependencies of this dependency.
-                TraverseDependencies(visitor, dependency.Directory);
+                TraverseDependencies(visitor, dependency.Directory, ignoreFilterFiles);
 
                 // If something went wrong with a dependency we are done.
                 if (visitor.ReturnCode != ReturnCode.Success)
@@ -108,13 +191,20 @@ namespace GitDepend.Visitors
                 {
                     _visitedDependencies.Add(dependency.Directory);
 
-	                if (visitor is NamedDependenciesVisitor)
-	                {
-		                ((NamedDependenciesVisitor)visitor).ParentRepoName = config.Name;
-	                }
+                    if (visitor is NamedDependenciesVisitor)
+                    {
+                        ((NamedDependenciesVisitor)visitor).ParentRepoName = config.Name;
+                    }
 
-	                // Visit the dependency.
-					code = visitor.VisitDependency(dir, dependency);
+                    if (_filterProjects.Count == 0 || _filterProjects.Contains(dependency.Configuration.Name))
+                    {
+                        // Visit the dependency.
+                        code = visitor.VisitDependency(dir, dependency);
+                    }
+                    else
+                    {
+                        code = ReturnCode.Success;
+                    }
 
                     // If something went wrong visiting the dependency we are done.
                     if (code != ReturnCode.Success)
@@ -130,8 +220,11 @@ namespace GitDepend.Visitors
             {
                 _visitedProjects.Add(dir);
 
-                // Visit the project.
-                code = visitor.VisitProject(dir, config);
+                if (_filterProjects.Count == 0 || _filterProjects.Contains(config.Name))
+                {
+                    // Visit the project.
+                    code = visitor.VisitProject(dir, config);
+                }
 
                 // If something went wrong visiting the project we are done.
                 if (code != ReturnCode.Success)

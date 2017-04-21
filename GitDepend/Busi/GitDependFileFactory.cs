@@ -100,6 +100,30 @@ namespace GitDepend.Busi
             return null;
         }
 
+        /// <summary>
+        /// Finds a GitDepend.json file in the given directory and loads it into memory.
+        /// </summary>
+        /// <param name="directory">The directory to start in.</param>
+        /// <returns>Whether the key file exists</returns>
+        public bool CheckForDependencyInclude(string directory)
+        {
+            if (!_fileSystem.Directory.Exists(directory))
+            {
+                return false;
+            }
+            
+            if (!string.IsNullOrEmpty(directory))
+            {
+                var file = _fileSystem.Path.Combine(directory, ".DepInclude");
+
+                if (_fileSystem.File.Exists(file))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private bool IsValidUrl(string url)
         {
             return Regex.IsMatch(url, @"^https://.*?$");

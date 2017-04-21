@@ -21,7 +21,7 @@ namespace GitDepend.UnitTests.Commands
         [Test]
         public void LogCommandSucceeds()
         {
-            _algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString)).DoInstead(
+            _algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false)).DoInstead(
                 (LogVisitor visitor, string directory) =>
                 {
                     visitor.ReturnCode = ReturnCode.Success;
@@ -38,7 +38,7 @@ namespace GitDepend.UnitTests.Commands
         [Test]
         public void LogCommandFails_WhenOtherReturnCodeReturned()
         {
-            _algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString)).DoInstead(
+            _algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString, false)).DoInstead(
                 (LogVisitor visitor, string directory) =>
                 {
                     visitor.ReturnCode = ReturnCode.InvalidCommand;

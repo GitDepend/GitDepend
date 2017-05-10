@@ -31,19 +31,13 @@ namespace GitDepend.UnitTests.Commands
             _badCleanSubOptions = new CleanSubOptions()
             {
                 Directory = "dir",
-                DryRun = false,
-                Force = false,
-                RemoveUntrackedFiles = false,
-                RemoveUntrackedDirectories = false
+                GitArguments = ""
             };
 
             _goodCleanSubOptions = new CleanSubOptions()
             {
                 Directory = "dir",
-                DryRun = true,
-                Force = true,
-                RemoveUntrackedFiles = true,
-                RemoveUntrackedDirectories = true
+                GitArguments = "-nfdx"
             };
             string dir;
             ReturnCode code;
@@ -91,7 +85,7 @@ namespace GitDepend.UnitTests.Commands
         public void CleanCommand_Fails_GitReturnCode_FailedToRun()
         {
             var git = DependencyInjection.Resolve<IGit>();
-            git.Arrange(x => x.Clean(false, false, false, false)).Returns(ReturnCode.FailedToRunGitCommand).MustBeCalled();
+            git.Arrange(x => x.Clean("")).Returns(ReturnCode.FailedToRunGitCommand).MustBeCalled();
             var algorithm = DependencyInjection.Resolve<IDependencyVisitorAlgorithm>();
             algorithm.Arrange(x => x.TraverseDependencies(Arg.IsAny<IVisitor>(), Arg.AnyString)).DoInstead(
                 (IVisitor visitor, string directory) =>
@@ -113,7 +107,7 @@ namespace GitDepend.UnitTests.Commands
         public void CleanCommand_WithProject_Succeeds()
         {
             var git = DependencyInjection.Resolve<IGit>();
-            git.Arrange(x => x.Clean(Arg.AnyBool, Arg.AnyBool, Arg.AnyBool, Arg.AnyBool))
+            git.Arrange(x => x.Clean(""))
                 .Returns(ReturnCode.Success)
                 .MustBeCalled();
 
@@ -130,6 +124,7 @@ namespace GitDepend.UnitTests.Commands
                 Name = "name"
             });
             CleanSubOptions newOptions = _goodCleanSubOptions;
+            newOptions.GitArguments = "";
             newOptions.Dependencies = new List<string>()
             {
                 "name"

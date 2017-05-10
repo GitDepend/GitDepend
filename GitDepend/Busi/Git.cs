@@ -141,31 +141,10 @@ namespace GitDepend.Busi
         /// <summary>
         /// Cleans the directory.
         /// </summary>
-        /// <param name="dryRun"></param>
-        /// <param name="force"></param>
-        /// <param name="removeFiles"></param>
-        /// <param name="removeDirectories"></param>
+        /// <param name="arguments"></param>
         /// <returns></returns>
-        public ReturnCode Clean(bool dryRun, bool force, bool removeFiles, bool removeDirectories)
+        public ReturnCode Clean(string arguments)
         {
-            string arguments = "-";
-            if (dryRun)
-            {
-                arguments += "n";
-            }
-            if (force)
-            {
-                arguments += "f";
-            }
-            if (removeFiles)
-            {
-                arguments += "x";
-            }
-            if (force)
-            {
-                arguments += "d";
-            }
-
             return ExecuteGitCommand($"clean {arguments}");
         }
 

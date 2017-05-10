@@ -12,7 +12,7 @@ using GitDepend.Resources;
 namespace GitDepend.Visitors
 {
 	/// <summary>
-	/// Implementation of <see cref="NamedDependenciesVisitor"/> that runs the build for dependencies.
+	/// Implementation of <see cref="IVisitor"/> that runs the build for dependencies.
 	/// </summary>
 	public class BuildVisitor : IVisitor
 	{
